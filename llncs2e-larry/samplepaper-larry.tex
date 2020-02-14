@@ -52,10 +52,11 @@ The abstract should briefly summarize the contents of the paper in
 %
 \section{Problem Specification}
 \begin{enumerate}
-    \item \textbf{State:} A \( 3 \times 3 \) matrix \( M \) with each entry \( m_{i, j} \) being a unique integer from \( \{0, 1, \cdots, 8 \} \) where 0 represents the blank tile.
+    \item \textbf{State:} For \( k \in \{3, 4, 5\} \),  A \( k \times k \) matrix \( M \) with each entry \( m_{i, j} \) being a unique integer from \( \{0, 1, \cdots, 8 \} \) where 0 represents the blank tile.
     \item \textbf{Initial State:} Puzzle can start in any state \textit{s}.
-    \item \textbf{Actions or \textit{Actions(s)}:} Let \( m_{k,l} \) denote the blank tile in matrix M. \textit{Actions(s)} returns the set of \(\{ m_{i,j} \in M: (i=k+1, j=l) \vee (i=k, j=l+1) \vee (i=k-1, j=l) \vee (i=k, j=l-1) \}\)
-    \item \textbf{Transition Model or \textit{Result(s,a)}:} Let \( m_{x, y} \) denote the tile specified by action \( a \). \textit{Result(s, a)} swaps the tiles \( m_{k,l} \) and \( m_{x,y} \) in the current state \textit{s} and returns this new state \textit{s'}.
+    \item \textbf{Actions or \textit{Actions(s)}:} Actions refer to the movements of the blank tile \( m_{k, l} \) \textit{Left, Right, Up, or Down}. More formally ...
+    % Q: An action swaps the tile \( m_{k, l} \) with the tile \(\{ m_{i,j} \in M: (i=k+1, j=l) \vee (i=k, j=l+1) \vee (i=k-1, j=l) \vee (i=k, j=l-1) \}\)
+    \item \textbf{Transition Model or \textit{Result(s,a)}:} \( Result(s, a) \) swaps the pair of tiles specified in action \( a \) in the current state \textit{s} and returns this new state \textit{s'}.
     \item \textbf{Goal State:} TODO: insert picture of goal state
     \item \textbf{Path Cost:} Every step cost \textit{c(s, a, s') = 1}, and the path cost is the summation of the step costs from the initial state to the goal state.
 \end{enumerate}
@@ -66,25 +67,32 @@ The abstract should briefly summarize the contents of the paper in
     \item \textbf{edges:} \textit{Result(s, a)}, which has a step cost of 1
 \end{enumerate}
 
+% TODO: Update unsolvable rule to k-puzzle 
 \subsection{Rule to Check if a 8 puzzle is Solvable}
 It is not possible to solve an instance of 8 puzzle if number of inversions is odd in the input state. 
-Inverison is defined as a pair of tiles form an inversion if the values on tiles are in reverse order of their appearance in goal state. Source \href{https://www.geeksforgeeks.org/check-instance-8-puzzle-solvable/}{here}.
-
+Inversion is defined as a pair of tiles form an inversion if the values on tiles are in reverse order of their appearance in goal state. Source \href{https://www.geeksforgeeks.org/check-instance-8-puzzle-solvable/}{here}.
 
 \subsection{Uninformed Search}
+% TODO: Update report of Uninformed search from BFS to IDS
+% TODO: IDS implementation
 \begin{enumerate}
-    \item \textbf{Implementation:} BFS. Step costs are equal, thus it is optimal.
+    \item \textbf{Implementation:} IDS. Step costs are equal, thus it is optimal.
     \item \textbf{Tree or graph?:} Graph search, in order to avoid infinite loops of states (since Graph search does not explore nodes which have already been explored.)
-    \item \textbf{Correctness:} BFS is complete (ie it will find a solution if it exists and \textit{b} is finite (ie \( b \leq 4 \)), thus it is correct.
+    \item \textbf{Correctness:} IDS is complete (ie it will find a solution if it exists and \textit{b} is finite (ie \( b \leq 4 \)), thus it is correct.
     \item \textbf{Complexity:} \( O(b^d) \)
 \end{enumerate}
+
+% TODO: A* Implementation
+% TODO: Implementation of 3 heuristics
+% TODO: Prove consistency of heuristics
+% Q: Need to prove complexity and correctness of algos?
 
 \subsection{Informed Search}
 \begin{enumerate}
     \item \textbf{Implementation:} \( A^* \) search. It improves on greedy best first search (ie \( f(n) = h(n) \)) as it avoids expanding paths that are already expensive (ie \( f(n) = g(n) + h(n) \)).
     \item \textbf{Tree or graph?:} Tree search. By Lemma 1, if \( h(n) \) is consistent, then the values of \( f(n) \) along any path are nondecreasing. Thus it does not matter if we add the explored node back into our frontier: there will exist another node \( n' \) such that \( f(n') < f(n) \).
     \item \textbf{Correctness:} \( A^* \) search is complete (ie it will find a solution if it exists and there is a finite no. of nodes with \( f(n) \leq C^{*} \), where \( C^* \) is the cost of the optimal solution path.
-    \item \textbf{Complexity:} \( O(b^{h^*(s_0) - h(s_0)}) \) (Q: need to prove?)
+    \item \textbf{Complexity:} \( O(b^{h^*(s_0) - h(s_0)}) \) 
 \end{enumerate}
 
 \subsection{Manhattan Distance} 
@@ -104,15 +112,17 @@ To prove that Manhattan Distance is consistent.
     \end{enumerate}
 \end{proof}
 
+\subsection{Euclidean Distance}
+
 \subsection{Number of tiles out of row + Number of tiles out of column} 
 \textbf{Relaxed Problem.} A tile can move anywhere within the row or column. This guarantees admissibility. \\
 TODO: Prove consistency (?). However, since both hamming and manhatten distance are consistent as shown \href{https://www.cs.princeton.edu/courses/archive/fall12/cos226/checklist/8puzzle.html}(here), 
 it's likely that this variant of hamming distance will be consistent too.
 
-\subsection{Simplified version of Linear conflict}
+% Q: Ask if this heuristic is non trivial.
+\subsection{Linear conflict + Manhattan Distance}
 Add two to the Manhattan priority function whenever two tiles are in their goal row (or column) but are reversed relative to their goal position. Paper available \href{https://cse.sc.edu/~mgv/csce580sp15/gradPres/HanssonMayerYung1992.pdf}(here).\\
 This is likely to be consistent since it is a linear transformation of the manhattan distance. \\ 
-\textbf{Q:} But is this considered a "simple" linear transformation? It's an informed one though. 
 
 \section{Experimental Setup}
 \begin{enumerate}
