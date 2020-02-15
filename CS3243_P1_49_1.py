@@ -86,7 +86,6 @@ class Puzzle(object):
         
         return flattened_arr
 
-
     
     @staticmethod
     def is_solvable(init_state):
@@ -107,7 +106,7 @@ class Puzzle(object):
             blank_tile_posi = (flattened_arr.index(0)) 
             count_frm_btm = no_of_rows - int(blank_tile_posi / no_of_rows)
             isEvenFrmBtm = Puzzle.even(count_frm_btm)
-            print("from btm ", count_frm_btm)
+    
             if (not isEvenInversions and isEvenFrmBtm)\
                 or (isEvenInversions and not isEvenFrmBtm):
                 return True
@@ -118,26 +117,18 @@ class Puzzle(object):
 
     @staticmethod
     def even(count):
-        if (count % 2 == 0):
-            return True
-        else:
-            return False
-
-
+        return count % 2 == 0
 
 
     @staticmethod
     def count_inversions(flattened_arr):
         no_of_inversions = 0
-        print("len is ",len(flattened_arr))
+   
         for i in range(len(flattened_arr)):
             for j in range(i,len(flattened_arr),1):
                 if (flattened_arr[i] > flattened_arr[j] and flattened_arr[j] != 0):
-                    print("i is ",flattened_arr[i])
-                    print("j is ",j)
                     no_of_inversions += 1
         
-        print("Number of inversions is ", no_of_inversions)
         return no_of_inversions
         
 
