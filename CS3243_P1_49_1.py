@@ -26,15 +26,14 @@ class Puzzle(object):
         self.k = Puzzle.get_k(init_state)
         self.blank_tile = Puzzle.get_blank_tile(init_state, self.k)
 
-    @staticmethod
-    def transition(state, blank_tile, k, action):
+    def transition(self, action):
         """ Moves the blank tile in a direction specified by the action.
         Args:
             param1 (dictionary): State of the puzzle
             param2 (int): Integer which denotes the key of the blank tile
             param3 (int): Integer which denotes the key of the target tile
         """
-        target_tile = {"row": blank_tile["row"], "col": blank_tile["col"]} # deep copy
+        target_tile = {"row": self.blank_tile["row"], "col": self.blank_tile["col"]} # deep copy
         if action == Puzzle.UP:
             target_tile["row"] -= 1
         elif action == Puzzle.DOWN:
@@ -44,15 +43,15 @@ class Puzzle(object):
         elif action == Puzzle.RIGHT:
             target_tile["col"] += 1
 
-        if Puzzle.is_illegal_tile(target_tile, k):
-            return state
+        if Puzzle.is_legal_tile(target_tile, self.k):
+            self.state = Puzzle.swap(self.state, target_tile, self.blank_tile)
+            self.actions.append(action)
 
-        new_state = Puzzle.swap(state, target_tile, blank_tile)
-        return new_state
+        return self
 
     @staticmethod
-    def is_illegal_tile(target_tile, k):
-        return target_tile["row"] < 0 or target_tile["row"] >= k or target_tile["col"] < 0 or target_tile["col"] >= k
+    def is_legal_tile(target_tile, k):
+        return target_tile["row"] >= 0 and target_tile["row"] < k and target_tile["col"] >= 0 and target_tile["col"] < k
 
     @staticmethod
     def swap(state, target_tile, blank_tile):
@@ -89,51 +88,49 @@ class Puzzle(object):
         """
 
     @staticmethod
-    def is_goal_state(self):
-        """ Checks if the given state is a goal state in O(1) time.
+    def is_goal_state(current_state, goal_state):
+        """ Checks if the given state is a goal state.
         Args:
             param1 (): State of the puzzle
 
         Returns:
             boolean: True if state is a goal state.
         """
-        return self.state == self.goal_state
+        return current_state == goal_state
 
-    @staticmethod
-    def test():
-        stubbed_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
-        stubbed_blank_tile = {"row": 2, "col": 2}
+    def test(self):
+
+        # Unit test for is_legal_tile
+        stubbed_illegal_target_tile = {"row": 2, "col": 2}
         stubbed_k = 3
-
-        # Unit test for is_illegal_tile
-        stubbed_illegal_target_tile = {"row": -1, "col": 2}
-        assert Puzzle.is_illegal_tile(stubbed_illegal_target_tile, stubbed_k) == True, \
-            "Unit test for is_illegal_tile is failing."
+        assert Puzzle.is_legal_tile(stubbed_illegal_target_tile, stubbed_k) == True, \
+            "Unit test for is_legal_tile is failing."
 
         # Unit test for swap
         stubbed_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
+        stubbed_blank_tile = {"row": 2, "col": 2}
         stubbed_target_tile = {"row": 0, "col": 0}
         new_state = Puzzle.swap(stubbed_state, stubbed_target_tile, stubbed_blank_tile)
         assert new_state[0][0] == 0, "Unit test for swap is failing."
 
         # Unit test for transition
         stubbed_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
-        new_state = Puzzle.transition(stubbed_state, stubbed_blank_tile, stubbed_k, Puzzle.LEFT)
-        assert new_state[2][2] == 7, "Unit test for transition is failing."
-
-        stubbed_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
-        new_state = Puzzle.transition(stubbed_state, stubbed_blank_tile, stubbed_k, Puzzle.RIGHT)
+        new_state = self.transition(Puzzle.RIGHT).state
         assert new_state == stubbed_state, \
             "Unit test for transition is failing: action is illegal so state should not change"
 
+        new_state = self.transition(Puzzle.LEFT).state
+        assert new_state[2][2] == 7, "Unit test for transition is failing."
 
+        # Unit test for is_goal_state
+        stubbed_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+        assert Puzzle.is_goal_state(stubbed_state, self.goal_state), "Unit test for is_goal_state is failing."
 
     def solve(self):
         #TODO
         # implement your search algorithm here
-        Puzzle.test()
-        
-        return ["LEFT", "RIGHT"] # sample output 
+        self.test()
+        return self.actions # sample output
 
     # you may add more functions if you think is useful
 
