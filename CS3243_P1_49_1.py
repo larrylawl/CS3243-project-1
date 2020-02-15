@@ -27,25 +27,39 @@ class Puzzle(object):
         self.blank_tile = Puzzle.get_blank_tile(init_state, self.k)
 
     @staticmethod
-    def transition(puzzle, action):
+    def transition(state, blank_tile, k, action):
         """ Moves the blank tile in a direction specified by the action.
         Args:
             param1 (dictionary): State of the puzzle
             param2 (int): Integer which denotes the key of the blank tile
             param3 (int): Integer which denotes the key of the target tile
         """
-        target_tile = puzzle.blank_tile
-        if action == UP:
+        target_tile = {"row": blank_tile["row"], "col": blank_tile["col"]} # deep copy
+        if action == Puzzle.UP:
             target_tile["row"] -= 1
-        elif action == DOWN:
+        elif action == Puzzle.DOWN:
             target_tile["row"] += 1
-        elif action == LEFT:
+        elif action == Puzzle.LEFT:
             target_tile["col"] -= 1
-        elif action == RIGHT:
+        elif action == Puzzle.RIGHT:
             target_tile["col"] += 1
 
-        if is_illegal_tile(target):
-            return puzzle
+        if Puzzle.is_illegal_tile(target_tile, k):
+            return state
+
+        new_state = Puzzle.swap(state, target_tile, blank_tile)
+        return new_state
+
+    @staticmethod
+    def is_illegal_tile(target_tile, k):
+        return target_tile["row"] < 0 or target_tile["row"] >= k or target_tile["col"] < 0 or target_tile["col"] >= k
+
+    @staticmethod
+    def swap(state, target_tile, blank_tile):
+        temp = state[target_tile["row"]][target_tile["col"]]
+        state[target_tile["row"]][target_tile["col"]] = state[blank_tile["row"]][blank_tile["col"]]
+        state[blank_tile["row"]][blank_tile["col"]] = temp
+        return state
 
     @staticmethod
     def get_k(state):
@@ -64,7 +78,6 @@ class Puzzle(object):
                     result["col"] = j
         return result
 
-
     @staticmethod
     def is_solvable(init_state):
         """ Checks if the given initial state is solvable.
@@ -75,6 +88,7 @@ class Puzzle(object):
             boolean: True if state is solvable.
         """
 
+    @staticmethod
     def is_goal_state(self):
         """ Checks if the given state is a goal state in O(1) time.
         Args:
@@ -85,12 +99,39 @@ class Puzzle(object):
         """
         return self.state == self.goal_state
 
+    @staticmethod
+    def test():
+        stubbed_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
+        stubbed_blank_tile = {"row": 2, "col": 2}
+        stubbed_k = 3
+
+        # Unit test for is_illegal_tile
+        stubbed_illegal_target_tile = {"row": -1, "col": 2}
+        assert Puzzle.is_illegal_tile(stubbed_illegal_target_tile, stubbed_k) == True, \
+            "Unit test for is_illegal_tile is failing."
+
+        # Unit test for swap
+        stubbed_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
+        stubbed_target_tile = {"row": 0, "col": 0}
+        new_state = Puzzle.swap(stubbed_state, stubbed_target_tile, stubbed_blank_tile)
+        assert new_state[0][0] == 0, "Unit test for swap is failing."
+
+        # Unit test for transition
+        stubbed_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
+        new_state = Puzzle.transition(stubbed_state, stubbed_blank_tile, stubbed_k, Puzzle.LEFT)
+        assert new_state[2][2] == 7, "Unit test for transition is failing."
+
+        stubbed_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
+        new_state = Puzzle.transition(stubbed_state, stubbed_blank_tile, stubbed_k, Puzzle.RIGHT)
+        assert new_state == stubbed_state, \
+            "Unit test for transition is failing: action is illegal so state should not change"
+
+
+
     def solve(self):
         #TODO
         # implement your search algorithm here
-        print(self.init_state)
-        print(self.blank_tile)
-        print(self.k)
+        Puzzle.test()
         
         return ["LEFT", "RIGHT"] # sample output 
 
