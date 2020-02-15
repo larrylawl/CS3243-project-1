@@ -76,10 +76,9 @@ Inversion is defined as a pair of tiles form an inversion if the values on tiles
 % TODO: Update report of Uninformed search from BFS to IDS
 % TODO: IDS implementation
 \begin{enumerate}
-    \item \textbf{Implementation:} IDS. Step costs are equal, thus it is optimal.
-    \item \textbf{Tree or graph?:} Graph search, in order to avoid infinite loops of states (since Graph search does not explore nodes which have already been explored.)
+    \item \textbf{Implementation:} Graph-based IDS. Step costs are equal, thus it is optimal. Furthermore, since the search space is large and the depth of the solution is not known, IDS is preferred. (P90)
     \item \textbf{Correctness:} IDS is complete (ie it will find a solution if it exists and \textit{b} is finite (ie \( b \leq 4 \)), thus it is correct.
-    \item \textbf{Complexity:} \( O(b^d) \)
+    \item \textbf{Complexity:} \( O(d) \)
 \end{enumerate}
 
 % TODO: A* Implementation
