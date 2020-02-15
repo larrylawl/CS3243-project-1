@@ -78,25 +78,59 @@ class Puzzle(object):
         return result
 
     @staticmethod
-    def is_solvable(init_state):
-        """ Checks if the given initial state is solvable.
-        Args:
-            param1 (dictionary): State of the puzzle
+    def flatten_array(unflattened_array):
+        flattened_arr = []
+        for array in unflattened_array:
+            for i in array:
+                flattened_arr.append(i)
+        
+        return flattened_arr
 
-        Returns:
-            boolean: True if state is solvable.
-        """
+    
+    @staticmethod
+    def is_solvable(init_state):
+
+        flattened_arr = Puzzle.flatten_array(init_state)
+        no_of_rows = len(init_state)
+        no_of_inversions = Puzzle.count_inversions(flattened_arr)
+
+        isEvenRows = Puzzle.even(no_of_rows)
+        isEvenInversions = Puzzle.even(no_of_inversions)
+        if (not isEvenRows):
+            if isEvenInversions:
+                return True
+            else:
+                return False
+
+        else:
+            blank_tile_posi = (flattened_arr.index(0)) 
+            count_frm_btm = no_of_rows - int(blank_tile_posi / no_of_rows)
+            isEvenFrmBtm = Puzzle.even(count_frm_btm)
+    
+            if (not isEvenInversions and isEvenFrmBtm)\
+                or (isEvenInversions and not isEvenFrmBtm):
+                return True
+            else:
+                return False
+        # method from https://www.geeksforgeeks.org/check-instance-15-puzzle-solvable/
+            
 
     @staticmethod
-    def is_goal_state(current_state, goal_state):
-        """ Checks if the given state is a goal state.
-        Args:
-            param1 (): State of the puzzle
+    def even(count):
+        return count % 2 == 0
 
-        Returns:
-            boolean: True if state is a goal state.
-        """
-        return current_state == goal_state
+
+    @staticmethod
+    def count_inversions(flattened_arr):
+        no_of_inversions = 0
+   
+        for i in range(len(flattened_arr)):
+            for j in range(i,len(flattened_arr),1):
+                if (flattened_arr[i] > flattened_arr[j] and flattened_arr[j] != 0):
+                    no_of_inversions += 1
+        
+        return no_of_inversions
+        
 
     def test(self):
 
@@ -118,6 +152,16 @@ class Puzzle(object):
         new_state = self.transition(Puzzle.RIGHT).state
         assert new_state == stubbed_state, \
             "Unit test for transition is failing: action is illegal so state should not change"
+
+        #Unit test for solvable 3x3
+        stubbed_state = [[8, 1, 2], [0, 4, 3], [7, 6, 5]]
+        assert not Puzzle.is_solvable(stubbed_state) == True, \
+            "Unit test for checking if 3x3 is unsolvable is failing"
+
+        #Unit test for solvable 4x4
+        stubbed_state = [[3, 9, 1, 15], [14, 11, 4, 6], [13, 0, 10, 12], [2, 7, 8, 5]]
+        assert not Puzzle.is_solvable(stubbed_state) == True, \
+            "Unit test for checking if 4x4 is unsolvable is failing"
 
         new_state = self.transition(Puzzle.LEFT).state
         assert new_state[2][2] == 7, "Unit test for transition is failing."
