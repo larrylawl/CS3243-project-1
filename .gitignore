@@ -2,5 +2,4 @@
 *.out
 
 # pycharm setup
-*.iml
-*.xml
+*.idea/

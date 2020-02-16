@@ -1,10 +1,14 @@
 # CS3243 Project 1
 
 ## Quick Setup
+`./runner.py CS3243_P1_49_1.py 3 2`
+
 `./runner.py CS3243_P1_49_i.py n j`, where 
 1. i denotes the python file to run. For now, i = 1 (IDS)
 2. n denotes the size of matrix 
 3. j denotes the input number of test case. (for eg, if testing on input_3.txt, then j = 3)
+
+> Read `runner.py` for more info.
  
 ## How to test?
 **Integrated Test.** Running this script tests for correctness and complexity (both space and time). <br />
