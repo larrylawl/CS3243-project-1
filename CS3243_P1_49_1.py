@@ -16,6 +16,7 @@ TODO
     2.1 Data structure that 1) swaps elts in o(1) and 2) compare with goal state in o(1)
 3. Implement IDS (with O(d) space complexity)
 4. Measure space and time complexity
+4. Run on sunfire to check
 """
 from copy import deepcopy
 
@@ -28,7 +29,7 @@ class Actions:
     ACTIONS = [UP, DOWN, LEFT, RIGHT]
 
 class Node:
-    def __init__(self, state=None, parent=None, cost=None, depth=0, children=[]):
+    def __init__(self, state=None, parent=None, cost=0, depth=0, children=[]):
         self.state = state
         self.parent = parent
         self.cost = cost
@@ -79,6 +80,9 @@ class Node:
 
 
 class Puzzle(object):
+    UNSOLVABLE = "UNSOLVABLE"
+    CUTOFF = "CUTOFF"
+    FAILURE = "FAILURE"
 
     def __init__(self, init_state, goal_state):
         # you may add more attributes if you think is useful
@@ -90,11 +94,12 @@ class Puzzle(object):
         self.past_states = set()
 
     @staticmethod
-    def transition(node, action, past_states, actions):
+    def transition(past_states, actions, node, action):
         """ Moves the blank tile in a direction specified by the action. Returns a new state.
         """
+        # print(node)
         blank_tile = node.get_blank_tile()
-        target_tile = deepcopy(blank_tile)  # deep copy
+        target_tile = deepcopy(blank_tile)
         if action == Actions.UP:
             target_tile["row"] -= 1
         elif action == Actions.DOWN:
@@ -104,12 +109,34 @@ class Puzzle(object):
         elif action == Actions.RIGHT:
             target_tile["col"] += 1
 
-        if Node.is_legal_tile(target_tile, node.k):
-            past_states.add(Node.state_to_string(node.state))
-            new_node = Node.swap(node, blank_tile, target_tile)
-            actions.append(action)
-
+        past_states.add(Node.state_to_string(node.state))
+        new_node = Node.swap(node, blank_tile, target_tile)
+        new_node.cost += 1
+        new_node.depth += 1
+        actions.append(action)
         return new_node
+
+    @staticmethod
+    def valid_actions(node):
+        """ Returns an array of valid actions
+        """
+        result = []
+        blank_tile = node.get_blank_tile()
+
+        for action in Actions.ACTIONS:
+            target_tile = deepcopy(blank_tile)
+            if action == Actions.UP:
+                target_tile["row"] -= 1
+            elif action == Actions.DOWN:
+                target_tile["row"] += 1
+            elif action == Actions.LEFT:
+                target_tile["col"] -= 1
+            elif action == Actions.RIGHT:
+                target_tile["col"] += 1
+
+            if Node.is_legal_tile(target_tile, node.k):
+                result.append(action)
+        return result
 
     @staticmethod
     def flatten_array(unflattened_array):
@@ -182,7 +209,7 @@ class Puzzle(object):
         stubbed_node = Node(state=stubbed_state)
         stubbed_past_states = set()
         stubbed_past_actions = []
-        new_node = Puzzle.transition(stubbed_node, Actions.LEFT, stubbed_past_states, stubbed_past_actions)
+        new_node = Puzzle.transition(stubbed_past_states, stubbed_past_actions, stubbed_node, Actions.LEFT)
         assert stubbed_node != new_node, "Unit test for transition is failing: transition should return a new node"
         assert new_node.state[2][1] == 0, "Unit test for transition is failing: transition incorrectly"
         assert Actions.LEFT in stubbed_past_actions, \
@@ -223,6 +250,40 @@ class Puzzle(object):
         assert Node.is_legal_tile(stubbed_illegal_target_tile, stubbed_k) == True, \
             "Unit test for is_legal_tile is failing."
 
+    @staticmethod
+    def depth_limited_search(puzzle, limit, debug=False):
+        """ Depth Limited Search implementation that models the implementation in the textbook (p88).
+        """
+        return Puzzle.recursive_DLS(puzzle.init_node, puzzle, limit, debug)
+
+    # TODO: Add graph search
+    # TODO: Way to print states to check
+    # TODO: Run on sunfire to check
+    @staticmethod
+    def recursive_DLS(node, puzzle, limit, debug=False):
+        if Puzzle.is_goal_state(node.state, puzzle.goal_state):
+            return puzzle.actions
+        elif limit == 0:
+            return Puzzle.CUTOFF
+        else:
+            is_cutoff = False
+            for action in Puzzle.valid_actions(node):
+                child_node = Puzzle.transition(puzzle.past_states, puzzle.actions, node, action)
+
+                if debug:
+                    print(child_node.state)
+
+                result = Puzzle.recursive_DLS(child_node, puzzle, limit - 1, debug)
+                if result == Puzzle.CUTOFF:
+                    is_cutoff = True
+                elif result != Puzzle.FAILURE:
+                    return result
+            if is_cutoff:
+                return Puzzle.CUTOFF
+            else:
+                return Puzzle.FAILURE
+
+
     # def IDS(self):
     #     inf = sys.maxint
     #
@@ -234,6 +295,11 @@ class Puzzle(object):
         # TODO
         # implement your search algorithm here
         self.test()
+
+        if not Puzzle.is_solvable(self.init_state):
+            self.actions.append(Puzzle.UNSOLVABLE)
+
+        Puzzle.depth_limited_search(self, 5, debug=True)
         return self.actions  # sample output
 
     # you may add more functions if you think is useful
