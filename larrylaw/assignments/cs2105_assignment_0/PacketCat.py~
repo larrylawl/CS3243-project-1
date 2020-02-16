@@ -1,0 +1,15 @@
+import sys
+
+while True:
+    # Read data
+    data = sys.stdin.buffer.read1(1000000)
+    pos = data.find(b"B")
+    if pos >= 0:
+        # Packet exists
+        header = data[0:pos+1]
+        payload = data[pos+1:]
+        sys.stdout.buffer.write(header)
+        sys.stdout.buffer.flush()
+        sys.stdout.buffer.write(payload)
+        sys.stdout.buffer.flush()
+    break

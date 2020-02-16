@@ -1,23 +1,6 @@
 import os
 import sys
 
-"""
-Objective: Get programme working. Worry about time/space complexity later.
-
-Steps:
-1. IDS
-2. Time Complexity
-3. Space Complexity
-
-TODO
-1. Learn how to run the programme and test it
-    1.1 SoC computing cluster
-2. Understand the programme
-    2.1 Data structure that 1) swaps elts in o(1) and 2) compare with goal state in o(1)
-3. Implement IDS (with O(d) space complexity)
-4. Measure space and time complexity
-4. Run on sunfire to check
-"""
 from copy import deepcopy
 
 
@@ -96,18 +79,18 @@ class Puzzle(object):
 
     @staticmethod
     def transition(past_states, node, action):
-        """ Moves the blank tile in a direction specified by the action. Returns a new state.
+        """ Moves the blank tile in the OPPOSITE direction specified by the action. (p4 of project1.pdf!
+        Returns a new state.
         """
-        # print(node)
         blank_tile = node.get_blank_tile()
         target_tile = deepcopy(blank_tile)
-        if action == Actions.UP:
+        if action == Actions.DOWN:
             target_tile["row"] -= 1
-        elif action == Actions.DOWN:
+        elif action == Actions.UP:
             target_tile["row"] += 1
-        elif action == Actions.LEFT:
-            target_tile["col"] -= 1
         elif action == Actions.RIGHT:
+            target_tile["col"] -= 1
+        elif action == Actions.LEFT:
             target_tile["col"] += 1
 
         past_states.add(Node.state_to_string(node.state))
@@ -125,13 +108,13 @@ class Puzzle(object):
 
         for action in Actions.ACTIONS:
             target_tile = deepcopy(blank_tile)
-            if action == Actions.UP:
+            if action == Actions.DOWN:
                 target_tile["row"] -= 1
-            elif action == Actions.DOWN:
+            elif action == Actions.UP:
                 target_tile["row"] += 1
-            elif action == Actions.LEFT:
-                target_tile["col"] -= 1
             elif action == Actions.RIGHT:
+                target_tile["col"] -= 1
+            elif action == Actions.LEFT:
                 target_tile["col"] += 1
 
             if Node.is_legal_tile(target_tile, node.k):
@@ -204,20 +187,14 @@ class Puzzle(object):
 
         """
 
-        # Unit test for swap
-        # stubbed_self = deepcopy(self)
-        # stubbed_target_tile = {"row": 0, "col": 0}
-        # stubbed_self.swap(stubbed_target_tile)
-        # assert stubbed_self.state[0][0] == 0, "Unit test for swap is failing."
-
         # Unit test for transition
         stubbed_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
         stubbed_node = Node(state=stubbed_state)
         stubbed_past_states = set()
-        new_node = Puzzle.transition(stubbed_past_states, stubbed_node, Actions.LEFT)
+        new_node = Puzzle.transition(stubbed_past_states, stubbed_node, Actions.RIGHT)
         assert stubbed_node != new_node, "Unit test for transition is failing: transition should return a new node"
         assert new_node.state[2][1] == 0, "Unit test for transition is failing: transition incorrectly"
-        assert Actions.LEFT in new_node.actions_from_root, \
+        assert Actions.RIGHT in new_node.actions_from_root, \
             "Unit test for transition is failing: past actions should be updated"
         assert Node.state_to_string(stubbed_state) in stubbed_past_states, \
             "Unit test for transition is failing: past states should be updated"
@@ -262,7 +239,6 @@ class Puzzle(object):
         """
         return Puzzle.recursive_DLS(puzzle.init_node, puzzle, limit, debug)
 
-    # TODO: Run on sunfire to check
     @staticmethod
     def recursive_DLS(node, puzzle, limit, debug=False):
         if Puzzle.is_goal_state(node.state, puzzle.goal_state):
@@ -289,7 +265,7 @@ class Puzzle(object):
 
     @staticmethod
     def iterative_deepening_search(puzzle, debug=False):
-        inf = sys.maxsize
+        inf = 10000000
 
         for depth in range(0, inf):
 
@@ -302,13 +278,15 @@ class Puzzle(object):
     def solve(self):
         # TODO
         # implement your search algorithm here
+
+        # Remove driver test in production
         self.test()
 
         if not Puzzle.is_solvable(self.init_state):
             self.actions.append(Puzzle.UNSOLVABLE)
 
-        self.actions = Puzzle.iterative_deepening_search(puzzle, debug=True)
-        print(self.actions)
+        self.actions = Puzzle.iterative_deepening_search(puzzle, debug=False)
+        print("Space Complexity for IDS (size of explored set): " + str(len(self.past_states)))
 
         return self.actions  # sample output
 
