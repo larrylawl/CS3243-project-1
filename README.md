@@ -3,11 +3,11 @@
 ## Quick Setup
 `./runner.py CS3243_P1_49_1.py 3 2`
 
-`./runner.py CS3243_P1_49_i.py n j`, where 
-1. i denotes the python file to run. For now, i = 1 (IDS)
-2. n denotes the size of matrix 
-3. j denotes the input number of test case. (for eg, if testing on input_3.txt, then j = 3)
-
+This script 
+1. Runs the CS3243_P1_49_1.py file on a 3x3 matrix for `public_tests_p1/n_equals_3/input_2.txt`.
+2. Prints correctness and complexity (both space and time)
+3. Prints every action and state from the initial state to the goal state (if solvable). 
+ 
 > Read `runner.py` for more info.
  
 ## How to test?
@@ -17,7 +17,7 @@
 **Unit Tests.** Within `puzzle.solve()`, there is a default driver test method `self.test()`, which performs unit tests. 
 
 ## How to debug?
-1. Running `runner.py` will show every action and state from the initial state to the goal state.
+1. Running `runner.py` prints every action and state from the initial state to the goal state.
 2. For IDS, `Puzzle.iterative_deepening_search(puzzle, debug=True` will print every explored state 
 (including unsuccessful explorations)
 
