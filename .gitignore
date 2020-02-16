@@ -1,1 +1,6 @@
-3x3_input_*
+# Output test cases
+*.out
+
+# pycharm setup
+*.iml
+*.xml
