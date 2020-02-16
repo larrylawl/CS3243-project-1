@@ -36,6 +36,7 @@ class Node:
         self.depth = depth
         self.children = children
         self.k = Node.get_k(state)
+        self.actions_from_root = list()
 
     # def expand(self):
 
@@ -94,7 +95,7 @@ class Puzzle(object):
         self.past_states = set()
 
     @staticmethod
-    def transition(past_states, actions, node, action):
+    def transition(past_states, node, action):
         """ Moves the blank tile in a direction specified by the action. Returns a new state.
         """
         # print(node)
@@ -113,7 +114,7 @@ class Puzzle(object):
         new_node = Node.swap(node, blank_tile, target_tile)
         new_node.cost += 1
         new_node.depth += 1
-        actions.append(action)
+        new_node.actions_from_root.append(action)
         return new_node
 
     def valid_actions(self, node):
@@ -213,11 +214,10 @@ class Puzzle(object):
         stubbed_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
         stubbed_node = Node(state=stubbed_state)
         stubbed_past_states = set()
-        stubbed_past_actions = []
-        new_node = Puzzle.transition(stubbed_past_states, stubbed_past_actions, stubbed_node, Actions.LEFT)
+        new_node = Puzzle.transition(stubbed_past_states, stubbed_node, Actions.LEFT)
         assert stubbed_node != new_node, "Unit test for transition is failing: transition should return a new node"
         assert new_node.state[2][1] == 0, "Unit test for transition is failing: transition incorrectly"
-        assert Actions.LEFT in stubbed_past_actions, \
+        assert Actions.LEFT in new_node.actions_from_root, \
             "Unit test for transition is failing: past actions should be updated"
         assert Node.state_to_string(stubbed_state) in stubbed_past_states, \
             "Unit test for transition is failing: past states should be updated"
@@ -262,18 +262,17 @@ class Puzzle(object):
         """
         return Puzzle.recursive_DLS(puzzle.init_node, puzzle, limit, debug)
 
-    # TODO: Add graph search
     # TODO: Run on sunfire to check
     @staticmethod
     def recursive_DLS(node, puzzle, limit, debug=False):
         if Puzzle.is_goal_state(node.state, puzzle.goal_state):
-            return puzzle.actions
+            return node.actions_from_root
         elif limit == 0:
             return Puzzle.CUTOFF
         else:
             is_cutoff = False
             for action in puzzle.valid_actions(node):
-                child_node = Puzzle.transition(puzzle.past_states, puzzle.actions, node, action)
+                child_node = Puzzle.transition(puzzle.past_states, node, action)
 
                 if debug:
                     print(child_node.state)
@@ -288,13 +287,17 @@ class Puzzle(object):
             else:
                 return Puzzle.FAILURE
 
+    @staticmethod
+    def iterative_deepening_search(puzzle, debug=False):
+        inf = sys.maxsize
 
-    # def IDS(self):
-    #     inf = sys.maxint
-    #
-    #     for depth in range(0, inf):
-    #         result = DLS(self, depth)
-    #         if result
+        for depth in range(0, inf):
+
+            puzzle.past_states = set()
+
+            result = Puzzle.depth_limited_search(puzzle, depth, debug)
+            if result != Puzzle.CUTOFF:
+                return result
 
     def solve(self):
         # TODO
@@ -304,7 +307,9 @@ class Puzzle(object):
         if not Puzzle.is_solvable(self.init_state):
             self.actions.append(Puzzle.UNSOLVABLE)
 
-        Puzzle.depth_limited_search(self, 5, debug=True)
+        self.actions = Puzzle.iterative_deepening_search(puzzle, debug=True)
+        print(self.actions)
+
         return self.actions  # sample output
 
     # you may add more functions if you think is useful
