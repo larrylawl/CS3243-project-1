@@ -2,14 +2,16 @@ import os
 import sys
 
 """
+Objective: Get programme working. Worry about time/space complexity later.
+
 TODO
-1. Learn how to run programme. Check if it reach goal
 1. Learn how to run the programme and test it
     1.1 SoC computing cluster
 2. Understand the programme
     2.1 Data structure that 1) swaps elts in o(1) and 2) compare with goal state in o(1)
 3. Implement IDS (with O(d) space complexity)
 """
+from copy import deepcopy
 
 class Puzzle(object):
     UP = "UP"
@@ -22,18 +24,14 @@ class Puzzle(object):
         self.init_state = init_state
         self.goal_state = goal_state
         self.actions = list()
-        self.state = self.init_state
+        self.state = deepcopy(init_state)
         self.k = Puzzle.get_k(init_state)
         self.blank_tile = Puzzle.get_blank_tile(init_state, self.k)
 
     def transition(self, action):
-        """ Moves the blank tile in a direction specified by the action.
-        Args:
-            param1 (dictionary): State of the puzzle
-            param2 (int): Integer which denotes the key of the blank tile
-            param3 (int): Integer which denotes the key of the target tile
+        """ Moves the blank tile in a direction specified by the action. Mutates node's state and blank tile position.
         """
-        target_tile = {"row": self.blank_tile["row"], "col": self.blank_tile["col"]} # deep copy
+        target_tile = deepcopy(self.blank_tile) # deep copy
         if action == Puzzle.UP:
             target_tile["row"] -= 1
         elif action == Puzzle.DOWN:
@@ -44,21 +42,25 @@ class Puzzle(object):
             target_tile["col"] += 1
 
         if Puzzle.is_legal_tile(target_tile, self.k):
-            self.state = Puzzle.swap(self.state, target_tile, self.blank_tile)
+            self.swap(target_tile)
             self.actions.append(action)
 
         return self
 
-    @staticmethod
-    def is_legal_tile(target_tile, k):
-        return target_tile["row"] >= 0 and target_tile["row"] < k and target_tile["col"] >= 0 and target_tile["col"] < k
+    def swap(self, target_tile):
+        """ Swaps target tile with blank tile. Mutates state and blank tile position.
+
+        """
+        temp = self.state[target_tile["row"]][target_tile["col"]]
+        self.state[target_tile["row"]][target_tile["col"]] = self.state[self.blank_tile["row"]][self.blank_tile["col"]]
+        self.state[self.blank_tile["row"]][self.blank_tile["col"]] = temp
+
+        # Updating position of blank_tile
+        self.blank_tile = target_tile
 
     @staticmethod
-    def swap(state, target_tile, blank_tile):
-        temp = state[target_tile["row"]][target_tile["col"]]
-        state[target_tile["row"]][target_tile["col"]] = state[blank_tile["row"]][blank_tile["col"]]
-        state[blank_tile["row"]][blank_tile["col"]] = temp
-        return state
+    def is_legal_tile(target_tile, k):
+        return 0 <= target_tile["row"] < k and 0 <= target_tile["col"] < k
 
     @staticmethod
     def get_k(state):
@@ -86,7 +88,6 @@ class Puzzle(object):
         
         return flattened_arr
 
-    
     @staticmethod
     def is_solvable(init_state):
 
@@ -119,6 +120,9 @@ class Puzzle(object):
     def even(count):
         return count % 2 == 0
 
+    @staticmethod
+    def is_goal_state(current_state, goal_state):
+        return current_state == goal_state
 
     @staticmethod
     def count_inversions(flattened_arr):
@@ -133,6 +137,9 @@ class Puzzle(object):
         
 
     def test(self):
+        """ Unit tests for basic functions. Assumes the input file is n_equals_3/input_1.txt.
+
+        """
 
         # Unit test for is_legal_tile
         stubbed_illegal_target_tile = {"row": 2, "col": 2}
@@ -141,17 +148,23 @@ class Puzzle(object):
             "Unit test for is_legal_tile is failing."
 
         # Unit test for swap
-        stubbed_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
-        stubbed_blank_tile = {"row": 2, "col": 2}
+        stubbed_self = deepcopy(self)
         stubbed_target_tile = {"row": 0, "col": 0}
-        new_state = Puzzle.swap(stubbed_state, stubbed_target_tile, stubbed_blank_tile)
-        assert new_state[0][0] == 0, "Unit test for swap is failing."
+        stubbed_self.swap(stubbed_target_tile)
+        assert stubbed_self.state[0][0] == 0, "Unit test for swap is failing."
 
         # Unit test for transition
+        stubbed_self = deepcopy(self)
         stubbed_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
-        new_state = self.transition(Puzzle.RIGHT).state
+        new_state = stubbed_self.transition(Puzzle.RIGHT).state
         assert new_state == stubbed_state, \
             "Unit test for transition is failing: action is illegal so state should not change"
+
+        stubbed_self = deepcopy(self)
+        new_state = stubbed_self.transition(Puzzle.LEFT).state
+        assert new_state[2][2] == 7, "Unit test for transition is failing."
+        assert stubbed_self.blank_tile == {"row": 2, "col": 1}, \
+            "Unit test for transition is failing: Blank tile attribute is incorrect."
 
         #Unit test for solvable 3x3
         stubbed_state = [[8, 1, 2], [0, 4, 3], [7, 6, 5]]
@@ -163,12 +176,12 @@ class Puzzle(object):
         assert not Puzzle.is_solvable(stubbed_state) == True, \
             "Unit test for checking if 4x4 is unsolvable is failing"
 
-        new_state = self.transition(Puzzle.LEFT).state
-        assert new_state[2][2] == 7, "Unit test for transition is failing."
-
         # Unit test for is_goal_state
+        stubbed_self = deepcopy(self)
         stubbed_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
-        assert Puzzle.is_goal_state(stubbed_state, self.goal_state), "Unit test for is_goal_state is failing."
+        assert Puzzle.is_goal_state(stubbed_state, stubbed_self.goal_state), "Unit test for is_goal_state is failing."
+
+    # def IDS(self):
 
     def solve(self):
         #TODO
