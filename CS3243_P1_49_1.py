@@ -116,8 +116,7 @@ class Puzzle(object):
         actions.append(action)
         return new_node
 
-    @staticmethod
-    def valid_actions(node):
+    def valid_actions(self, node):
         """ Returns an array of valid actions
         """
         result = []
@@ -135,8 +134,14 @@ class Puzzle(object):
                 target_tile["col"] += 1
 
             if Node.is_legal_tile(target_tile, node.k):
-                result.append(action)
+                state_string = Node.state_to_string(Node.swap(node, blank_tile, target_tile).state)
+                if not Puzzle.is_explored_state(self.past_states, state_string):
+                    result.append(action)
         return result
+
+    @staticmethod
+    def is_explored_state(past_states, state_string):
+        return state_string in past_states
 
     @staticmethod
     def flatten_array(unflattened_array):
@@ -253,11 +258,11 @@ class Puzzle(object):
     @staticmethod
     def depth_limited_search(puzzle, limit, debug=False):
         """ Depth Limited Search implementation that models the implementation in the textbook (p88).
+        Set debug to True to print states.
         """
         return Puzzle.recursive_DLS(puzzle.init_node, puzzle, limit, debug)
 
     # TODO: Add graph search
-    # TODO: Way to print states to check
     # TODO: Run on sunfire to check
     @staticmethod
     def recursive_DLS(node, puzzle, limit, debug=False):
@@ -267,7 +272,7 @@ class Puzzle(object):
             return Puzzle.CUTOFF
         else:
             is_cutoff = False
-            for action in Puzzle.valid_actions(node):
+            for action in puzzle.valid_actions(node):
                 child_node = Puzzle.transition(puzzle.past_states, puzzle.actions, node, action)
 
                 if debug:
