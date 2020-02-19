@@ -1,1 +1,5 @@
-output.txt
+# Output test cases
+*.out
+
+# pycharm setup
+*.idea/
