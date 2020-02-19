@@ -1,80 +1,7 @@
 import os
 import sys
-
-
-class Puzzle(object):
-    def __init__(self, init_state, goal_state):
-        # you may add more attributes if you think is useful
-        self.init_state = init_state
-        self.goal_state = goal_state
-        self.actions = list()
-
-    def solve(self):
-        #TODO
-        # implement your search algorithm here
-        
-        return ["LEFT", "RIGHT"] # sample output 
-
-    # you may add more functions if you think is useful
-
-if __name__ == "__main__":
-    # do NOT modify below
-
-    # argv[0] represents the name of the file that is being executed
-    # argv[1] represents name of input file
-    # argv[2] represents name of destination output file
-    if len(sys.argv) != 3:
-        raise ValueError("Wrong number of arguments!")
-
-    try:
-        f = open(sys.argv[1], 'r')
-    except IOError:
-        raise IOError("Input file not found!")
-
-    lines = f.readlines()
-    
-    # n = num rows in input file
-    n = len(lines)
-    # max_num = n to the power of 2 - 1
-    max_num = n ** 2 - 1
-
-    # Instantiate a 2D list of size n x n
-    init_state = [[0 for i in range(n)] for j in range(n)]
-    goal_state = [[0 for i in range(n)] for j in range(n)]
-    
-
-    i,j = 0, 0
-    for line in lines:
-        for number in line.split(" "):
-            if number == '':
-                continue
-            value = int(number , base = 10)
-            if  0 <= value <= max_num:
-                init_state[i][j] = value
-                j += 1
-                if j == n:
-                    i += 1
-                    j = 0
-
-    for i in range(1, max_num + 1):
-        goal_state[(i-1)//n][(i-1)%n] = i
-    goal_state[n - 1][n - 1] = 0
-
-    puzzle = Puzzle(init_state, goal_state)
-    ans = puzzle.solve()
-
-    with open(sys.argv[2], 'a') as f:
-        for answer in ans:
-            f.write(answer+'\n')
-
-
-
-
-
-
-
-import os
-import sys
+import heapq
+import time
 
 from copy import deepcopy
 
@@ -96,10 +23,6 @@ class Node:
         self.k = Node.get_k(state)
         self.actions_from_root = list()
 
-    # def expand(self):
-
-
-    # def parents(self):
 
     @staticmethod
     def swap(node, blank_tile, target_tile):
@@ -307,67 +230,81 @@ class Puzzle(object):
         assert Node.is_legal_tile(stubbed_illegal_target_tile, stubbed_k) == True, \
             "Unit test for is_legal_tile is failing."
 
-    @staticmethod
-    def depth_limited_search(puzzle, limit, debug=False):
-        """ Depth Limited Search implementation that models the implementation in the textbook (p88).
-        Set debug to True to print states.
-        """
-        return Puzzle.recursive_DLS(puzzle.init_node, puzzle, limit, debug)
 
-    @staticmethod
-    def recursive_DLS(node, puzzle, limit, debug=False):
-        if Puzzle.is_goal_state(node.state, puzzle.goal_state):
-            return node.actions_from_root
-        elif limit == 0:
-            return Puzzle.CUTOFF
-        else:
-            is_cutoff = False
-            for action in puzzle.valid_actions(node):
-                child_node = Puzzle.transition(puzzle.past_states, node, action)
 
-                if debug:
-                    print(child_node.state)
-
-                result = Puzzle.recursive_DLS(child_node, puzzle, limit - 1, debug)
-                if result == Puzzle.CUTOFF:
-                    is_cutoff = True
-                elif result != Puzzle.FAILURE:
-                    return result
-            if is_cutoff:
-                return Puzzle.CUTOFF
-            else:
-                return Puzzle.FAILURE
-
-    @staticmethod
-    def iterative_deepening_search(puzzle, debug=False):
-        inf = 10000000
-
-        for depth in range(0, inf):
-
-            puzzle.past_states = set()
-
-            result = Puzzle.depth_limited_search(puzzle, depth, debug)
-            if result != Puzzle.CUTOFF:
-                return result
 
     def solve(self):
-        # TODO
-        # implement your search algorithm here
-
-        # Remove driver test in production
-        self.test()
+        
+        start_time = time.time()
 
         if not Puzzle.is_solvable(self.init_state):
             self.actions.append(Puzzle.UNSOLVABLE)
+        else:
+            self.actions = self.a_star_search(puzzle)
 
-        self.actions = Puzzle.iterative_deepening_search(puzzle, debug=False)
-        print("Space Complexity for IDS (size of explored set): " + str(len(self.past_states)))
+        print("Number of nodes passed through " + str(len(self.past_states)))
+        print("--- %s seconds ---" % (time.time() - start_time))
 
-        return self.actions  # sample output
+        return self.actions 
+            
 
-    # you may add more functions if you think is useful
 
 
+        """ heapq operates as a priority queue. It operates in the following format: 
+            heapq.heappush( the queue, (first_comparator, second_comparator, item))
+            In this case I added id(node) which returns a unique id -> as if you only have the heuristic, 
+            there will be an error as all the comparators have to be unique.
+        """
+    def a_star_search(self, puzzle):
+        queue = []
+        node = puzzle.init_node
+
+        # Initial node is entered into the queue
+        heapq.heappush(queue,(0, id(node), node))
+
+        # queue[0][2] is the first node in the priority queue
+        while (not Puzzle.is_goal_state(queue[0][2].state, self.goal_state)):
+
+            # temp_list is the 3 - element tuple from the queue, holding the evaluation function, the id and the node
+            temp_list = heapq.heappop(queue)
+
+            curr_node = temp_list[2]
+            queue = self.explore_next_states(curr_node, queue, puzzle)
+
+        return queue[0][2].actions_from_root
+     
+        
+    def explore_next_states(self, node, queue, puzzle):
+
+        for action in puzzle.valid_actions(node):
+            child_node = Puzzle.transition(puzzle.past_states, node, action)
+            
+            if Node.state_to_string(child_node.state) not in puzzle.past_states:
+                heuristic = Puzzle.get_heuristic_Manhattan(child_node)
+                heapq.heappush(queue, ((node.cost + heuristic, id(child_node), child_node)))
+            
+        return queue
+
+
+    # Manhattan heuristic
+    @staticmethod
+    def get_heuristic_Manhattan(node):
+        no_of_rows = len(node.state)
+        arr_no = 0
+        index = 0
+        sum = 0
+
+        for single_list in node.state:
+            for val in single_list:
+                sum += abs((val-1)% no_of_rows - index % no_of_rows) + abs((val-1)// no_of_rows - index // no_of_rows)
+                index += 1
+                  
+        return sum
+        
+
+
+
+    
 if __name__ == "__main__":
     # do NOT modify below
 
@@ -383,7 +320,7 @@ if __name__ == "__main__":
         raise IOError("Input file not found!")
 
     lines = f.readlines()
-
+    
     # n = num rows in input file
     n = len(lines)
     # max_num = n to the power of 2 - 1
@@ -392,14 +329,15 @@ if __name__ == "__main__":
     # Instantiate a 2D list of size n x n
     init_state = [[0 for i in range(n)] for j in range(n)]
     goal_state = [[0 for i in range(n)] for j in range(n)]
+    
 
-    i, j = 0, 0
+    i,j = 0, 0
     for line in lines:
         for number in line.split(" "):
             if number == '':
                 continue
-            value = int(number, base=10)
-            if 0 <= value <= max_num:
+            value = int(number , base = 10)
+            if  0 <= value <= max_num:
                 init_state[i][j] = value
                 j += 1
                 if j == n:
@@ -407,7 +345,7 @@ if __name__ == "__main__":
                     j = 0
 
     for i in range(1, max_num + 1):
-        goal_state[(i - 1) // n][(i - 1) % n] = i
+        goal_state[(i-1)//n][(i-1)%n] = i
     goal_state[n - 1][n - 1] = 0
 
     puzzle = Puzzle(init_state, goal_state)
@@ -415,4 +353,8 @@ if __name__ == "__main__":
 
     with open(sys.argv[2], 'a') as f:
         for answer in ans:
-            f.write(answer + '\n')
+            f.write(answer+'\n')
+
+
+
+
