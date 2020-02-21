@@ -281,7 +281,7 @@ class Puzzle(object):
             child_node = Puzzle.transition(puzzle.past_states, node, action)
             
             if Node.state_to_string(child_node.state) not in puzzle.past_states:
-                heuristic = Puzzle.get_heuristic_Manhattan(child_node)
+                heuristic = Puzzle.get_heuristic_Euclidean(child_node)
                 heapq.heappush(queue, ((node.cost + heuristic, id(child_node), child_node)))
             
         return queue
@@ -289,7 +289,7 @@ class Puzzle(object):
 
     # Manhattan heuristic
     @staticmethod
-    def get_heuristic_Manhattan(node):
+    def get_heuristic_Euclidean(node):
         no_of_rows = len(node.state)
         arr_no = 0
         index = 0
