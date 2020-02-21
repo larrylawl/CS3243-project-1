@@ -291,7 +291,6 @@ class Puzzle(object):
     @staticmethod
     def get_heuristic_Euclidean(node):
         no_of_rows = len(node.state)
-        arr_no = 0
         index = 0
         sum = 0
 
