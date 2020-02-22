@@ -1,4 +1,4 @@
-pyimport os
+import os
 import sys
 
 from copy import deepcopy
@@ -136,41 +136,14 @@ class Puzzle(object):
 
         return flattened_arr
 
-    # @staticmethod
-    # def is_solvable(init_state):
-
-    #     flattened_arr = Puzzle.flatten_array(init_state)
-    #     no_of_rows = len(init_state)
-    #     no_of_inversions = Puzzle.count_inversions(flattened_arr)
-
-    #     isEvenRows = Puzzle.even(no_of_rows)
-    #     isEvenInversions = Puzzle.even(no_of_inversions)
-    #     if (not isEvenRows):
-    #         if isEvenInversions:
-    #             return True
-    #         else:
-    #             return False
-
-    #     else:
-    #         blank_tile_posi = (flattened_arr.index(0))
-    #         count_frm_btm = no_of_rows - int(blank_tile_posi / no_of_rows)
-    #         isEvenFrmBtm = Puzzle.even(count_frm_btm)
-
-    #         if (not isEvenInversions and isEvenFrmBtm) \
-    #                 or (isEvenInversions and not isEvenFrmBtm):
-    #             return True
-    #         else:
-    #             return False
-    #     # method from https://www.geeksforgeeks.org/check-instance-15-puzzle-solvable/
-
-@staticmethod
+    @staticmethod
     def is_solvable(init_state):
 
         flattened_arr = Puzzle.flatten_array(init_state)
-        k = init_state.get_k()
+        k = len(init_state)
         no_of_inversions = Puzzle.count_inversions(flattened_arr)
 
-        isKEven = Puzzle.even(no_of_rows)
+        isKEven = Puzzle.even(k)
         isEvenInversions = Puzzle.even(no_of_inversions)
         if (not isKEven):
             if isEvenInversions:
