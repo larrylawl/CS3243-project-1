@@ -290,7 +290,7 @@ class Puzzle(object):
     def convert_val_to_coord(value, node):
         return value // node.k, value % node.k
 
-    # Manhattan heuristic
+    # Euclidean heuristic
     @staticmethod
     def get_heuristic_Euclidean(node):
         no_of_rows = node.k
