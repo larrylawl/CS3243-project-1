@@ -1,5 +1,6 @@
 import os
 import sys
+import math
 
 from copy import deepcopy
 
@@ -27,23 +28,19 @@ class Node:
     # def parents(self):
 
     @staticmethod
-    def swap(node, blank_tile, target_tile):
+    def swap(node, blank_tile, target_tile, debug=True):
         """ Swaps target tile with blank tile. Returns a new node.
         """
         new_node = deepcopy(node)
-        temp = new_node.state[target_tile["row"]][target_tile["col"]]
-        new_node.state[target_tile["row"]][target_tile["col"]] = new_node.state[blank_tile["row"]][blank_tile["col"]]
-        new_node.state[blank_tile["row"]][blank_tile["col"]] = temp
+        temp = new_node.state[target_tile["index"]]
+        new_node.state[target_tile["index"]] = new_node.state[blank_tile["index"]]
+        new_node.state[blank_tile["index"]] = temp
 
         return new_node
 
-    def get_blank_tile(self):
-        result = {"row": -1, "col": -1}
-        for i in range(0, self.k):
-            for j in range(0, self.k):
-                if self.state[i][j] == 0:
-                    result["row"] = i
-                    result["col"] = j
+    def get_blank_tile(self, debug=True):
+        i = self.state.index(0)
+        result = {"index" : i}
         return result
 
     @staticmethod
@@ -55,12 +52,12 @@ class Node:
     def get_k(state):
         """ Returns an integer indicating the dimension of the k x k matrix
         """
-        k = len(state)
+        k = int(math.sqrt(len(state)))
         return k
 
     @staticmethod
-    def is_legal_tile(target_tile, k):
-        return 0 <= target_tile["row"] < k and 0 <= target_tile["col"] < k
+    def is_legal_tile(target_tile, k, debug=True):
+        return 0 <= target_tile["index"] < k * k
 
 
 class Puzzle(object):
@@ -84,14 +81,15 @@ class Puzzle(object):
         """
         blank_tile = node.get_blank_tile()
         target_tile = deepcopy(blank_tile)
+
         if action == Actions.DOWN:
-            target_tile["row"] -= 1
+            target_tile["index"] -= node.k
         elif action == Actions.UP:
-            target_tile["row"] += 1
+            target_tile["index"] += node.k
         elif action == Actions.RIGHT:
-            target_tile["col"] -= 1
+            target_tile["index"] -= 1
         elif action == Actions.LEFT:
-            target_tile["col"] += 1
+            target_tile["index"] += 1
 
         past_states.add(Node.state_to_string(node.state))
         new_node = Node.swap(node, blank_tile, target_tile)
@@ -109,13 +107,13 @@ class Puzzle(object):
         for action in Actions.ACTIONS:
             target_tile = deepcopy(blank_tile)
             if action == Actions.DOWN:
-                target_tile["row"] -= 1
+                target_tile["index"] -= node.k
             elif action == Actions.UP:
-                target_tile["row"] += 1
+                target_tile["index"] += node.k
             elif action == Actions.RIGHT:
-                target_tile["col"] -= 1
+                target_tile["index"] -= 1
             elif action == Actions.LEFT:
-                target_tile["col"] += 1
+                target_tile["index"] += 1
 
             if Node.is_legal_tile(target_tile, node.k):
                 state_string = Node.state_to_string(Node.swap(node, blank_tile, target_tile).state)
@@ -128,20 +126,9 @@ class Puzzle(object):
         return state_string in past_states
 
     @staticmethod
-    def flatten_array(unflattened_array):
-        flattened_arr = []
-        for array in unflattened_array:
-            for i in array:
-                flattened_arr.append(i)
-
-        return flattened_arr
-
-    @staticmethod
     def is_solvable(init_state):
-        print("hello")
-        flattened_arr = Puzzle.flatten_array(init_state)
         k = len(init_state)
-        no_of_inversions = Puzzle.count_inversions(flattened_arr)
+        no_of_inversions = Puzzle.count_inversions(init_state)
 
         isKEven = Puzzle.even(k)
         isEvenInversions = Puzzle.even(no_of_inversions)
@@ -154,7 +141,7 @@ class Puzzle(object):
                 return False
 
         else:
-            blank_tile_posi = (flattened_arr.index(0))
+            blank_tile_posi = (init_state.index(0))
             blank_tile_row_posi = int(blank_tile_posi / k)
             sum_of_inversions_and_blank_tile_row_posi = blank_tile_row_posi + no_of_inversions
             isSumEven = Puzzle.even(sum_of_inversions_and_blank_tile_row_posi)
@@ -183,8 +170,12 @@ class Puzzle(object):
         return no_of_inversions
 
     @staticmethod
-    def is_goal_state(state, goal_state):
-        return state == goal_state
+    def is_goal_state(k, state, goal_state):
+        for i in range(k):
+            if state[i] != goal_state[i]:
+                    return False
+        
+        return True
 
     def test(self):
         """ Unit tests for basic functions. Assumes the input file is n_equals_3/input_1.txt.
@@ -192,61 +183,61 @@ class Puzzle(object):
         """
 
         # Unit test for transition
-        stubbed_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+        stubbed_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
         stubbed_node = Node(state=stubbed_state)
         stubbed_past_states = set()
         new_node = Puzzle.transition(stubbed_past_states, stubbed_node, Actions.RIGHT)
         assert stubbed_node != new_node, "Unit test for transition is failing: transition should return a new node"
-        assert new_node.state[2][1] == 0, "Unit test for transition is failing: transition incorrectly"
+        assert new_node.state[7] == 0, "Unit test for transition is failing: transition incorrectly"
         assert Actions.RIGHT in new_node.actions_from_root, \
             "Unit test for transition is failing: past actions should be updated"
         assert Node.state_to_string(stubbed_state) in stubbed_past_states, \
             "Unit test for transition is failing: past states should be updated"
 
         # Unit test for solvable 3x3
-        stubbed_state = [[8, 1, 2], [0, 4, 3], [7, 6, 5]]
+        stubbed_state = [8, 1, 2, 0, 4, 3, 7, 6, 5]
         assert not Puzzle.is_solvable(stubbed_state) == True, \
             "Unit test for checking if 3x3 is unsolvable is failing"
 
         # Unit test for solvable 4x4
-        stubbed_state = [[3, 9, 1, 15], [14, 11, 4, 6], [13, 0, 10, 12], [2, 7, 8, 5]]
+        stubbed_state = [3, 9, 1, 15, 14, 11, 4, 6, 13, 0, 10, 12, 2, 7, 8, 5]
         assert not Puzzle.is_solvable(stubbed_state) == True, \
             "Unit test for checking if 4x4 is unsolvable is failing"
 
         ### Node Tests
 
         # Unit test for swap node
-        stubbed_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
-        stubbed_target_tile = {"row": 2, "col": 1}
-        stubbed_blank_tile = {"row": 2, "col": 2}
+        stubbed_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+        stubbed_target_tile = {"index": 7}
+        stubbed_blank_tile = {"index": 8}
         node = Node(state=stubbed_state)
         new_node = Node.swap(node, stubbed_blank_tile, stubbed_target_tile)
         assert node != new_node, "Unit test for swap node is failing: swap should return a new node"
-        assert new_node.state[2][1] == 0, "Unit test for swap node is failing: swapping incorrectly"
+        assert new_node.state[7] == 0, "Unit test for swap node is failing: swapping incorrectly"
 
         # Unit test for state to string
-        stubbed_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
-        expected_state_string = "[[1, 2, 3], [4, 5, 6], [8, 7, 0]]"
+        stubbed_state = [1, 2, 3, 4, 5, 6, 8, 7, 0]
+        expected_state_string = "[1, 2, 3, 4, 5, 6, 8, 7, 0]"
         assert expected_state_string == Node.state_to_string(stubbed_state), \
             "Unit test for state_to_string is failing."
 
         # Unit test for is_legal_tile
-        stubbed_illegal_target_tile = {"row": 2, "col": 2}
+        stubbed_illegal_target_tile = {"index" : 8}
         stubbed_k = 3
         assert Node.is_legal_tile(stubbed_illegal_target_tile, stubbed_k) == True, \
             "Unit test for is_legal_tile is failing."
 
     @staticmethod
-    def depth_limited_search(puzzle, limit, debug=False):
+    def depth_limited_search(puzzle, limit, debug=True):
         """ Depth Limited Search implementation that models the implementation in the textbook (p88).
         Set debug to True to print states.
         """
         return Puzzle.recursive_DLS(puzzle.init_node, puzzle, limit, debug)
 
     @staticmethod
-    def recursive_DLS(node, puzzle, limit, debug=True):
+    def recursive_DLS(node, puzzle, limit, debug=False):
         print(Node.state_to_string(node.state))
-        if Puzzle.is_goal_state(node.state, puzzle.goal_state):
+        if Puzzle.is_goal_state(node.k, node.state, puzzle.goal_state):
             return node.actions_from_root
         elif limit == 0:
             return Puzzle.CUTOFF
@@ -285,7 +276,7 @@ class Puzzle(object):
         # implement your search algorithm here
 
         # Remove driver test in production
-        # self.test()
+        self.test()
 
         if not Puzzle.is_solvable(self.init_state):
             self.actions.append(Puzzle.UNSOLVABLE)
@@ -319,27 +310,21 @@ if __name__ == "__main__":
     # max_num = n to the power of 2 - 1
     max_num = n ** 2 - 1
 
-    # Instantiate a 2D list of size n x n
-    init_state = [[0 for i in range(n)] for j in range(n)]
-    goal_state = [[0 for i in range(n)] for j in range(n)]
+    # Instantiate a 1D list of size n x n
+    init_state = []
+    goal_state = [0 for i in range(n ** 2)]
 
-    i, j = 0, 0
     for line in lines:
+        line = line.strip()
         for number in line.split(" "):
-            if number == '':
-                continue
-            value = int(number, base=10)
-            if 0 <= value <= max_num:
-                init_state[i][j] = value
-                j += 1
-                if j == n:
-                    i += 1
-                    j = 0
+            init_state.append(int(number))
 
-    for i in range(1, max_num + 1):
-        goal_state[(i - 1) // n][(i - 1) % n] = i
-    goal_state[n - 1][n - 1] = 0
+    for i in range(0, max_num):
+        goal_state[i] = i + 1
+    goal_state[n * n - 1] = 0
 
+    print(Node.state_to_string(init_state))
+    print(Node.state_to_string(goal_state))
     puzzle = Puzzle(init_state, goal_state)
     ans = puzzle.solve()
 
