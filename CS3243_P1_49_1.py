@@ -290,8 +290,9 @@ class Puzzle(object):
         if not Puzzle.is_solvable(self.init_state):
             self.actions.append(Puzzle.UNSOLVABLE)
 
-        self.actions = Puzzle.iterative_deepening_search(puzzle, debug=False)
-        print("Space Complexity for IDS (size of explored set): " + str(len(self.past_states)))
+        else:
+            self.actions = Puzzle.iterative_deepening_search(puzzle, debug=False)
+            print("Space Complexity for IDS (size of explored set): " + str(len(self.past_states)))
 
         return self.actions  # sample output
 
