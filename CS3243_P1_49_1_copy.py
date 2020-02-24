@@ -1,7 +1,7 @@
 import os
 import sys
 import math
-
+from random import randrange, sample
 from copy import deepcopy
 
 
@@ -45,7 +45,7 @@ class Node:
 
     @staticmethod
     def state_to_string(state):
-        result = "[" + ", ".join(str(x) for x in state) + "]"
+        result = "".join(str(x) for x in state)
         return result
 
     @staticmethod
@@ -56,8 +56,15 @@ class Node:
         return k
 
     @staticmethod
-    def is_legal_tile(target_tile, k, debug=True):
-        return 0 <= target_tile["index"] < k * k
+    def is_legal_tile(target_tile, blank_tile, k, debug=True):
+        # cannot move left
+        if blank_tile["index"] == 2 or blank_tile["index"] == 5 or blank_tile["index"] == 8:
+            return target_tile["index"] != blank_tile["index"] + 1 and 0 <= target_tile["index"] < k * k
+        # cannot move right
+        elif blank_tile["index"] == 0 or blank_tile["index"] == 3 or blank_tile["index"] == 6:
+            return target_tile["index"] != blank_tile["index"] - 1 and 0 <= target_tile["index"] < k * k
+        else:
+            return 0 <= target_tile["index"] < k * k
 
 
 class Puzzle(object):
@@ -115,11 +122,16 @@ class Puzzle(object):
             elif action == Actions.LEFT:
                 target_tile["index"] += 1
 
-            if Node.is_legal_tile(target_tile, node.k):
+            if Node.is_legal_tile(target_tile, blank_tile, node.k):
                 state_string = Node.state_to_string(Node.swap(node, blank_tile, target_tile).state)
                 if not Puzzle.is_explored_state(self.past_states, state_string):
-                    result.append(action)
+                    Puzzle.random_insert(result, action)
+                    
         return result
+
+    @staticmethod
+    def random_insert(lst, item):
+        lst.insert(randrange(len(lst)+1), item)
 
     @staticmethod
     def is_explored_state(past_states, state_string):
@@ -134,10 +146,8 @@ class Puzzle(object):
         isEvenInversions = Puzzle.even(no_of_inversions)
         if (not isKEven):
             if isEvenInversions:
-                print("Puzzle is solvable!")
                 return True
             else:
-                print("Puzzle is not solvable!")
                 return False
 
         else:
@@ -171,7 +181,7 @@ class Puzzle(object):
 
     @staticmethod
     def is_goal_state(k, state, goal_state):
-        for i in range(k):
+        for i in range(k * k):
             if state[i] != goal_state[i]:
                     return False
         
@@ -217,7 +227,8 @@ class Puzzle(object):
 
         # Unit test for state to string
         stubbed_state = [1, 2, 3, 4, 5, 6, 8, 7, 0]
-        expected_state_string = "[1, 2, 3, 4, 5, 6, 8, 7, 0]"
+        # expected_state_string = "[1, 2, 3, 4, 5, 6, 8, 7, 0]"
+        expected_state_string = "123456870"
         assert expected_state_string == Node.state_to_string(stubbed_state), \
             "Unit test for state_to_string is failing."
 
@@ -276,13 +287,14 @@ class Puzzle(object):
         # implement your search algorithm here
 
         # Remove driver test in production
-        self.test()
+        # self.test()
 
         if not Puzzle.is_solvable(self.init_state):
             self.actions.append(Puzzle.UNSOLVABLE)
 
-        self.actions = Puzzle.iterative_deepening_search(puzzle, debug=False)
-        print("Space Complexity for IDS (size of explored set): " + str(len(self.past_states)))
+        else:
+            self.actions = Puzzle.iterative_deepening_search(puzzle, debug=False)
+            print("Space Complexity for IDS (size of explored set): " + str(len(self.past_states)))
 
         return self.actions  # sample output
 
@@ -323,8 +335,6 @@ if __name__ == "__main__":
         goal_state[i] = i + 1
     goal_state[n * n - 1] = 0
 
-    print(Node.state_to_string(init_state))
-    print(Node.state_to_string(goal_state))
     puzzle = Puzzle(init_state, goal_state)
     ans = puzzle.solve()
 
