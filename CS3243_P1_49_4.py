@@ -303,12 +303,14 @@ class Puzzle(object):
                 if (row == goal_row and col == goal_col): continue #if at the correct pos alr
                 if (i == goal_row): #if row is correct, loop thru next col in the same row
                     for next_col in range(i, no_of_rows):
-                        if ((node.state[i][next_col] % no_of_rows) < goal_col): #goal col of next val shd be to the left
+                        next_val = node.state[i][next_col]
+                        if (next_val != 0 and (next_val % no_of_rows) < goal_col): #goal col of next val shd be to the left
                             lin_conflict += 1
                 
                 if (j == goal_col): #if col is correct, loop thru next row in the same col
                     for next_row in range(j, no_of_rows):
-                        if ((node.state[next_row][j] // no_of_rows) < goal_row):
+                        next_val = node.state[next_row][j]
+                        if (next_val != 0 and (next_val // no_of_rows) < goal_row): #goal row of next val shd be above
                             lin_conflict += 1
 
                 manhattan_sum += abs(goal_col - j) + abs(goal_row - i)
