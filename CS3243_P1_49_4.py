@@ -285,39 +285,168 @@ class Puzzle(object):
             
         return queue
 
+    @staticmethod
+    def get_heuristic_Manhattan_linear(node):
+        return Puzzle.get_heuristic_Manhattan(node) + 2 * Puzzle.get_heuristic_linear_conflict(node)
+
+    # Check if the two tiles who have the same GOAL row/ col are conflicting (not in order).
+    @staticmethod
+    def is_conflicting(node, curr_pos_j, goal_pos_j, curr_pos_k, goal_pos_k):
+        return (curr_pos_j < curr_pos_k and goal_pos_j > goal_pos_k) \
+            or (curr_pos_j > curr_pos_k and goal_pos_j < goal_pos_k)
+
+
+    @staticmethod
+    def get_num_conflicting_tiles_in_row(node, curr_row):
+        num_conflicting_tiles = [0] * node.k # Initialise the num of conflicting tiles list with 0.
+        for curr_col in range(node.k):
+            val = node.state[curr_row][curr_col]
+            if (val == 0): continue
+            curr_pos = curr_row, curr_col
+            goal_pos = Puzzle.convert_val_to_coord(val - 1, node)
+            if (curr_pos == goal_pos): continue # If at the correct pos alr, skip.
+
+            goal_row, goal_col = goal_pos[0], goal_pos[1]
+
+            # If tile is in its goal row, loop thru next cols in the same row.
+            if (curr_row == goal_row):
+                for next_col in range(curr_col, node.k):
+                    next_val = node.state[curr_row][next_col]
+                    if next_val == 0: continue # Skip blank tile
+                    next_goal_row, next_goal_col = Puzzle.convert_val_to_coord(next_val, node)
+
+                    # If both are in the same row and have the same GOAL row, add num of conflicting tiles.
+                    if (goal_row == next_goal_row \
+                        and Puzzle.is_conflicting(node, curr_col, goal_col, next_col, next_goal_col)):
+                            num_conflicting_tiles[curr_col] += 1
+                            num_conflicting_tiles[next_col] += 1
+
+        return num_conflicting_tiles
+
+    @staticmethod
+    def get_num_conflicting_tiles_in_col(node, curr_col):
+        num_conflicting_tiles = [0] * node.k # Initialise the num of conflicting tiles list with 0.
+        for curr_row in range(node.k):
+            val = node.state[curr_row][curr_col]
+            if (val == 0): continue
+            curr_pos = curr_row, curr_col
+            goal_pos = Puzzle.convert_val_to_coord(val - 1, node)
+            if (curr_pos == goal_pos): continue # If at the correct pos alr, skip.
+
+            goal_row, goal_col = goal_pos[0], goal_pos[1]
+
+            # If tile is in its goal row, loop thru next rows in the same col.
+            if (curr_col == goal_col):
+                for next_row in range(curr_row, node.k):
+                    next_val = node.state[next_row][curr_col]
+                    if next_val == 0: continue # Skip blank tile.
+                    next_goal_row, next_goal_col = Puzzle.convert_val_to_coord(next_val, node)
+
+                    # If both are in the same column and have the same GOAL column, add num of conflicting tiles.
+                    if (goal_col == next_goal_col \
+                        and Puzzle.is_conflicting(node, curr_row, goal_row, next_row, next_goal_row)):
+                            num_conflicting_tiles[curr_row] += 1
+                            num_conflicting_tiles[next_row] += 1
+
+        return num_conflicting_tiles
+
+    # Linear conflict heuristic
+    @staticmethod
+    def get_heuristic_linear_conflict(node):
+        no_of_rows = node.k
+        index = 0
+        manhattan_sum = 0
+        lin_conflict_row = 0
+        lin_conflict_col = 0
+
+        # Find linear conflict for each row.
+        for curr_row in range(no_of_rows):
+            # Get the num of tiles which conflict with each tile in curr row.
+            list_num_conflicting_tiles_in_row = Puzzle.get_num_conflicting_tiles_in_row(node, curr_row)
+            highest_conflict_val = max(list_num_conflicting_tiles_in_row)
+
+            # If num of highest conflict = 0, it means no more linear conflict in the row.
+            while (highest_conflict_val > 0):
+                col_index_with_most_conflict = list_num_conflicting_tiles_in_row.index(highest_conflict_val)
+                
+                # Let tile_k be the tile with most conflicts in the row.
+                tile_k = node.state[curr_row][col_index_with_most_conflict]
+                tile_k_goal_row, tile_k_goal_col = Puzzle.convert_val_to_coord(tile_k, node)
+
+                # Remove tile_k from curr_row, set num of conflict of tile_k to 0.
+                list_num_conflicting_tiles_in_row[col_index_with_most_conflict] = 0
+
+                # For every tile_j that was in conflict with tile_k, reduce the former's num of conflicting tiles.
+                for tile_j_col in range(no_of_rows):
+                    if (tile_j_col == col_index_with_most_conflict): continue
+                    tile_j = node.state[curr_row][tile_j_col]
+                    tile_j_goal_row, tile_j_goal_col = Puzzle.convert_val_to_coord(tile_j, node)
+                    if (tile_j != 0 and list_num_conflicting_tiles_in_row[tile_j_col] > 0 and tile_k_goal_row == tile_j_goal_row \
+                        and Puzzle.is_conflicting(node, tile_j_col, tile_j_goal_col, col_index_with_most_conflict, tile_k_goal_col)):
+                            list_num_conflicting_tiles_in_row[tile_j_col] -= 1
+
+                lin_conflict_row += 1
+
+                # Find new highest conflict value.
+                highest_conflict_val = max(list_num_conflicting_tiles_in_row)
+
+
+        for curr_col in range(no_of_rows):
+            # Get the num of tiles which conflict with each tile in curr col.
+            list_num_conflicting_tiles_in_col = Puzzle.get_num_conflicting_tiles_in_col(node, curr_col)
+            highest_conflict_val = max(list_num_conflicting_tiles_in_col)
+
+            # If num of highest conflict = 0, it means no more linear conflict in the col.
+            while (highest_conflict_val > 0):
+                row_index_with_most_conflict = list_num_conflicting_tiles_in_col.index(highest_conflict_val)
+                
+                # Let tile_k be the tile with most conflicts in the col.
+                tile_k = node.state[row_index_with_most_conflict][curr_col]
+                tile_k_goal_row, tile_k_goal_col = Puzzle.convert_val_to_coord(tile_k, node)
+
+                # Remove tile_k from curr_col, set num of conflict of tile_k to 0.
+                list_num_conflicting_tiles_in_col[row_index_with_most_conflict] = 0
+
+                # For every tile_j that was in conflict with tile_k, reduce the former's num of conflicting tiles.
+                for tile_j_row in range(no_of_rows):
+                    if (tile_j_row == row_index_with_most_conflict): continue
+                    tile_j = node.state[tile_j_row][curr_col]
+                    tile_j_goal_row, tile_j_goal_col = Puzzle.convert_val_to_coord(tile_j, node)
+                    if (tile_j != 0 and list_num_conflicting_tiles_in_col[tile_j_row] > 0 and tile_k_goal_col == tile_j_goal_col \
+                        and Puzzle.is_conflicting(node, tile_j_row, tile_j_goal_row, row_index_with_most_conflict, tile_k_goal_row)):
+                            list_num_conflicting_tiles_in_col[tile_j_row] -= 1
+
+                lin_conflict_col += 1
+
+                # Find new highest conflict value.
+                highest_conflict_val = max(list_num_conflicting_tiles_in_col)
+        
+        return lin_conflict_row + lin_conflict_col
+
+    @staticmethod
+    def convert_val_to_coord(value, node):
+        return value // node.k, value % node.k
 
     # Manhattan heuristic
     @staticmethod
-    def get_heuristic_Manhattan_linear(node):
-        no_of_rows = len(node.state)
+    def get_heuristic_Manhattan(node):
+        no_of_rows = node.k
         index = 0
         manhattan_sum = 0
-        lin_conflict = 0
 
-        for row in range(no_of_rows):
-            for col in range(no_of_rows):
-                val = node.state[row][col]
-                if (val == 0): continue
-                goal_row = (val-1)// no_of_rows
-                goal_col = (val-1)% no_of_rows
-                if (row == goal_row and col == goal_col): continue #if at the correct pos alr
-                if (i == goal_row): #if row is correct, loop thru next col in the same row
-                    for next_col in range(i, no_of_rows):
-                        if ((node.state[i][next_col] % no_of_rows) < goal_col): #goal col of next val shd be to the left
-                            lin_conflict += 1
-                
-                if (j == goal_col): #if col is correct, loop thru next row in the same col
-                    for next_row in range(j, no_of_rows):
-                        if ((node.state[next_row][j] // no_of_rows) < goal_row):
-                            lin_conflict += 1
+        for row in node.state:
+            for val in row:
+                if (val != 0):
+                    curr_row, curr_col = Puzzle.convert_val_to_coord(index, node)                    
+                    goal_row, goal_col = Puzzle.convert_val_to_coord(val - 1, node)
 
-                manhattan_sum += abs(goal_col - j) + abs(goal_row - i)
+                    dist_x = curr_col - goal_col
+                    dist_y = curr_row - goal_row
+                    
+                    manhattan_sum += abs(dist_x) + abs(dist_y)
+                    index += 1
                   
-        return manhattan_sum + 2*lin_conflict
-        
-
-
-
+        return manhattan_sum
     
 if __name__ == "__main__":
     # do NOT modify below

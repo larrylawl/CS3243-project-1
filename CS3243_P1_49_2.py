@@ -284,27 +284,32 @@ class Puzzle(object):
                 heapq.heappush(queue, ((node.cost + heuristic, id(child_node), child_node)))
             
         return queue
-
+       
+    @staticmethod
+    def convert_val_to_coord(value, node):
+        return value // node.k, value % node.k
 
     # Manhattan heuristic
     @staticmethod
     def get_heuristic_Manhattan(node):
-        no_of_rows = len(node.state)
-        arr_no = 0
+        no_of_rows = node.k
         index = 0
-        sum = 0
+        manhattan_sum = 0
 
-        for single_list in node.state:
-            for val in single_list:
-                sum += abs((val-1)% no_of_rows - index % no_of_rows) + abs((val-1)// no_of_rows - index // no_of_rows)
-                index += 1
+        for row in node.state:
+            for val in row:
+                if (val != 0):
+                    curr_row, curr_col = Puzzle.convert_val_to_coord(index, node)                    
+                    goal_row, goal_col = Puzzle.convert_val_to_coord(val - 1, node)
+
+                    dist_x = curr_col - goal_col
+                    dist_y = curr_row - goal_row
+                    
+                    manhattan_sum += abs(dist_x) + abs(dist_y)
+                    index += 1
                   
-        return sum
-        
-
-
-
-    
+        return manhattan_sum
+ 
 if __name__ == "__main__":
     # do NOT modify below
 

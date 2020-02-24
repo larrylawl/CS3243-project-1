@@ -286,20 +286,30 @@ class Puzzle(object):
             
         return queue
 
+    @staticmethod
+    def convert_val_to_coord(value, node):
+        return value // node.k, value % node.k
 
-    # Manhattan heuristic
+    # Euclidean heuristic
     @staticmethod
     def get_heuristic_Euclidean(node):
-        no_of_rows = len(node.state)
+        no_of_rows = node.k
         index = 0
-        sum = 0
+        euclidean_sum = 0
 
-        for single_list in node.state:
-            for val in single_list:
-                sum += m.sqrt(((val-1)% no_of_rows - index % no_of_rows)**2 + ((val-1)// no_of_rows - index // no_of_rows)**2)
-                index += 1
+        for row in node.state:
+            for val in row:
+                if (val != 0):
+                    curr_row, curr_col = Puzzle.convert_val_to_coord(index, node)                    
+                    goal_row, goal_col = Puzzle.convert_val_to_coord(val - 1, node)
+
+                    dist_x = curr_col - goal_col
+                    dist_y = curr_row - goal_row
+                    
+                    euclidean_sum += m.sqrt((dist_x)**2 + (dist_y)**2)
+                    index += 1
                   
-        return sum
+        return euclidean_sum
         
 
 
