@@ -8,6 +8,9 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+\usepackage[toc,page]{appendix}
 
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
@@ -18,110 +21,94 @@
 
 \begin{document}
 %
-\title{Contribution Title\thanks{Supported by organization x.}}
+\title{An Evaluation of Uninformed and Informed Search Algorithms on the k-puzzle Problem\thanks{Supported by Prof Yair Zick and Prof Daren Ler.}}
 %
-%\titlerunning{Abbreviated pa`per title}
+\titlerunning{Evaluation of Search Algos on k-puzzle}
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
-\author{First Author\inst{1}\orcidID{0000-1111-2222-3333} \and
-Second Author\inst{2,3}\orcidID{1111-2222-3333-4444} \and
-Third Author\inst{3}\orcidID{2222--3333-4444-5555}}
+\author{Dalis Chan\inst{1} \and
+Johanna \inst{2} \and
+Sean Low Chen Yi \inst{3} \and 
+Law Ann Liat, Larry \inst{4}}
 %
-\authorrunning{F. Author et al.}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
-\institute{Princeton University, Princeton NJ 08544, USA \and
-Springer Heidelberg, Tiergartenstr. 17, 69121 Heidelberg, Germany
-\email{lncs@springer.com}\\
-\url{http://www.springer.com/gp/computer-science/lncs} \and
-ABC Institute, Rupert-Karls-University Heidelberg, Heidelberg, Germany\\
-\email{\{abc,lncs\}@uni-heidelberg.de}}
+\institute{INSERT DALIS MATRIC NUMBER \and
+INSERT JOHANNA MATRIC NUMBER \and
+INSERT SEAN MATRIC NUMBER \and 
+A0189883A}
 %
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-The abstract should briefly summarize the contents of the paper in
-150--250 words.
-
-\keywords{First keyword  \and Second keyword \and Another keyword.}
+K-puzzle is often used as test problems for new search algorithms in artificial intelligence ~\cite[p71]{stuart_russell_artifical_2010}. This paper evaluates the use of iterative deepening search (IDS) and \( A^* \) search. 
+Since \( A^* \) search uses heuristic functions to guide its search, this paper also evalutes the heuristic functions euclidean distance, manhattan distance, and linear conflict.
 \end{abstract}
 %
 %
 %
 \section{Problem Specification}
 \begin{enumerate}
-    \item \textbf{State:} For \( k \in \{3, 4, 5\} \),  A \( k \times k \) matrix \( M \) with each entry \( m_{i, j} \) being a unique integer from \( \{0, 1, \cdots, 8 \} \) where 0 represents the blank tile.
+    \item \textbf{State:} For \( k \in \{3, 4, 5\} \),  a \( k \times k \) matrix \( M \) with each entry \( m_{i, j} \) being a unique integer from \( \{0, 1, \cdots, 8 \} \) where 0 represents the blank tile.
     \item \textbf{Initial State:} Puzzle can start in any state \textit{s}.
-    \item \textbf{Actions or \textit{Actions(s)}:} Actions refer to the movements of the blank tile \( m_{k, l} \) \textit{Left, Right, Up, or Down}. More formally ...
-    % Q: An action swaps the tile \( m_{k, l} \) with the tile \(\{ m_{i,j} \in M: (i=k+1, j=l) \vee (i=k, j=l+1) \vee (i=k-1, j=l) \vee (i=k, j=l-1) \}\)
+    \item \textbf{Actions or \textit{Actions(s)}:} Let \( m_{k, l} \in M \) denote the blank tile and \( m_{i, j} \in M \) denote the tile \textbf{adjacent} to the blank tile \( m_{k, l} \).
+    Actions are movements of the adjacent tile \( m_{i, j} \) towards the blank tile \( m_{k, l} \). For example, the action \textit{Left} moves the adjacent tile \( m_{k, l+1} \in M \) to the blank tile \( m_{k, l} \).
     \item \textbf{Transition Model or \textit{Result(s,a)}:} \( Result(s, a) \) swaps the pair of tiles specified in action \( a \) in the current state \textit{s} and returns this new state \textit{s'}.
-    \item \textbf{Goal State:} TODO: insert picture of goal state
+    \item \textbf{Goal State:}
+    \[
+    M_{goal}= \begin{bmatrix}
+        1 & 2 & 3 \\
+        4 & 5 & 6 \\
+        7 & 8 & 0
+        \end{bmatrix}
+    \]
     \item \textbf{Path Cost:} Every step cost \textit{c(s, a, s') = 1}, and the path cost is the summation of the step costs from the initial state to the goal state.
 \end{enumerate}
 
 \section{Technical Analysis of the Selected Algorithms and Heuristics}
-\begin{enumerate}
-    \item \textbf{nodes:} state \textit{s}
-    \item \textbf{edges:} \textit{Result(s, a)}, which has a step cost of 1
-\end{enumerate}
 
-% TODO: Update unsolvable rule to k-puzzle 
-\subsection{Rule to Check if a 8 puzzle is Solvable}
-It is not possible to solve an instance of 8 puzzle if number of inversions is odd in the input state. 
-Inversion is defined as a pair of tiles form an inversion if the values on tiles are in reverse order of their appearance in goal state. Source \href{https://www.geeksforgeeks.org/check-instance-8-puzzle-solvable/}{here}.
+\subsection{Rule to Check if k-puzzle is Solvable}
+\textbf{Definition.} A pair of tiles form an \textit{inversion} if the values on tiles are in the reverse order of their appearance in the goal state. \\
+\textbf{Rules~\cite{aditya_goel_how_nodate}.} Let \( M \) denote a \( k \times k \) matrix, \( m_{i, j} \) denote a blank tile in \( M \), and \( n_i \) denote the number of inversions in the intial state \( M_{initial} \). Puzzle is solvable if \dots
+\begin{enumerate}
+    \item \( k \) is odd and \( n_i \) is even
+    \item \( k \) is even,
+    \begin{enumerate}
+        \item \( n_i \) is odd and \( m_{i,j} \) is on an even row from the bottom (ie \( j \) is odd).
+        \item \( n_i \) is even and \( m_{i,j} \) is on an odd row from the bottom (ie \( j \) is even).
+    \end{enumerate}
+\end{enumerate}
 
 \subsection{Uninformed Search}
-% TODO: Update report of Uninformed search from BFS to IDS
-% TODO: IDS implementation
 \begin{enumerate}
-    \item \textbf{Implementation:} Graph-based IDS. Step costs are equal, thus it is optimal. Furthermore, since the search space is large and the depth of the solution is not known, IDS is preferred. (P90)
-    \item \textbf{Correctness:} IDS is complete (ie it will find a solution if it exists and \textit{b} is finite (ie \( b \leq 4 \)), thus it is correct.
-    \item \textbf{Complexity:} \( O(d) \)
+    \item \textbf{Implementation:} Graph-based IDS. Step costs are equal, thus it is optimal. Furthermore, since the search space is large and the depth of the solution is not known, IDS is preferred ~\cite[p90]{stuart_russell_artifical_2010}.
+    \item \textbf{Correctness:} Branching factor \( b = 4 \) is finite, thus IDS is complete ~\cite[p88-90]{stuart_russell_artifical_2010}. 
+    \item \textbf{Time Complexity:} \( O(b^d) \) ~\cite[p88-90]{stuart_russell_artifical_2010}.
+    \item \textbf{Space Complexity:} \( O(bd) \) ~\cite[p88-90]{stuart_russell_artifical_2010}.
 \end{enumerate}
 
-% TODO: A* Implementation
-% TODO: Implementation of 3 heuristics
-% TODO: Prove consistency of heuristics
-% Q: Need to prove complexity and correctness of algos?
-
+% TODO Add in proves for heuristic
 \subsection{Informed Search}
 \begin{enumerate}
-    \item \textbf{Implementation:} \( A^* \) search. It improves on greedy best first search (ie \( f(n) = h(n) \)) as it avoids expanding paths that are already expensive (ie \( f(n) = g(n) + h(n) \)).
-    \item \textbf{Tree or graph?:} Tree search. By Lemma 1, if \( h(n) \) is consistent, then the values of \( f(n) \) along any path are nondecreasing. Thus it does not matter if we add the explored node back into our frontier: there will exist another node \( n' \) such that \( f(n') < f(n) \).
-    \item \textbf{Correctness:} \( A^* \) search is complete (ie it will find a solution if it exists and there is a finite no. of nodes with \( f(n) \leq C^{*} \), where \( C^* \) is the cost of the optimal solution path.
-    \item \textbf{Complexity:} \( O(b^{h^*(s_0) - h(s_0)}) \) 
+    \item \textbf{Implementation:} Graph-based \( A^* \) search. It improves on greedy best first search (ie \( f(n) = h(n) \)) as it avoids expanding paths that are already expensive (ie \( f(n) = g(n) + h(n) \)).
+    \item \textbf{Correctness:} Since the search space is finite, \( A^* \) search will be complete.
+    \item \textbf{Time Complexity:} \( O(b^{h^*(s_0) - h(s_0)}) \) ~\cite[p93-99]{stuart_russell_artifical_2010}.
+    \item \textbf{Space Complexity:} \( O(b^m) \) ~\cite[p93-99]{stuart_russell_artifical_2010}.
 \end{enumerate}
 
-\subsection{Manhattan Distance} 
-To prove that Manhattan Distance is consistent.
-\begin{proof} Proof by Cases
-    \begin{enumerate}
-        \item \( |h(n') - h(n) = 1| \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
-        \item Case 1: \( h(n') = h(n) + 1 \)
-        \begin{enumerate}
-            \item \( h(n) \leq h(n) + 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
-        \end{enumerate}
-        \item Case 2: \( h(n') = h(n) - 1 \)
-        \begin{enumerate}
-            \item \( h(n) \leq h(n) - 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
-        \end{enumerate}
-        \item For both cases of \( h(n') \), \( h(n) \) is consistent. (\(\bullet\))
-    \end{enumerate}
-\end{proof}
+\subsection{\(h_1:\) Euclidean Distance}
+\textbf{Definition.} Euclidean Distance heuristic is defined as the straight line distance between the tiles from their goal position ~\cite{rosalind_euclidean_nodate}. \\
+\textbf{Prove for Consistency.} Euclidian distance is a form general triangle inequality, given that the euclidian distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides ( the actual distance from S to middle state N and the euclidian distance from N to G) as the euclidian distance from \( S \) to \( G \) is already the shortest path. 
+Since general triangle inequality fulfills the definition of consistency ~\cite[p95]{stuart_russell_artifical_2010}, euclidean distance is consistent.
 
-\subsection{Euclidean Distance}
+\subsection{\(h_2:\) Manhattan Distance} 
+\textbf{Definition.} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010} . Note that this sum only includes horizontal and vertical distances as \textit{Actions} do not allow the diagonal movements. \\
+\textbf{Prove for Consistency.} Prove for consistency can be found in appendix \ref{appendix:manhat_cons}.
 
-\subsection{Number of tiles out of row + Number of tiles out of column} 
-\textbf{Relaxed Problem.} A tile can move anywhere within the row or column. This guarantees admissibility. \\
-TODO: Prove consistency (?). However, since both hamming and manhatten distance are consistent as shown \href{https://www.cs.princeton.edu/courses/archive/fall12/cos226/checklist/8puzzle.html}(here), 
-it's likely that this variant of hamming distance will be consistent too.
-
-% Q: Ask if this heuristic is non trivial.
-\subsection{Linear conflict + Manhattan Distance}
-Add two to the Manhattan priority function whenever two tiles are in their goal row (or column) but are reversed relative to their goal position. Paper available \href{https://cse.sc.edu/~mgv/csce580sp15/gradPres/HanssonMayerYung1992.pdf}(here).\\
-This is likely to be consistent since it is a linear transformation of the manhattan distance. \\ 
+% TODO: Add in linear conflict
+\subsection{ \(h_3: \) Linear Conflict}
 
 \section{Experimental Setup}
 \begin{enumerate}
@@ -201,15 +188,16 @@ book~\cite{ref_book1}, proceedings without editors~\cite{ref_proc1},
 and a homepage~\cite{ref_url1}. Multiple citations are grouped
 \cite{ref_article1,ref_lncs1,ref_book1},
 \cite{ref_article1,ref_book1,ref_proc1,ref_url1}.
+
 %
 % ---- Bibliography ----
 %
 % BibTeX users should specify bibliography style 'splncs04'.
 % References will then be sorted and formatted in the correct style.
 %
-% \bibliographystyle{splncs04}
-% \bibliography{mybibliography}
-%
+\bibliographystyle{splncs04}
+\bibliography{CS3243_project_1}
+
 \begin{thebibliography}{8}
 \bibitem{ref_article1}
 Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
@@ -231,4 +219,25 @@ on Proceedings, pp. 1--2. Publisher, Location (2010)
 LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
 Oct 2017
 \end{thebibliography}
+
+\appendix
+\section{Prove for Manhattan Distance Consistency}
+\label{appendix:manhat_cons}
+
+To prove that Manhattan Distance is consistent.
+\begin{proof} Proof by Cases
+    \begin{enumerate}
+        \item \( |h(n') - h(n) = 1| \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
+        \item Case 1: \( h(n') = h(n) + 1 \)
+        \begin{enumerate}
+            \item \( h(n) \leq h(n) + 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
+        \end{enumerate}
+        \item Case 2: \( h(n') = h(n) - 1 \)
+        \begin{enumerate}
+            \item \( h(n) \leq h(n) - 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
+        \end{enumerate}
+        \item For both cases of \( h(n') \), \( h(n) \) is consistent. (\(\bullet\))
+    \end{enumerate}
+\end{proof}
+
 \end{document}
