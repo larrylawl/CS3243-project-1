@@ -3,8 +3,74 @@ import sys
 import heapq
 import time
 import math
-from copy import deepcopy
 
+
+def swap(state, blank_tile_index, target_tile_index, debug=False):
+        """ Swaps target tile with blank tile. Returns a new array.
+        """
+        new_state = state[:]
+        temp = new_state[target_tile_index]
+        new_state[target_tile_index] = state[blank_tile_index]
+        new_state[blank_tile_index] = temp
+
+        return new_state
+
+def get_blank_tile(self, debug=False):
+    i = self.state.index(0)
+    result = {"index" : i}
+    return result
+
+def state_to_string(state):
+    result = "".join(str(x) for x in state)
+    return result
+
+def is_legal_tile(target_tile_index, blank_tile_index, k, debug=False):
+    
+    list_right_edge = list()
+    list_left_edge = list()
+    for i in range(1, k + 1):
+        list_right_edge.append(i * k - 1)
+    for i in range(0, k):
+        list_left_edge.append(i * k)
+    # cannot move left
+    if blank_tile_index in list_right_edge:
+        return target_tile_index != blank_tile_index + 1 and 0 <= target_tile_index < k * k
+    # cannot move right
+    elif blank_tile_index in list_left_edge:
+        return target_tile_index != blank_tile_index - 1 and 0 <= target_tile_index < k * k
+    else:
+        return 0 <= target_tile_index < k * k  
+
+def opposite_actions(action, latest_action):
+    if action == Actions.DOWN:
+        return latest_action == Actions.UP
+    if action == Actions.UP:
+        return latest_action == Actions.DOWN
+    if action == Actions.RIGHT:
+        return latest_action == Actions.LEFT
+    if action == Actions.LEFT:
+        return latest_action == Actions.RIGHT
+
+def is_goal_state(k, state, goal_state):
+    for i in range(k * k):
+        if state[i] != goal_state[i]:
+                return False
+    
+    return True
+
+def flatten_array(unflattened_array):
+    flattened_arr = []
+    for array in unflattened_array:
+        for i in array:
+            flattened_arr.append(i)
+
+    return flattened_arr
+
+def random_insert(lst, item):
+    lst.insert(randrange(len(lst)+1), item)
+
+def isEven(count):
+        return count % 2 == 0
 
 class Actions:
     UP = "UP"
@@ -13,55 +79,6 @@ class Actions:
     RIGHT = "RIGHT"
     ACTIONS = [UP, DOWN, LEFT, RIGHT]
 
-class Node:
-    def __init__(self, state=None, cost=0, depth=0):
-        self.state = state
-        self.cost = cost
-        self.depth = depth
-        self.k = Node.get_k(state)
-        self.actions_from_root = list()
-
-
-    @staticmethod
-    def swap(state, blank_tile_index, target_tile_index, debug=True):
-        """ Swaps target tile with blank tile. Returns a new array.
-        """
-        new_state = state[:]
-        temp = new_state[target_tile_index]
-        new_state[target_tile_index] = 0
-        new_state[blank_tile_index] = temp
-
-        return new_state
-
-    @staticmethod
-    def state_to_string(state):
-        result = " ".join(str(x) for x in state)
-        return result
-
-    @staticmethod
-    def get_k(state):
-        """ Returns an integer indicating the dimension of the k x k matrix
-        """
-        k = int(math.sqrt(len(state)))
-        return k
-
-    @staticmethod
-    def is_legal_move(target_tile_index, blank_tile_index, k, debug=True):
-        list_right_edge = list()
-        list_left_edge = list()
-        for i in range(1, k + 1):
-            list_right_edge.append(i * k - 1)
-        for i in range(0, k):
-            list_left_edge.append(i * k)
-        # cannot move left
-        if blank_tile_index in list_right_edge:
-            return target_tile_index != blank_tile_index + 1 and 0 <= target_tile_index < k * k
-        # cannot move right
-        elif blank_tile_index in list_left_edge:
-            return target_tile_index != blank_tile_index - 1 and 0 <= target_tile_index < k * k
-        else:
-            return 0 <= target_tile_index < k * k
-
 class Puzzle(object):
     UNSOLVABLE = "UNSOLVABLE"
     CUTOFF = "CUTOFF"
@@ -69,70 +86,71 @@ class Puzzle(object):
 
     def __init__(self, init_state, goal_state):
         # you may add more attributes if you think is useful
-        self.flat_state = Puzzle.flatten_array(init_state)
-        self.flat_goal_state = Puzzle.flatten_array(goal_state)
+        self.flat_state = flatten_array(init_state)
+        self.flat_goal_state = flatten_array(goal_state)
         self.init_state = self.flat_state
-        self.init_node = Node(self.flat_state)
-        self.goal_state = Puzzle.flatten_array(goal_state)
-        self.goal_node = Node(self.flat_goal_state)
+        self.init_node = {"state" : self.flat_state, "cost" : 0, "depth": 0, "actions_history": list()}
+        self.goal_state = self.flat_goal_state
         self.actions = list()
         self.past_states = set()
+        self.k = len(init_state)
 
-    @staticmethod
-    def transition(past_states, node, action):
+    def transition(self, node, action):
         """ Moves the blank tile in the OPPOSITE direction specified by the action. (p4 of project1.pdf!
         Returns a new state.
         """
-        blank_tile_index = node.state.index(0)
+        blank_tile_index = node["state"].index(0)
         target_tile_index = blank_tile_index
 
         if action == Actions.DOWN:
-            target_tile_index -= node.k
+            target_tile_index -= self.k
         elif action == Actions.UP:
-            target_tile_index += node.k
+            target_tile_index += self.k
         elif action == Actions.RIGHT:
             target_tile_index -= 1
         elif action == Actions.LEFT:
             target_tile_index += 1
 
-        past_states.add(Node.state_to_string(node.state))
-        new_state = Node.swap(node.state, blank_tile_index, target_tile_index)
-        new_cost = node.cost + 1
-        new_depth = node.depth + 1
-        new_node = Node(new_state, new_cost, new_depth)
-        new_node.actions_from_root = list(node.actions_from_root)
-        new_node.actions_from_root.append(action)
+        self.past_states.add(state_to_string(node["state"]))
+        new_state = swap(node["state"], blank_tile_index, target_tile_index)
+        new_cost = node["cost"] + 1
+        new_depth = node["depth"] + 1
+        actions_history = node["actions_history"]
+        new_actions_history = actions_history[:]
+        new_actions_history.append(action)
+
+        new_node = {"state" : new_state, "cost" : new_cost, "depth": new_depth, "actions_history" : new_actions_history}
         return new_node
 
     def valid_actions(self, node):
         """ Returns an array of valid actions
         """
         result = []
+        blank_tile_index = node["state"].index(0)
 
         for action in Actions.ACTIONS:
-            if len(node.actions_from_root) > 0:
-                latest_action = node.actions_from_root[-1]
-                if puzzle.opposite_actions(action, latest_action):
+            actions_count = len(node["actions_history"])
+            if actions_count > 0:
+                latest_action = node["actions_history"][actions_count - 1]
+                if opposite_actions(action, latest_action):
                     continue
 
-            blank_tile_index = node.state.index(0)
             target_tile_index = blank_tile_index
 
             if action == Actions.DOWN:
-                target_tile_index -= node.k
+                target_tile_index -= self.k
             elif action == Actions.UP:
-                target_tile_index += node.k
+                target_tile_index += self.k
             elif action == Actions.RIGHT:
                 target_tile_index -= 1
             elif action == Actions.LEFT:
                 target_tile_index += 1
 
-
-            if Node.is_legal_move(target_tile_index, blank_tile_index, node.k):
-                state_string = Node.state_to_string(Node.swap(node.state, blank_tile_index, target_tile_index))
-                if not Puzzle.is_explored_state(self.past_states, state_string):
+            if is_legal_tile(target_tile_index, blank_tile_index, self.k):
+                state_string = state_to_string(swap(node["state"], blank_tile_index, target_tile_index))
+                if not self.is_explored_state(state_string):
                     result.append(action)
-                    # Puzzle.random_insert(result, action)                   
+
         return result
 
     def opposite_actions(self, action, latest_action):
@@ -145,17 +163,16 @@ class Puzzle(object):
         if action == Actions.LEFT:
             return latest_action == Actions.RIGHT
 
-    @staticmethod
-    def is_explored_state(past_states, state_string):
-        return state_string in past_states
+    def is_explored_state(self, state_string):
+        return state_string in self.past_states
 
     @staticmethod
-    def is_solvable(init_state):
-        k = int(math.sqrt(len(init_state)))
-        no_of_inversions = Puzzle.count_inversions(init_state)
+    def is_solvable(state):
+        k = int(math.sqrt(len(state)))
+        no_of_inversions = Puzzle.count_inversions(state)
 
-        isKEven = Puzzle.even(k)
-        isEvenInversions = Puzzle.even(no_of_inversions)
+        isKEven = isEven(k)
+        isEvenInversions = isEven(no_of_inversions)
         if (not isKEven):
             if isEvenInversions:
                 return True
@@ -163,10 +180,10 @@ class Puzzle(object):
                 return False
 
         else:
-            blank_tile_posi = (init_state.index(0))
+            blank_tile_posi = (state.index(0))
             blank_tile_row_posi = int(blank_tile_posi / k)
             sum_of_inversions_and_blank_tile_row_posi = blank_tile_row_posi + no_of_inversions
-            isSumEven = Puzzle.even(sum_of_inversions_and_blank_tile_row_posi)
+            isSumEven = isEven(sum_of_inversions_and_blank_tile_row_posi)
 
             if (not isSumEven):
                 print("Puzzle is solvable!")
@@ -175,6 +192,18 @@ class Puzzle(object):
                 print("Puzzle is not solvable!")
                 return False
         # method from https://www.cs.princeton.edu/courses/archive/spring18/cos226/assignments/8puzzle/index.html
+
+
+    @staticmethod
+    def count_inversions(flattened_arr):
+        no_of_inversions = 0
+
+        for i in range(len(flattened_arr)):
+            for j in range(i, len(flattened_arr), 1):
+                if flattened_arr[i] > flattened_arr[j] != 0:
+                    no_of_inversions += 1
+
+        return no_of_inversions
 
     @staticmethod
     def even(count):
@@ -208,17 +237,20 @@ class Puzzle(object):
         """ Unit tests for basic functions. Assumes the input file is n_equals_3/input_1.txt.
 
         """
-
+        # Stubbed puzzle
+        stubbed_init_state = [[1, 2, 3], [4, 5, 6], [7, 0, 8]]
+        stubbed_goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+        puzzle = Puzzle(stubbed_init_state, stubbed_goal_state)
         # Unit test for transition
-        stubbed_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-        stubbed_node = Node(state=stubbed_state)
+        stubbed_state = [1, 2, 3, 4, 5, 6, 7, 0, 8]
+        stubbed_node = {"state" : stubbed_state, "cost" : 0, "depth": 0, "actions_history": list()}
         stubbed_past_states = set()
-        new_node = Puzzle.transition(stubbed_past_states, stubbed_node, Actions.RIGHT)
+        new_node = puzzle.transition(stubbed_node, Actions.LEFT)
         assert stubbed_node != new_node, "Unit test for transition is failing: transition should return a new node"
-        assert new_node.state[7] == 0, "Unit test for transition is failing: transition incorrectly"
-        assert Actions.RIGHT in new_node.actions_from_root, \
+        assert new_node["state"][8] == 0, "Unit test for transition is failing: transition incorrectly"
+        assert Actions.LEFT in new_node["actions_history"], \
             "Unit test for transition is failing: past actions should be updated"
-        assert Node.state_to_string(stubbed_state) in stubbed_past_states, \
+        assert state_to_string(stubbed_state) in puzzle.past_states, \
             "Unit test for transition is failing: past states should be updated"
 
         # Unit test for solvable 3x3
@@ -235,9 +267,9 @@ class Puzzle(object):
 
         # Unit test for swap
         stubbed_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-        stubbed_target_tile = {"index": 7}
-        stubbed_blank_tile = {"index": 8}
-        new_state = Node.swap(stubbed_state, stubbed_blank_tile, stubbed_target_tile)
+        stubbed_target_tile_index = 7
+        stubbed_blank_tile_index = 8
+        new_state = swap(stubbed_state, stubbed_blank_tile_index, stubbed_target_tile_index)
         assert stubbed_state != new_state, "Unit test for swap node is failing: swap should return a new node"
         assert new_state[7] == 0, "Unit test for swap node is failing: swapping incorrectly"
 
@@ -245,14 +277,14 @@ class Puzzle(object):
         stubbed_state = [1, 2, 3, 4, 5, 6, 8, 7, 0]
         # expected_state_string = "[1, 2, 3, 4, 5, 6, 8, 7, 0]"
         expected_state_string = "123456870"
-        assert expected_state_string == Node.state_to_string(stubbed_state), \
+        assert expected_state_string == state_to_string(stubbed_state), \
             "Unit test for state_to_string is failing."
 
-        # Unit test for is_legal_move
-        stubbed_illegal_target_tile = {"index" : 8}
+        # Unit test for is_legal_tile
+        stubbed_illegal_target_tile_index = 8
         stubbed_k = 3
-        assert Node.is_legal_move(stubbed_illegal_target_tile, stubbed_blank_tile, stubbed_k) == True, \
-            "Unit test for is_legal_move is failing."
+        assert is_legal_tile(stubbed_illegal_target_tile_index, stubbed_blank_tile_index, stubbed_k) == True, \
+            "Unit test for is_legal_tile is failing."
 
     def solve(self):
         
@@ -284,46 +316,42 @@ class Puzzle(object):
         heapq.heappush(queue,(0, id(node), node))
 
         # queue[0][2] is the first node in the priority queue
-        while (not Puzzle.is_goal_state(queue[0][2].state, self.goal_state)):
+        while (not Puzzle.is_goal_state(queue[0][2]["state"], self.goal_state)):
 
             # temp_list is the 3 - element tuple from the queue, holding the evaluation function, the id and the node
             temp_list = heapq.heappop(queue)
 
             curr_node = temp_list[2]
-            
-            print(Node.state_to_string(curr_node.state))
 
             queue = self.explore_next_states(curr_node, queue, puzzle)
 
-        return queue[0][2].actions_from_root
+        return queue[0][2]["actions_history"]
      
         
     def explore_next_states(self, node, queue, puzzle):
 
         for action in puzzle.valid_actions(node):
-            child_node = Puzzle.transition(puzzle.past_states, node, action)
+            child_node = puzzle.transition(node, action)
             
-            if Node.state_to_string(child_node.state) not in puzzle.past_states:
-                heuristic = Puzzle.get_heuristic_Manhattan(child_node)
-                heapq.heappush(queue, ((node.cost + heuristic, id(child_node), child_node)))
+            if state_to_string(child_node["state"]) not in puzzle.past_states:
+                heuristic = puzzle.get_heuristic_Manhattan(child_node)
+                heapq.heappush(queue, ((node["cost"] + heuristic, id(child_node), child_node)))
             
         return queue
        
-    @staticmethod
-    def convert_val_to_coord(value, node):
-        return value // node.k, value % node.k
+    def convert_val_to_coord(self, value, node):
+        return value // self.k, value % self.k
 
     # Manhattan heuristic
-    @staticmethod
-    def get_heuristic_Manhattan(node):
-        no_of_rows = node.k
+    def get_heuristic_Manhattan(self, node):
+        no_of_rows = self.k
         index = 0
         manhattan_sum = 0
 
-        for val in node.state:
+        for val in node["state"]:
             if (val != 0):
-                curr_row, curr_col = Puzzle.convert_val_to_coord(index, node)                    
-                goal_row, goal_col = Puzzle.convert_val_to_coord(val - 1, node)
+                curr_row, curr_col = puzzle.convert_val_to_coord(index, node)                    
+                goal_row, goal_col = puzzle.convert_val_to_coord(val - 1, node)
 
                 dist_x = curr_col - goal_col
                 dist_y = curr_row - goal_row
