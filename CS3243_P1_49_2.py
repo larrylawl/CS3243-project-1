@@ -348,6 +348,7 @@ class Puzzle(object):
     def convert_val_to_coord(self, value, node):
         return value // self.k, value % self.k
 
+    # Manhattan heuristic
     def get_heuristic_Manhattan(self, node):
         no_of_rows = self.k
         index = 0
