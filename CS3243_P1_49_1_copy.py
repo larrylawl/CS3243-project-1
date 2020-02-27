@@ -236,7 +236,7 @@ class Puzzle(object):
 
     @staticmethod
     def recursive_DLS(node, puzzle, limit, debug=False):
-        print(Node.state_to_string(node.state))
+        #print(Node.state_to_string(node.state))
         if Puzzle.is_goal_state(node.k, node.state, puzzle.goal_state):
             return node.actions_from_root
         elif limit == 0:

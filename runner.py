@@ -45,7 +45,7 @@ end = time.time()
 print("Completed.\nDuration: {0} seconds".format(round(end-start, 2)))
 
 # option to run solver to check for correctness
-if (input_num != "1"):
+if (True):
     cat = subprocess.Popen(('cat', output_file), stdout=subprocess.PIPE)
     length = subprocess.check_output(('wc', '-l'), stdin=cat.stdout)
     cat.wait()
