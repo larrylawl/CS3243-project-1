@@ -166,7 +166,7 @@ def plotRunTimes(dim_3_tuple, dim_4_tuple, dim_5_tuple):
     plt.legend()
     
     # Prepare the x-axis
-    x = [1, 2, 3, 4, 5]
+    x = range(30)
 
     ########## 3 X 3 Graph ##########
     plt.subplot(1, 3, 1)
@@ -222,13 +222,13 @@ def getRunTimesForKPuzzle(k):
     e_time = []
     lc_m_time = []
 
-    for steps in range(1, 6):
-        print("/////////////////////  dinemsion:" + str(k) + " with "+ str(steps) + "steps  ////////////////")
+    for steps in range(1, 31):
+        print("/////////////////////  dimension:" + str(k) + " with "+ str(steps) + "steps  ////////////////")
         m_30_times = []
         e_30_times = []
         lc_m_30_times = []
 
-        for i in range (1, 30):
+        for i in range (1, 31):
             puzzleGenerator = KPuzzleGenerator(k, steps)
             goal_state = puzzleGenerator.generate_goal_state()
             init_state = puzzleGenerator.generate_init_state()
