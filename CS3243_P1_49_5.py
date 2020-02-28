@@ -1,6 +1,12 @@
 import os
 import sys
 from random import randrange
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+import CS3243_P1_49_2 as manhattan
+import CS3243_P1_49_3 as euclidean
+import CS3243_P1_49_4 as linear_conf_manhattan
 
 def random_insert(lst, item):
     lst.insert(randrange(len(lst)+1), item)
@@ -78,69 +84,47 @@ class KPuzzleGenerator(object):
                 if actions:
                     latest_action = actions[-1]
                     if not Actions.are_opposite_actions(action, latest_action):
-                        actions.append(actions)
+                        actions.append(action)
                         self.move_by_action(new_puzzle, action)
-                        print(len(actions))
                 else:
                     actions.append(action)
                     self.move_by_action(new_puzzle, action)
-                    print(len(actions))
 
         return new_puzzle
-    
-    # def generate_init_state(self, puzzle, actions):
-    #     print("Original state:")
-    #     print_puzzle(puzzle)
         
-    #     for i in range(len(actions)):
-    #         actions[i] = actions[i].rstrip('\n')
-
-    #     if actions[0] == "UNSOLVABLE":
-    #         print("The puzzle cannot be solved.")
-    #     else:
-    #         for k in range(len(actions)):
-    #             self.move_by_action(puzzle, action)
-    #             print_puzzle(puzzle)
-        
-    #     return puzzle
-    
     def move_by_action(self, puzzle, action):
         if action == "DOWN":
-            print("Move: DOWN")
             self.move_down(puzzle)
         elif action == "UP":
-            print("Move: UP")
             self.move_up(puzzle)
         elif action == "LEFT":
-            print("Move: LEFT")
             self.move_left(puzzle)
         else:
-            print("Move: RIGHT")
             self.move_right(puzzle)
 
     def move_down(self, puzzle):
         x, y = self.get_zero(puzzle)
         puzzle[x][y] = puzzle[x - 1][y]
         puzzle[x - 1][y] = 0
-        self.print_puzzle(puzzle)
+        # self.print_puzzle(puzzle)
 
     def move_up(self, puzzle):
         x, y = self.get_zero(puzzle)
         puzzle[x][y] = puzzle[x + 1][y]
         puzzle[x + 1][y] = 0
-        self.print_puzzle(puzzle)
+        # self.print_puzzle(puzzle)
 
     def move_left(self, puzzle):
         x, y = self.get_zero(puzzle)
         puzzle[x][y] = puzzle[x][y + 1]
         puzzle[x][y + 1] = 0 
-        self.print_puzzle(puzzle)
+        # self.print_puzzle(puzzle)
 
     def move_right(self, puzzle):
         x, y = self.get_zero(puzzle)
         puzzle[x][y] = puzzle[x][y - 1]
         puzzle[x][y - 1] = 0
-        self.print_puzzle(puzzle)
+        # self.print_puzzle(puzzle)
 
     def print_puzzle(self, puzzle):
         size = len(puzzle)
@@ -174,25 +158,103 @@ class Puzzle(object):
 
     # you may add more functions if you think is useful
 
+def plotRunTimes(dim_3_tuple, dim_4_tuple, dim_5_tuple):
+
+    fig = plt.figure()
+
+    # Add a legend
+    plt.legend()
+    
+    # Prepare the x-axis
+    x = [1, 2, 3, 4, 5]
+
+    ########## 3 X 3 Graph ##########
+    plt.subplot(1, 3, 1)
+
+    # Name the title
+    plt.title("3 X 3 Puzzle")
+
+    # Name the axes
+    plt.xlabel("Steps to Goal State")
+    plt.ylabel("Time Taken")
+
+
+    # Plot the data
+    plt.plot(x, dim_3_tuple[0], label='Manhattan Distance')
+    plt.plot(x, dim_3_tuple[1], label='Euclidean Distance')
+    plt.plot(x, dim_3_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
+
+    ########## 4 X 4 Graph ##########
+    plt.subplot(1, 3, 2)
+    
+    # Name the title
+    plt.title("4 x 4 Puzzle")
+
+    # Name the axes
+    plt.xlabel("Steps to Goal State")
+    plt.ylabel("Time Taken")
+
+    # Plot the data
+    plt.plot(x, dim_4_tuple[0], label='Manhattan Distance')
+    plt.plot(x, dim_4_tuple[1], label='Euclidean Distance')
+    plt.plot(x, dim_4_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
+
+    ########## 5 X 5 Graph ##########
+    plt.subplot(1, 3, 3)
+    
+    # Name the title
+    plt.title("5 x 5 Puzzle")
+
+    # Name the axes
+    plt.xlabel("Steps to Goal State")
+    plt.ylabel("Time Taken")
+
+    # Plot the data
+    plt.plot(x, dim_5_tuple[0], label='Manhattan Distance')
+    plt.plot(x, dim_5_tuple[1], label='Euclidean Distance')
+    plt.plot(x, dim_5_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
+
+    plt.show()
+
+
+def getRunTimesForKPuzzle(k):
+    m_time = []
+    e_time = []
+    lc_m_time = []
+
+    for steps in range(1, 6):
+        print("/////////////////////  dinemsion:" + str(k) + " with "+ str(steps) + "steps  ////////////////")
+        m_30_times = []
+        e_30_times = []
+        lc_m_30_times = []
+
+        for i in range (1, 30):
+            puzzleGenerator = KPuzzleGenerator(k, steps)
+            goal_state = puzzleGenerator.generate_goal_state()
+            init_state = puzzleGenerator.generate_init_state()
+
+            m_puzzle = manhattan.Puzzle(init_state, goal_state)
+            e_puzzle = euclidean.Puzzle(init_state, goal_state)
+            lc_m_puzzle = linear_conf_manhattan.Puzzle(init_state, goal_state)
+
+            m_30_times.append(m_puzzle.getSolutionTime())
+            e_30_times.append(e_puzzle.getSolutionTime())
+            lc_m_30_times.append(lc_m_puzzle.getSolutionTime())
+
+        m_ave_time = np.mean(m_30_times)
+        e_ave_time = np.mean(e_30_times)
+        lc_m_ave_time = np.mean(lc_m_30_times)
+
+        m_time.append(m_ave_time)
+        e_time.append(e_ave_time)
+        lc_m_time.append(lc_m_ave_time)
+    
+    return (m_time, e_time, lc_m_time)
+
+
 if __name__ == "__main__":
+    dim_3_tuple = getRunTimesForKPuzzle(3)
+    dim_4_tuple = getRunTimesForKPuzzle(4)
+    dim_5_tuple = getRunTimesForKPuzzle(5)
 
-    if len(sys.argv) != 3:
-        raise ValueError("Wrong number of arguments!")
-
-    k = int(sys.argv[1])
-    steps = int(sys.argv[2])
-
-    print(k)
-
-    print(steps)
-
-    puzzleGenerator = KPuzzleGenerator(k, steps)
-    goal_state = puzzleGenerator.generate_goal_state()
-    print(goal_state)
-    actions = puzzleGenerator.generate_init_state()
-    print(actions)
-
-
-
-
-
+    plotRunTimes(dim_3_tuple, dim_4_tuple, dim_5_tuple)

@@ -166,11 +166,9 @@ class Puzzle(object):
     def is_explored_state(self, state_string):
         return state_string in self.past_states
 
-    @staticmethod
-    def is_solvable(state):
-        k = int(math.sqrt(len(state)))
-        print("k is " + str(k))
-        no_of_inversions = Puzzle.count_inversions(state)
+    def is_solvable(self):
+        k = int(math.sqrt(len(self.init_state)))
+        no_of_inversions = Puzzle.count_inversions(self.init_state)
 
         isKEven = isEven(k)
         isEvenInversions = isEven(no_of_inversions)
@@ -181,7 +179,7 @@ class Puzzle(object):
                 return False
 
         else:
-            blank_tile_posi = (state.index(0))
+            blank_tile_posi = (self.init_state.index(0))
             blank_tile_row_posi = int(blank_tile_posi / k)
             sum_of_inversions_and_blank_tile_row_posi = blank_tile_row_posi + no_of_inversions
             isSumEven = isEven(sum_of_inversions_and_blank_tile_row_posi)
@@ -291,17 +289,25 @@ class Puzzle(object):
         
         start_time = time.time()
 
-        if not Puzzle.is_solvable(self.init_state):
+        if not self.is_solvable():
             self.actions.append(Puzzle.UNSOLVABLE)
         else:
-            self.actions = self.a_star_search(puzzle)
+            self.actions = self.a_star_search()
 
             print("Number of nodes passed through " + str(len(self.past_states)))
             print("--- %s seconds ---" % (time.time() - start_time))
 
-        return self.actions 
+        return self.actions
+    
+    def getSolutionTime(self):
+        
+        start_time = time.time()
+
+        self.solve()
+
+        return time.time() - start_time
             
-    def a_star_search(self, puzzle):
+    def a_star_search(self):
 
         
         """ heapq operates as a priority queue. It operates in the following format: 
@@ -311,7 +317,7 @@ class Puzzle(object):
         """
 
         queue = [] # contains a tuple(node cost, id of node, node)
-        node = puzzle.init_node
+        node = self.init_node
 
         # Initial node is entered into the queue
         heapq.heappush(queue,(0, id(node), node))
@@ -324,18 +330,18 @@ class Puzzle(object):
 
             curr_node = temp_list[2]
             
-            queue = self.explore_next_states(curr_node, queue, puzzle)
+            queue = self.explore_next_states(curr_node, queue)
 
         return queue[0][2]["actions_history"]
      
         
-    def explore_next_states(self, node, queue, puzzle):
+    def explore_next_states(self, node, queue):
 
-        for action in puzzle.valid_actions(node):
-            child_node = puzzle.transition(node, action)
+        for action in self.valid_actions(node):
+            child_node = self.transition(node, action)
             
-            if state_to_string(child_node["state"]) not in puzzle.past_states:
-                heuristic = puzzle.get_heuristic_Manhattan_linear(child_node["state"])
+            if state_to_string(child_node["state"]) not in self.past_states:
+                heuristic = self.get_heuristic_Manhattan_linear(child_node["state"])
                 heapq.heappush(queue, ((node["cost"] + heuristic, id(child_node), child_node)))
             
         return queue
@@ -344,7 +350,7 @@ class Puzzle(object):
         return value // self.k, value % self.k
 
     def get_heuristic_Manhattan_linear(self, state):
-        return puzzle.get_heuristic_Manhattan(state) + 2 * puzzle.get_heuristic_linear_conflict(state)
+        return self.get_heuristic_Manhattan(state) + 2 * self.get_heuristic_linear_conflict(state)
 
     # Check if the two tiles who have the same GOAL row/ col are conflicting (not in order).
     def is_conflicting(self, curr_pos_j, goal_pos_j, curr_pos_k, goal_pos_k):
