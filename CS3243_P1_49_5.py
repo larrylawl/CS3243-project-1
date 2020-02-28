@@ -227,7 +227,7 @@ def getRunTimesForKPuzzle(k):
         e_30_times = []
         lc_m_30_times = []
 
-        for i in range (1, 2):
+        for i in range (1, 31):
             puzzleGenerator = KPuzzleGenerator(k, steps)
             goal_state = puzzleGenerator.generate_goal_state()
             init_state = puzzleGenerator.generate_init_state()
