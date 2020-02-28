@@ -11,6 +11,17 @@ class Actions:
     RIGHT = "RIGHT"
     ACTIONS = [UP, DOWN, LEFT, RIGHT]
 
+    @staticmethod
+    def opposite_actions(action, latest_action):
+        if action == Actions.DOWN:
+            return latest_action == Actions.UP
+        if action == Actions.UP:
+            return latest_action == Actions.DOWN
+        if action == Actions.RIGHT:
+            return latest_action == Actions.LEFT
+        if action == Actions.LEFT:
+            return latest_action == Actions.RIGHT
+
 class Node:
     def __init__(self, state=None, parent=None, cost=0, depth=0, children=[]):
         self.state = state
