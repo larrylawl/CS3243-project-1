@@ -356,7 +356,7 @@ class Puzzle(object):
                     # If not we simply add it into the frontier
                     heapq.heappush(frontier, ((evaluation_func, id(child_node), child_node)))
                    
-        return frontier[0][2]["actions_history"]
+        return curr_node["actions_history"]
 
 
 
