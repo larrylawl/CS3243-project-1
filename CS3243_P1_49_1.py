@@ -164,8 +164,10 @@ class Puzzle(object):
         isEvenInversions = isEven(no_of_inversions)
         if (not isKEven):
             if isEvenInversions:
+                print("Puzzle is solvable!")
                 return True
             else:
+                print("Puzzle is not solvable!")
                 return False
 
         else:

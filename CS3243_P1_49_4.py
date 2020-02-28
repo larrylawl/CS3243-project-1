@@ -94,6 +94,7 @@ class Puzzle(object):
         self.actions = list()
         self.past_states = set()
         self.k = len(init_state)
+        self.state_to_cost = {}
 
     def transition(self, node, action):
         """ Moves the blank tile in the OPPOSITE direction specified by the action. (p4 of project1.pdf!
@@ -297,60 +298,68 @@ class Puzzle(object):
             print("Number of nodes passed through " + str(len(self.past_states)))
             print("--- %s seconds ---" % (time.time() - start_time))
 
-        return self.actions
+        return self.actions 
     
-    def getSolutionTime(self):
-        
-        start_time = time.time()
+    
+    def a_star_search(self, puzzle):
 
-        self.solve()
-
-        return time.time() - start_time
-            
-    def a_star_search(self):
-
-        
-        """ heapq operates as a priority queue. It operates in the following format: 
-            heapq.heappush( the queue, (first_comparator, second_comparator, item))
-            In this case I added id(node) which returns a unique id -> as if you only have the heuristic, 
-            there will be an error as all the comparators have to be unique.
-        """
-
-        queue = [] # contains a tuple(node cost, id of node, node)
-        node = self.init_node
+        node = puzzle.init_node
 
         # Initial node is entered into the queue
-        heapq.heappush(queue,(0, id(node), node))
+        frontier = [] 
+        heapq.heappush(frontier,(0, id(node), node))
 
-        # queue[0][2] is the first node in the priority queue
-        while (not Puzzle.is_goal_state(queue[0][2]["state"], self.goal_state)):
+        while (True):
 
             # temp_list is the 3 - element tuple from the queue, holding the evaluation function, the id and the node
-            temp_list = heapq.heappop(queue)
-
+            temp_list = heapq.heappop(frontier)
             curr_node = temp_list[2]
-            
-            queue = self.explore_next_states(curr_node, queue)
 
-        return queue[0][2]["actions_history"]
-     
-        
-    def explore_next_states(self, node, queue):
+            # If the goal state is reached
+            if (Puzzle.is_goal_state(curr_node["state"], self.goal_state)):
+                break
 
-        for action in self.valid_actions(node):
-            child_node = self.transition(node, action)
-            
-            if state_to_string(child_node["state"]) not in self.past_states:
-                heuristic = self.get_heuristic_Manhattan_linear(child_node["state"])
-                heapq.heappush(queue, ((node["cost"] + heuristic, id(child_node), child_node)))
-            
-        return queue
-       
+            curr_state_string = state_to_string(curr_node["state"])
+
+            # If state has already been visited skip it (because we expanded it before)
+            if (curr_state_string in puzzle.past_states):
+                continue
+            else:
+                # Add the state into the past states of the Puzzle to mark it as done
+                puzzle.past_states.add(curr_state_string)
+           
+            # Expand the current node
+            for action in puzzle.valid_actions(curr_node):
+                child_node = puzzle.transition(curr_node, action)
+                child_state_string = state_to_string(child_node["state"])
+
+                if child_state_string not in puzzle.past_states:
+                    heuristic = puzzle.get_heuristic_Manhattan_linear(child_node)
+
+                    # evaluation_func = g(child_node) + heuristic
+                    evaluation_func = child_node["cost"] + heuristic
+
+                    # Add the key (state) and value (cost) into a dictionary if its not already inside
+                    if child_state_string not in puzzle.state_to_cost:
+                        puzzle.state_to_cost[child_state_string] = evaluation_func
+                    else:
+                        # If the node is already in the frontier and its cost is lower than this current node, we skip it
+                        if (puzzle.state_to_cost[child_state_string] >= evaluation_func):
+                            continue
+
+                    # If not we simply add it into the frontier
+                    heapq.heappush(frontier, ((evaluation_func, id(child_node), child_node)))
+                   
+        return frontier[0][2]["actions_history"]
+
+
+
+
     def convert_val_to_coord(self, value):
         return value // self.k, value % self.k
 
-    def get_heuristic_Manhattan_linear(self, state):
-        return self.get_heuristic_Manhattan(state) + 2 * self.get_heuristic_linear_conflict(state)
+    def get_heuristic_Manhattan_linear(self, node):
+        return puzzle.get_heuristic_Manhattan(node) + 2 * puzzle.get_heuristic_linear_conflict(node)
 
     # Check if the two tiles who have the same GOAL row/ col are conflicting (not in order).
     def is_conflicting(self, curr_pos_j, goal_pos_j, curr_pos_k, goal_pos_k):
@@ -358,7 +367,7 @@ class Puzzle(object):
             or (curr_pos_j > curr_pos_k and goal_pos_j < goal_pos_k)
 
     # Linear conflict heuristic
-    def get_heuristic_linear_conflict(self, state):
+    def get_heuristic_linear_conflict(self, node):
         no_of_rows = self.k
         index = 0
         manhattan_sum = 0
@@ -368,7 +377,7 @@ class Puzzle(object):
         # Find linear conflict for each row.
         for row_index in range(no_of_rows):
             # Get the num of tiles which conflict with each tile in curr row.
-            curr_row_arr = self.getIthRow(state, row_index)
+            curr_row_arr = self.getIthRow(node["state"], row_index)
             list_num_conflicting_tiles_in_row = self.get_num_conflicting_tiles_in_row(row_index, curr_row_arr)
             highest_conflict_val = max(list_num_conflicting_tiles_in_row)
 
@@ -400,7 +409,7 @@ class Puzzle(object):
 
         for col_index in range(no_of_rows):
             # Get the num of tiles which conflict with each tile in curr col.
-            curr_col_arr = self.getIthCol(state, col_index)
+            curr_col_arr = self.getIthCol(node["state"], col_index)
             list_num_conflicting_tiles_in_col = self.get_num_conflicting_tiles_in_col(col_index, curr_col_arr)
             highest_conflict_val = max(list_num_conflicting_tiles_in_col)
 
@@ -503,12 +512,12 @@ class Puzzle(object):
 
         return num_conflicting_tiles
           
-    def get_heuristic_Manhattan(self, state):
+    def get_heuristic_Manhattan(self, node):
         no_of_rows = self.k
         index = 0
         manhattan_sum = 0
 
-        for val in state:
+        for val in node["state"]:
             if (val != 0):
                 curr_row, curr_col = self.convert_val_to_coord(index)                    
                 goal_row, goal_col = self.convert_val_to_coord(val - 1)
@@ -517,7 +526,7 @@ class Puzzle(object):
                 dist_y = curr_row - goal_row
                 
                 manhattan_sum += abs(dist_x) + abs(dist_y)
-                index += 1
+            index += 1
                   
         return manhattan_sum
 
