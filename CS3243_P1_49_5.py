@@ -162,9 +162,6 @@ def plotRunTimes(dim_3_tuple, dim_4_tuple, dim_5_tuple):
 
     fig = plt.figure()
 
-    # Add a legend
-    plt.legend()
-    
     # Prepare the x-axis
     x = range(30)
 
@@ -178,11 +175,13 @@ def plotRunTimes(dim_3_tuple, dim_4_tuple, dim_5_tuple):
     plt.xlabel("Steps to Goal State")
     plt.ylabel("Time Taken")
 
-
     # Plot the data
     plt.plot(x, dim_3_tuple[0], label='Manhattan Distance')
     plt.plot(x, dim_3_tuple[1], label='Euclidean Distance')
     plt.plot(x, dim_3_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
+
+    # Place the legend
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
 
     ########## 4 X 4 Graph ##########
     plt.subplot(1, 3, 2)
@@ -213,7 +212,7 @@ def plotRunTimes(dim_3_tuple, dim_4_tuple, dim_5_tuple):
     plt.plot(x, dim_5_tuple[0], label='Manhattan Distance')
     plt.plot(x, dim_5_tuple[1], label='Euclidean Distance')
     plt.plot(x, dim_5_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
-
+    
     plt.show()
 
 
@@ -228,7 +227,7 @@ def getRunTimesForKPuzzle(k):
         e_30_times = []
         lc_m_30_times = []
 
-        for i in range (1, 31):
+        for i in range (1, 2):
             puzzleGenerator = KPuzzleGenerator(k, steps)
             goal_state = puzzleGenerator.generate_goal_state()
             init_state = puzzleGenerator.generate_init_state()
