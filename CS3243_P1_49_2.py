@@ -235,17 +235,17 @@ class Puzzle(object):
         stubbed_state = [1, 2, 3, 4, 5, 6, 7, 0, 8]
         stubbed_node = {"state" : stubbed_state, "cost" : 0, "depth": 0, "actions_history": list()}
         stubbed_past_states = set()
-        new_node = puzzle.transition(stubbed_node, Actions.LEFT)
+        new_node = self.transition(stubbed_node, Actions.LEFT)
         assert stubbed_node != new_node, "Unit test for transition is failing: transition should return a new node"
         assert new_node["state"][8] == 0, "Unit test for transition is failing: transition incorrectly"
         assert Actions.LEFT in new_node["actions_history"], \
             "Unit test for transition is failing: past actions should be updated"
-        assert state_to_string(stubbed_state) in puzzle.past_states, \
+        assert state_to_string(stubbed_state) in self.past_states, \
             "Unit test for transition is failing: past states should be updated"
 
         # Unit test for solvable 3x3
         stubbed_state = [8, 1, 2, 0, 4, 3, 7, 6, 5]
-        assert not Puzzle.is_solvable(stubbed_state) == True, \
+        assert not self.is_solvable(stubbed_state) == True, \
             "Unit test for checking if 3x3 is unsolvable is failing"
 
         # Unit test for solvable 4x4
@@ -300,7 +300,7 @@ class Puzzle(object):
 
     def a_star_search(self):
 
-        node = puzzle.init_node
+        node = self.init_node
 
         # Initial node is entered into the queue
         frontier = [] 
@@ -319,29 +319,29 @@ class Puzzle(object):
             curr_state_string = state_to_string(curr_node["state"])
 
             # If state has already been visited skip it (because we expanded it before)
-            if (curr_state_string in puzzle.past_states):
+            if (curr_state_string in self.past_states):
                 continue
             else:
                 # Add the state into the past states of the Puzzle to mark it as done
-                puzzle.past_states.add(curr_state_string)
+                self.past_states.add(curr_state_string)
            
             # Expand the current node
-            for action in puzzle.valid_actions(curr_node):
-                child_node = puzzle.transition(curr_node, action)
+            for action in self.valid_actions(curr_node):
+                child_node = self.transition(curr_node, action)
                 child_state_string = state_to_string(child_node["state"])
 
-                if child_state_string not in puzzle.past_states:
-                    heuristic = puzzle.get_heuristic_Manhattan(child_node)
+                if child_state_string not in self.past_states:
+                    heuristic = self.get_heuristic_Manhattan(child_node)
 
                     # evaluation_func = g(child_node) + heuristic
                     evaluation_func = child_node["cost"] + heuristic
 
                     # Add the key (state) and value (cost) into a dictionary if its not already inside
-                    if child_state_string not in puzzle.state_to_cost:
-                        puzzle.state_to_cost[child_state_string] = evaluation_func
+                    if child_state_string not in self.state_to_cost:
+                        self.state_to_cost[child_state_string] = evaluation_func
                     else:
                         # If the node is already in the frontier and its cost is lower than this current node, we skip it
-                        if (puzzle.state_to_cost[child_state_string] >= evaluation_func):
+                        if (self.state_to_cost[child_state_string] >= evaluation_func):
                             continue
 
                     # If not we simply add it into the frontier
@@ -363,8 +363,8 @@ class Puzzle(object):
 
         for val in node["state"]:
             if (val != 0):
-                curr_row, curr_col = puzzle.convert_val_to_coord(index, node)        
-                goal_row, goal_col = puzzle.convert_val_to_coord(val - 1, node)
+                curr_row, curr_col = self.convert_val_to_coord(index, node)        
+                goal_row, goal_col = self.convert_val_to_coord(val - 1, node)
 
                 dist_x = curr_col - goal_col
                 dist_y = curr_row - goal_row

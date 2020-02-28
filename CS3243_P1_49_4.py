@@ -299,11 +299,17 @@ class Puzzle(object):
             print("--- %s seconds ---" % (time.time() - start_time))
 
         return self.actions 
-    
-    
-    def a_star_search(self, puzzle):
 
-        node = puzzle.init_node
+    def getSolutionTime(self):
+        start_time = time.time()
+
+        self.solve()
+
+        return time.time() - start_time
+    
+    def a_star_search(self):
+
+        node = self.init_node
 
         # Initial node is entered into the queue
         frontier = [] 
@@ -322,29 +328,29 @@ class Puzzle(object):
             curr_state_string = state_to_string(curr_node["state"])
 
             # If state has already been visited skip it (because we expanded it before)
-            if (curr_state_string in puzzle.past_states):
+            if (curr_state_string in self.past_states):
                 continue
             else:
                 # Add the state into the past states of the Puzzle to mark it as done
-                puzzle.past_states.add(curr_state_string)
+                self.past_states.add(curr_state_string)
            
             # Expand the current node
-            for action in puzzle.valid_actions(curr_node):
-                child_node = puzzle.transition(curr_node, action)
+            for action in self.valid_actions(curr_node):
+                child_node = self.transition(curr_node, action)
                 child_state_string = state_to_string(child_node["state"])
 
-                if child_state_string not in puzzle.past_states:
-                    heuristic = puzzle.get_heuristic_Manhattan_linear(child_node)
+                if child_state_string not in self.past_states:
+                    heuristic = self.get_heuristic_Manhattan_linear(child_node)
 
                     # evaluation_func = g(child_node) + heuristic
                     evaluation_func = child_node["cost"] + heuristic
 
                     # Add the key (state) and value (cost) into a dictionary if its not already inside
-                    if child_state_string not in puzzle.state_to_cost:
-                        puzzle.state_to_cost[child_state_string] = evaluation_func
+                    if child_state_string not in self.state_to_cost:
+                        self.state_to_cost[child_state_string] = evaluation_func
                     else:
                         # If the node is already in the frontier and its cost is lower than this current node, we skip it
-                        if (puzzle.state_to_cost[child_state_string] >= evaluation_func):
+                        if (self.state_to_cost[child_state_string] >= evaluation_func):
                             continue
 
                     # If not we simply add it into the frontier
@@ -359,7 +365,7 @@ class Puzzle(object):
         return value // self.k, value % self.k
 
     def get_heuristic_Manhattan_linear(self, node):
-        return puzzle.get_heuristic_Manhattan(node) + 2 * puzzle.get_heuristic_linear_conflict(node)
+        return self.get_heuristic_Manhattan(node) + 2 * self.get_heuristic_linear_conflict(node)
 
     # Check if the two tiles who have the same GOAL row/ col are conflicting (not in order).
     def is_conflicting(self, curr_pos_j, goal_pos_j, curr_pos_k, goal_pos_k):
