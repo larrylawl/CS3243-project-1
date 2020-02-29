@@ -285,8 +285,10 @@ class Puzzle(object):
         else:
             self.actions = self.a_star_search()
 
-            print("Number of nodes passed through " + str(len(self.past_states)))
+            print("Number of nodes passed through: " + str(len(self.past_states)))
+            print("Actions to goal state:  " + str(len(self.actions)))
             print("--- %s seconds ---" % (time.time() - start_time))
+            
 
         return self.actions 
             
