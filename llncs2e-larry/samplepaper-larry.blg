@@ -7,17 +7,12 @@ Warning--entry type for "aditya_goel_how_nodate" isn't style-file defined
 --line 2 of file CS3243_project_1.bib
 Warning--entry type for "rosalind_euclidean_nodate" isn't style-file defined
 --line 16 of file CS3243_project_1.bib
-Warning--I didn't find a database entry for "ref_article1"
-Warning--I didn't find a database entry for "ref_lncs1"
-Warning--I didn't find a database entry for "ref_book1"
-Warning--I didn't find a database entry for "ref_proc1"
-Warning--I didn't find a database entry for "ref_url1"
 Warning--empty booktitle in othar_hansson_generating_1985
 Warning--empty year in othar_hansson_generating_1985
 Warning--empty year in stuart_russell_artifical_2010
 You've used 4 entries,
             2850 wiz_defined-function locations,
-            613 strings with 5040 characters,
+            608 strings with 4993 characters,
 and the built_in function-call counts, 1274 in all, are:
 = -- 74
 > -- 43
@@ -56,4 +51,4 @@ warning$ -- 3
 while$ -- 8
 width$ -- 5
 write$ -- 33
-(There were 10 warnings)
+(There were 5 warnings)

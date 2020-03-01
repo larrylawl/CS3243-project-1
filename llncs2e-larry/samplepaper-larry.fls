@@ -237,15 +237,6 @@ INPUT /usr/local/texlive/2019/texmf-dist/tex/latex/base/omscmr.fd
 INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.png
 INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.png
 INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.png
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.eps
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.eps
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.eps
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1-eps-converted-to.pdf
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1-eps-converted-to.pdf
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.eps
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1-eps-converted-to.pdf
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1-eps-converted-to.pdf
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1-eps-converted-to.pdf
 INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.bbl
 INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.bbl
 INPUT /usr/local/texlive/2019/texmf-dist/fonts/tfm/public/cm/cmtt9.tfm
@@ -272,6 +263,5 @@ INPUT /usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pf
 INPUT /usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb
 INPUT /usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb
 INPUT /usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb
-INPUT /usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb
 INPUT /usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb
 INPUT /usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb
