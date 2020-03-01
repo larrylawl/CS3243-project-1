@@ -172,7 +172,7 @@ def plotRunTimes(dim_3_nodes, dim_3_frontier):
     fig = plt.figure()
 
     # Prepare the x-axis
-    x = range(1, 28)
+    x = range(1, 26)
 
     plt.subplot(1, 2, 1)
 
@@ -217,6 +217,9 @@ def plotRunTimes(dim_3_nodes, dim_3_frontier):
     plt.plot(x, dim_3_frontier[0], label='Manhattan Distance')
     plt.plot(x, dim_3_frontier[1], label='Euclidean Distance')
     plt.plot(x, dim_3_frontier[2], label='Manhattan Distance + 2(Linear Conflicts)')
+
+    # Place the legend
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
     
     plt.show()
 
@@ -230,7 +233,7 @@ def getNodesExploredAndMaxFrontierSizeForKPuzzle(k):
     e_max_frontier = []
     lc_m_max_frontier = []
 
-    for steps in range(1, 28):
+    for steps in range(1, 26):
         m_30_nodes = []
         e_30_nodes = []
         lc_m_30_nodes = []
@@ -239,7 +242,7 @@ def getNodesExploredAndMaxFrontierSizeForKPuzzle(k):
         e_30_max_frontier = []
         lc_m_30_max_frontier = []
 
-        for i in range(10):
+        for i in range(30):
 
             incorrectNumberOfSteps = True
             while incorrectNumberOfSteps:
