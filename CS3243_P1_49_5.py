@@ -169,12 +169,12 @@ class Puzzle(object):
 
     # you may add more functions if you think is useful
 
-def plotRunTimes(dim_3_nodes, dim_3_memory):
+def plotRunTimes(nodes, memory, times):
 
     # Prepare the x-axis
     x = range(1, 26)
 
-    plt.subplot(1, 2, 1)
+    plt.subplot(1, 3, 1)
 
     # Name the title
     plt.title("Time Complexity")
@@ -191,14 +191,14 @@ def plotRunTimes(dim_3_nodes, dim_3_memory):
 
 
     # Plot the data
-    plt.plot(x, dim_3_nodes[0], label='Manhattan Distance')
-    plt.plot(x, dim_3_nodes[1], label='Euclidean Distance')
-    plt.plot(x, dim_3_nodes[2], label='Manhattan Distance + 2(Linear Conflicts)')
+    plt.plot(x, nodes[0], label='Manhattan Distance')
+    plt.plot(x, nodes[1], label='Euclidean Distance')
+    plt.plot(x, nodes[2], label='Manhattan Distance + 2(Linear Conflicts)')
 
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
 
-    plt.subplot(1, 2, 2)
+    plt.subplot(1, 3, 2)
     
     # Name the title
     plt.title("Space Complexity")
@@ -214,17 +214,41 @@ def plotRunTimes(dim_3_nodes, dim_3_memory):
     plt.grid(axis='y')
 
     # Plot the data
-    plt.plot(x, dim_3_memory[0], label='Manhattan Distance')
-    plt.plot(x, dim_3_memory[1], label='Euclidean Distance')
-    plt.plot(x, dim_3_memory[2], label='Manhattan Distance + 2(Linear Conflicts)')
+    plt.plot(x, memory[0], label='Manhattan Distance')
+    plt.plot(x, memory[1], label='Euclidean Distance')
+    plt.plot(x, memory[2], label='Manhattan Distance + 2(Linear Conflicts)')
 
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
+
+    plt.subplot(1, 3, 3)
     
+    # Name the title
+    plt.title("Space Complexity")
+
+    # Name the axes
+    plt.xlabel("Steps to Goal State")
+    plt.ylabel("Maximum Nodes in Memory")
+
+    # show all values on the x-axis
+    plt.xticks(x)
+
+    # show grid
+    plt.grid(axis='y')
+
+    # Plot the data
+    plt.plot(x, times[0], label='Manhattan Distance')
+    plt.plot(x, times[1], label='Euclidean Distance')
+    plt.plot(x, times[2], label='Manhattan Distance + 2(Linear Conflicts)')
+
+    # Place the legend
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
+
+
     plt.show()
 
 
-def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
+def getNodesExploredMaxMemorySizeAndTimeForKPuzzle(k):
 
     # The arrays will store the number of nodes generated for puzzles of steps n
     # where arr[i - 1] contains the number of nodes for step n
@@ -238,6 +262,12 @@ def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
     e_max_memory_used = []
     lc_m_max_memory_used = []
 
+    # The arrays will store the times generated for puzzles of steps n
+    # where arr[i - 1] contains the times for step n
+    m_times = []
+    e_times = []
+    lc_m_times = []
+
     # Generate puzzles from steps 1 to 25
     for steps in range(1, 26):
         m_30_nodes = []
@@ -247,6 +277,10 @@ def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
         m_30_max_memory_used = []
         e_30_max_memory_used = []
         lc_m_30_max_memory_used = []
+
+        m_30_times = []
+        e_30_times = []
+        lc_m_30_times = []
 
         # Generate each puzzle 30 times and take the average of each metric
         for i in range(30):
@@ -268,9 +302,9 @@ def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
                 lc_m_puzzle = linear_conf_manhattan.Puzzle(init_state, goal_state)
 
                 # Solve the puzzles for each of the heuristics scripts
-                m_puzzle.solve()
-                e_puzzle.solve()
-                lc_m_puzzle.solve()
+                m_time = m_puzzle.getSolutionTime()
+                e_time = e_puzzle.getSolutionTime()
+                lc_m_time = lc_m_puzzle.getSolutionTime()
 
                 # Get the number of steps taken to reach goal state
                 m_steps = len(m_puzzle.actions)
@@ -291,6 +325,12 @@ def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
                     m_30_max_memory_used.append(m_puzzle.nodes_in_memory)
                     e_30_max_memory_used.append(e_puzzle.nodes_in_memory)
                     lc_m_30_max_memory_used.append(lc_m_puzzle.nodes_in_memory)
+
+                    # Get the actual time taken
+                    m_30_times.append(m_time)
+                    e_30_times.append(e_time)
+                    lc_m_30_times.append(lc_m_time)
+
                 else:
                     print("!!!!!!!!!!!!!!!!!!REDO!!!!!!!!!!!!!!!!!!!\n")
 
@@ -303,6 +343,10 @@ def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
         e_ave_max_memory_used = np.mean(e_30_max_memory_used)
         lc_m_ave_max_memory_used = np.mean(lc_m_30_max_memory_used)
 
+        m_ave_times = np.mean(m_30_times)
+        e_ave_times = np.mean(e_30_times)
+        lc_m_ave_times = np.mean(lc_m_30_times) 
+        
         # Append to the arrays
         m_nodes.append(m_ave_nodes)
         e_nodes.append(e_ave_nodes)
@@ -311,17 +355,22 @@ def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
         m_max_memory_used.append(m_ave_max_memory_used)
         e_max_memory_used.append(e_ave_max_memory_used)
         lc_m_max_memory_used.append(lc_m_ave_max_memory_used)
+
+        m_times.append(m_ave_times)
+        e_times.append(e_ave_times)
+        lc_m_times.append(lc_m_ave_times)
     
     nodes_tuple = (m_nodes, e_nodes, lc_m_nodes)
     max_memory_used_tuple = (m_max_memory_used, e_max_memory_used, lc_m_max_memory_used)
+    time_tuple = (m_times, e_times, lc_m_times)
 
-    return (nodes_tuple, max_memory_used_tuple)
+    return (nodes_tuple, max_memory_used_tuple, time_tuple)
 
 
 if __name__ == "__main__":
     # dim_3_tuples return a tuple which contains:
     # tuple[0]: the nodes generated for the puzzles for each heuristic
     # tuple[1]: the max nodes in memory for the puzzles for each heuristics 
-    dim_3_tuples = getNodesExploredAndMaxMemorySizeForKPuzzle(3)
+    dim_3_tuples = getNodesExploredMaxMemorySizeAndTimeForKPuzzle(3)
 
-    plotRunTimes(dim_3_tuples[0], dim_3_tuples[1])
+    plotRunTimes(dim_3_tuples[0], dim_3_tuples[1], dim_3_tuples[2])
