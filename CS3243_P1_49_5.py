@@ -228,7 +228,7 @@ def plotRunTimes(nodes, memory, times):
 
     # Name the axes
     plt.xlabel("Steps to Goal State")
-    plt.ylabel("Maximum Nodes in Memory")
+    plt.ylabel("Actual Time Taken")
 
     # show all values on the x-axis
     plt.xticks(x)
