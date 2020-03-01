@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex samplepaper-larry"] 1583077042 "samplepaper-larry.aux" "samplepaper-larry.bbl" "samplepaper-larry" 1583077046
+["bibtex samplepaper-larry"] 1583076967 "samplepaper-larry.aux" "samplepaper-larry.bbl" "samplepaper-larry" 1583076970
   "./splncs04.bst" 1581675473 33694 ee21ae2a29028dc8ad842a97200982c7 ""
-  "CS3243_project_1.bib" 1583077036 814 3c12538843538e6f8782deb45f3f0ae0 ""
-  "samplepaper-larry.aux" 1583077044 5373 a5adcaecd6f7e876b0bf9abf392e2c00 "pdflatex"
+  "CS3243_project_1.bib" 1583076961 814 3c12538843538e6f8782deb45f3f0ae0 ""
+  "samplepaper-larry.aux" 1583076969 5332 6b2db3280e7a254fac6d90f8ca155078 "pdflatex"
   (generated)
   "samplepaper-larry.bbl"
   "samplepaper-larry.blg"
-["pdflatex"] 1583077042 "c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/samplepaper-larry.tex" "c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/samplepaper-larry.pdf" "samplepaper-larry" 1583077046
+["pdflatex"] 1583076967 "c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/samplepaper-larry.tex" "c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/samplepaper-larry.pdf" "samplepaper-larry" 1583076970
   "C:/Users/dalis/AppData/Local/MiKTeX/2.9/miktex/data/le/pdftex/pdflatex.fmt" 1582987414 9848437 2d581f4b787d7d7f2038c65db0a61491 ""
   "C:/Users/dalis/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map" 1582990593 77580 0902bf85dfadfdef13ad4bb0cb98be38 ""
   "C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1233951848 1120 1e8878807317373affa7f7bba4cf2f6a ""
@@ -53,7 +53,6 @@
   "C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmib10.pfb" 1247596666 36912 b448ef9ad9d7228ec3c6e71005136d55 ""
   "C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1247596667 35752 024fb6c41858982481f6968b5fc26508 ""
   "C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb" 1247596667 31809 8670ca339bf94e56da1fc21c80635e2a ""
-  "C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb" 1247596667 32734 69e00a6b65cedb993666e42eedb3d48f ""
   "C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1247596667 32762 7fee39e011c23b3589931effd97b9702 ""
   "C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb" 1247596666 33993 9b89b85fd2d9df0482bd47194d1d3bf3 ""
   "C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1247596667 32569 5e5ddc8df908dea60932f3c484a54c0d ""
@@ -181,15 +180,15 @@
   "C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/tex/latex/tools/multicol.sty" 1580644884 31532 04852e45d7c17cb384689d2f83b628d3 ""
   "C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/tex/latex/xcolor/xcolor.sty" 1463135581 57049 34128738f682d033422ca125f82e5d62 ""
-  "c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/samplepaper-larry.aux" 1583077044 5373 a5adcaecd6f7e876b0bf9abf392e2c00 ""
-  "c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/samplepaper-larry.tex" 1583077033 16607 75c057d29177e554f4334fe6d27aa975 ""
+  "c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/samplepaper-larry.aux" 1583076969 5332 6b2db3280e7a254fac6d90f8ca155078 ""
+  "c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/samplepaper-larry.tex" 1583076961 15863 0e71a03678af2adc776fb0883489184d ""
   "fig1.eps" 1581675473 357553 7e2b7e710693198613c8426973a2c3ce ""
   "fig1.png" 1583071966 79444 34b4cf95bb33e5605cb1c6520a7275cd ""
   "llncs.cls" 1581675473 43467 b08ec23e994470d7d8fc268d245cf555 ""
-  "samplepaper-larry.aux" 1583077044 5373 a5adcaecd6f7e876b0bf9abf392e2c00 "pdflatex"
-  "samplepaper-larry.bbl" 1583077042 561 cdb301b2c5f48c931a1d355d05b1ba20 "bibtex samplepaper-larry"
-  "samplepaper-larry.out" 1583077044 117 c991fae2c695135670a9f21426b5343b "pdflatex"
-  "samplepaper-larry.tex" 1583077033 16607 75c057d29177e554f4334fe6d27aa975 ""
+  "samplepaper-larry.aux" 1583076969 5332 6b2db3280e7a254fac6d90f8ca155078 "pdflatex"
+  "samplepaper-larry.bbl" 1583076967 741 4e7e952833348114186129033392ffee "bibtex samplepaper-larry"
+  "samplepaper-larry.out" 1583076969 117 c991fae2c695135670a9f21426b5343b "pdflatex"
+  "samplepaper-larry.tex" 1583076961 15863 0e71a03678af2adc776fb0883489184d ""
   (generated)
   "c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/samplepaper-larry.pdf"
   "samplepaper-larry.out"

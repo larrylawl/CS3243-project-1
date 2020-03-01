@@ -167,7 +167,7 @@ class Puzzle(object):
 
     # you may add more functions if you think is useful
 
-def plotRunTimes(dim_3_nodes, dim_3_frontier):
+def plotRunTimes(dim_3_nodes, dim_3_memory):
 
     fig = plt.figure()
 
@@ -205,7 +205,7 @@ def plotRunTimes(dim_3_nodes, dim_3_frontier):
 
     # Name the axes
     plt.xlabel("Steps to Goal State")
-    plt.ylabel("Maximum Frontier Size")
+    plt.ylabel("Maximum Nodes in Memory")
 
     # show all values on the x-axis
     plt.xticks(x)
@@ -214,9 +214,9 @@ def plotRunTimes(dim_3_nodes, dim_3_frontier):
     plt.grid(axis='y')
 
     # Plot the data
-    plt.plot(x, dim_3_frontier[0], label='Manhattan Distance')
-    plt.plot(x, dim_3_frontier[1], label='Euclidean Distance')
-    plt.plot(x, dim_3_frontier[2], label='Manhattan Distance + 2(Linear Conflicts)')
+    plt.plot(x, dim_3_memory[0], label='Manhattan Distance')
+    plt.plot(x, dim_3_memory[1], label='Euclidean Distance')
+    plt.plot(x, dim_3_memory[2], label='Manhattan Distance + 2(Linear Conflicts)')
 
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
@@ -224,23 +224,23 @@ def plotRunTimes(dim_3_nodes, dim_3_frontier):
     plt.show()
 
 
-def getNodesExploredAndMaxFrontierSizeForKPuzzle(k):
+def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
     m_nodes = []
     e_nodes = []
     lc_m_nodes = []
 
-    m_max_frontier = []
-    e_max_frontier = []
-    lc_m_max_frontier = []
+    m_max_memory_used = []
+    e_max_memory_used = []
+    lc_m_max_memory_used = []
 
     for steps in range(1, 26):
         m_30_nodes = []
         e_30_nodes = []
         lc_m_30_nodes = []
 
-        m_30_max_frontier = []
-        e_30_max_frontier = []
-        lc_m_30_max_frontier = []
+        m_30_max_memory_used = []
+        e_30_max_memory_used = []
+        lc_m_30_max_memory_used = []
 
         for i in range(30):
 
@@ -271,9 +271,9 @@ def getNodesExploredAndMaxFrontierSizeForKPuzzle(k):
                     e_30_nodes.append(len(e_puzzle.past_states))
                     lc_m_30_nodes.append(len(lc_m_puzzle.past_states))
 
-                    m_30_max_frontier.append(m_puzzle.frontier_size)
-                    e_30_max_frontier.append(e_puzzle.frontier_size)
-                    lc_m_30_max_frontier.append(lc_m_puzzle.frontier_size)
+                    m_30_max_memory_used.append(m_puzzle.nodes_in_memory)
+                    e_30_max_memory_used.append(e_puzzle.nodes_in_memory)
+                    lc_m_30_max_memory_used.append(lc_m_puzzle.nodes_in_memory)
                 else:
                     print("!!!!!!!!!!!!!!!!!!REDO!!!!!!!!!!!!!!!!!!!\n")
 
@@ -281,25 +281,25 @@ def getNodesExploredAndMaxFrontierSizeForKPuzzle(k):
         e_ave_nodes = np.mean(e_30_nodes)
         lc_m_ave_nodes = np.mean(lc_m_30_nodes)
 
-        m_ave_max_frontier = np.mean(m_30_max_frontier)
-        e_ave_max_frontier = np.mean(e_30_max_frontier)
-        lc_m_ave_max_frontier = np.mean(lc_m_30_max_frontier)
+        m_ave_max_memory_used = np.mean(m_30_max_memory_used)
+        e_ave_max_memory_used = np.mean(e_30_max_memory_used)
+        lc_m_ave_max_memory_used = np.mean(lc_m_30_max_memory_used)
 
         m_nodes.append(m_ave_nodes)
         e_nodes.append(e_ave_nodes)
         lc_m_nodes.append(lc_m_ave_nodes)
 
-        m_max_frontier.append(m_ave_max_frontier)
-        e_max_frontier.append(e_ave_max_frontier)
-        lc_m_max_frontier.append(lc_m_ave_max_frontier)
+        m_max_memory_used.append(m_ave_max_memory_used)
+        e_max_memory_used.append(e_ave_max_memory_used)
+        lc_m_max_memory_used.append(lc_m_ave_max_memory_used)
     
     nodes_tuple = (m_nodes, e_nodes, lc_m_nodes)
-    max_frontier_tuple = (m_max_frontier, e_max_frontier, lc_m_max_frontier)
+    max_memory_used_tuple = (m_max_memory_used, e_max_memory_used, lc_m_max_memory_used)
 
-    return (nodes_tuple, max_frontier_tuple)
+    return (nodes_tuple, max_memory_used_tuple)
 
 
 if __name__ == "__main__":
-    dim_3_tuples = getNodesExploredAndMaxFrontierSizeForKPuzzle(3)
+    dim_3_tuples = getNodesExploredAndMaxMemorySizeForKPuzzle(3)
 
     plotRunTimes(dim_3_tuples[0], dim_3_tuples[1])
