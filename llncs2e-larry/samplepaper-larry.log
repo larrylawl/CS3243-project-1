@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.2.3)  1 MAR 2020 22:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.2.3)  1 MAR 2020 23:59
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -581,12 +581,18 @@ a shorter form with \authorrunning prior to \maketitle
 [1
 
 {/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
-<fig1.png, id=115, 1110.0672pt x 561.5379pt>
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 166.
+ (/usr/local/texlive/2019/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 166.
+<fig1.png, id=123, 1110.0672pt x 561.5379pt>
 File: fig1.png Graphic file (type png)
 <use fig1.png>
-Package pdftex.def Info: fig1.png  used on input line 162.
+Package pdftex.def Info: fig1.png  used on input line 176.
 (pdftex.def)             Requested size: 347.12354pt x 175.59155pt.
- [4 </Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.png>]
+ [4]
 Package epstopdf Info: Source file: <fig1.eps>
 (epstopdf)                    date: 2020-02-14 18:16:51
 (epstopdf)                    size: 357553 bytes
@@ -594,41 +600,41 @@ Package epstopdf Info: Source file: <fig1.eps>
 (epstopdf)                    date: 2020-02-14 18:16:51
 (epstopdf)                    size: 26595 bytes
 (epstopdf)             Command: <repstopdf --outfile=fig1-eps-converted-to.pdf fig1.eps>
-(epstopdf)             \includegraphics on input line 212.
+(epstopdf)             \includegraphics on input line 225.
 Package epstopdf Info: Output file is already uptodate.
-<fig1-eps-converted-to.pdf, id=131, 345.29pt x 142.5325pt>
+<fig1-eps-converted-to.pdf, id=143, 345.29pt x 142.5325pt>
 File: fig1-eps-converted-to.pdf Graphic file (type pdf)
 <use fig1-eps-converted-to.pdf>
-Package pdftex.def Info: fig1-eps-converted-to.pdf  used on input line 212.
+Package pdftex.def Info: fig1-eps-converted-to.pdf  used on input line 225.
 (pdftex.def)             Requested size: 347.12354pt x 143.29115pt.
- [5 </Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1-eps-converted-to.pdf>] (/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.bbl
+ [5 </Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.png>] (/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 14--16
 []\OT1/cmr/m/n/9 Rosalind: Eu-clidean dis-tance, []$\OT1/cmtt/m/n/9 http : / / rosalind . info / glossary /
  []
 
-) [6]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 292.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 292.
+) [6 </Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1-eps-converted-to.pdf>] [7]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 305.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 305.
  (/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 292.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 292.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 305.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 305.
 Package rerunfilecheck Info: File `samplepaper-larry.out' has not changed.
 (rerunfilecheck)             Checksum: C991FAE2C695135670A9F21426B5343B;117.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 292.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 305.
  ) 
 Here is how much of TeX's memory you used:
- 16619 strings out of 492616
- 311204 string characters out of 6129482
- 387884 words of memory out of 5000000
- 20170 multiletter control sequences out of 15000+600000
+ 16644 strings out of 492616
+ 311587 string characters out of 6129482
+ 387969 words of memory out of 5000000
+ 20186 multiletter control sequences out of 15000+600000
  15178 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,10n,48p,512b,402s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,10n,48p,512b,384s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.pdf (6 pages, 362225 bytes).
+Output written on /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.pdf (7 pages, 363707 bytes).
 PDF statistics:
- 295 PDF objects out of 1000 (max. 8388607)
- 229 compressed objects within 3 object streams
- 76 named destinations out of 1000 (max. 500000)
+ 315 PDF objects out of 1000 (max. 8388607)
+ 244 compressed objects within 3 object streams
+ 82 named destinations out of 1000 (max. 500000)
  31 words of extra memory for PDF output out of 10000 (max. 10000000)
 

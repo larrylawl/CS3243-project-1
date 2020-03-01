@@ -55,22 +55,24 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
     \item \textbf{Actions or \textit{Actions(s)}:} Let \( m_{k, l} \in M \) denote the blank tile and \( m_{i, j} \in M \) denote the tile \textbf{adjacent} to the blank tile \( m_{k, l} \).
     Actions are movements of the adjacent tile \( m_{i, j} \) towards the blank tile \( m_{k, l} \). For example, the action \textit{Left} moves the adjacent tile \( m_{k, l+1} \in M \) to the blank tile \( m_{k, l} \).
     \item \textbf{Transition Model or \textit{Result(s,a)}:} \( Result(s, a) \) swaps the pair of tiles specified in action \( a \) in the current state \textit{s} and returns this new state \textit{s'}.
-    \item \textbf{Goal State:}
+    \item \textbf{Goal State:} 
     \[
     M_{goal}= \begin{bmatrix}
-        1 & 2 & 3 \\
-        4 & 5 & 6 \\
-        7 & 8 & 0
+        1 & 2 & \cdots & k \\
+        k+1 & k+2 & \cdots & 2k \\
+        \vdots & \vdots & \vdots \\
+        k^2 - k + 1 & k^2 - k & \cdots & 0
         \end{bmatrix}
     \]
     \item \textbf{Path Cost:} Every step cost \textit{c(s, a, s') = 1}, and the path cost is the summation of the step costs from the initial state to the goal state.
 \end{enumerate}
 
 \section{Technical Analysis of the Selected Algorithms and Heuristics}
+\label{section2}
 
 \subsection{Rule to Check if k-puzzle is Solvable}
-\textbf{Definition.} A pair of tiles form an \textit{inversion} if the values on tiles are in the reverse order of their appearance in the goal state. \\
-\textbf{Rules~\cite{aditya_goel_how_nodate}.} Let \( M \) denote a \( k \times k \) matrix, \( m_{i, j} \) denote a blank tile in \( M \), and \( n_i \) denote the number of inversions in the intial state \( M_{initial} \). Puzzle is solvable if \dots
+\textbf{Definition.}~\cite{aditya_goel_how_nodate}. A pair of tiles form an \textit{inversion} if the values on tiles are in the reverse order of their appearance in the goal state. \\
+\textbf{Rules}~\cite{aditya_goel_how_nodate}. Let \( M \) denote a \( k \times k \) matrix, \( m_{i, j} \) denote a blank tile in \( M \), and \( n_i \) denote the number of inversions in the intial state \( M_{initial} \). Puzzle is solvable if \dots
 \begin{enumerate}
     \item \( k \) is odd and \( n_i \) is even
     \item \( k \) is even,
@@ -82,7 +84,7 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 
 \subsection{Uninformed Search}
 \begin{enumerate}
-    \item \textbf{Implementation:} Graph-based IDS. Step costs are equal, thus it is optimal. Furthermore, since the search space is large and the depth of the solution is not known, IDS is preferred ~\cite[p90]{stuart_russell_artifical_2010}.
+    \item \textbf{Implementation:} Graph-based IDS. Step costs are equal, thus it is optimal~\cite[p88]{stuart_russell_artifical_2010}. Furthermore, since the search space is large and the depth of the solution is not known, IDS is preferred ~\cite[p90]{stuart_russell_artifical_2010}.
     \item \textbf{Correctness:} Branching factor \( b = 4 \) is finite, thus IDS is complete ~\cite[p88-90]{stuart_russell_artifical_2010}. 
     \item \textbf{Time Complexity:} \( O(b^d) \) ~\cite[p88-90]{stuart_russell_artifical_2010}.
     \item \textbf{Space Complexity:} \( O(bd) \) ~\cite[p88-90]{stuart_russell_artifical_2010}.
@@ -91,20 +93,20 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 % TODO Add in proofs for heuristic
 \subsection{Informed Search}
 \begin{enumerate}
-    \item \textbf{Implementation:} Graph-based \( A^* \) search. It improofs on greedy best first search (ie \( f(n) = h(n) \)) as it avoids expanding paths that are already expensive (ie \( f(n) = g(n) + h(n) \)).
+    \item \textbf{Implementation:} Graph-based \( A^* \) search. It improves on greedy best first search (ie \( f(n) = h(n) \)) as it avoids expanding paths that are already expensive (ie \( f(n) = g(n) + h(n) \)).
     \item \textbf{Correctness:} Since the search space is finite, \( A^* \) search will be complete.
     \item \textbf{Time Complexity:} \( O(b^{h^*(s_0) - h(s_0)}) \) ~\cite[p93-99]{stuart_russell_artifical_2010}.
     \item \textbf{Space Complexity:} \( O(b^m) \) ~\cite[p93-99]{stuart_russell_artifical_2010}.
 \end{enumerate}
 
-\subsection{\(h_1:\) Euclidean Distance}
-\textbf{Definition.} Euclidean Distance heuristic is defined as the straight line distance between the tiles from their goal position ~\cite{rosalind_euclidean_nodate}. \\
-\textbf{Proof for Consistency.} Euclidian distance is a form general triangle inequality, given that the euclidian distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides ( the actual distance from S to middle state N and the euclidian distance from N to G) as the euclidian distance from \( S \) to \( G \) is already the shortest path. 
-Since general triangle inequality fulfills the definition of consistency ~\cite[p95]{stuart_russell_artifical_2010}, euclidean distance is consistent.
-
-\subsection{\(h_2:\) Manhattan Distance} 
-\textbf{Definition.} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010} . Note that this sum only includes horizontal and vertical distances as \textit{Actions} do not allow the diagonal movements. \\
+\subsection{\(h_1:\) Manhattan Distance} 
+\textbf{Definition.} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010} . Note that this sum only includes horizontal and vertical distances as \textit{Actions} do not allow diagonal movements. \\
 \textbf{Proof for Consistency.} Proof for consistency can be found in appendix \ref{appendix:manhat_cons}.
+
+\subsection{\(h_2:\) Euclidean Distance}
+\textbf{Definition.} Euclidean Distance heuristic is defined as the straight line distance between the tiles from their goal position ~\cite{rosalind_euclidean_nodate}. \\
+\textbf{Proof for Consistency.} Euclidean distance is a form general triangle inequality, given that the euclidean distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides ( the actual distance from S to middle state N and the euclidean distance from N to G) as the euclidean distance from \( S \) to \( G \) is already the shortest path. 
+Since general triangle inequality fulfills the definition of consistency ~\cite[p95]{stuart_russell_artifical_2010}, euclidean distance is consistent.
 
 \subsection{ \(h_3: \) Linear Conflict}
 \textbf{Definition.} Two tiles \( t_j \) and \( t_k \) are in a linear conflict if \( t_j \) and \( t_k \) are in the same line, 
@@ -130,7 +132,7 @@ the goal positions of \( t_j \) and \( t_k \) are both in that line,
 \[
     f(s) = g(s) + h(s)
 \]
-, where $g(s') = g(s) + 1$ and $h(s) = ManhattanDistance(s) + LinearConflict(s)$. \\
+where $g(s') = g(s) + 1$ and $h(s) = ManhattanDistance(s) + LinearConflict(s)$. \\
 Assume that tile \( t_k \) moves from row \( r_i \) to row \( r_j \) and stays in the same column. Let \( ManhattanDistance(s) \) be \( MD(s) \) and \( LinearConflict(s) \) be \( LC(s) \). 
 \begin{enumerate}
     \item \textbf{Condition 1:} Both \( r_i \) and \( r_j \) are not the goal row of \( t_j \).
@@ -146,7 +148,7 @@ Assume that tile \( t_k \) moves from row \( r_i \) to row \( r_j \) and stays i
     \item \textbf{Condition 3:} \( r_i \) is the goal row of \( t_j \).
     
         As \( t_j \) moves away from its goal row, \( MD(s') = MD(s) + 1 \). 
-        As \( r_i \) is the goal row, the conflicts in row \( r_i \) may or may not decrease; so it is either \( lc(s', r_i) = lc(s, r_i) \) or \( lc(s', r_i) = lc(s, r_i) + 2 \). 
+        As \( r_i \) is the goal row, the conflicts in row \( r_i \) may or may not decrease; so it is either \( lc(s', r_i) = lc(s, r_i) \) or \( lc(s', r_i) = lc(s, r_i) - 2 \). 
         Since \( r_j \) is not the goal row of \( t_j \), \( lc(s', r_j) = lc(s, r_j) \). 
         Therefore, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
 \end{enumerate}
@@ -154,16 +156,27 @@ All 3 cases show that \( f(s') \geq f(s) \). Thus, for any tile which moves from
 
 
 \section{Experimental Setup}
-\subsection{Description}
-The three informed searches were tested against 3 x 3 puzzles of varying difficulty and their runtimes are plotted against the number of nodes it passed to achieve goal states. To minimize bias, the searches were tested against 30 different puzzles for each number of steps needed to achieve goal states and the average of the 30 values of nodes passed are taken. See
-Fig.~\ref{fig1} for the visualization of the results.
+\subsection{Experiment Goals}
+The goal of the experiments are to measure the time and space complexity of the search algorithms. The metrics used to measure these complexities are justified below. The rationale for the chosen algorithms and heuristics are elaborated in section \ref{section2}. \\
+\textbf{Time Complexity:} Number of nodes generated during the search \cite[p80]{stuart_russell_artifical_2010}. This is measured by number of the explored states. \\
+\textbf{Space Complexity:} Maximum number of nodes stored in memory during the search \cite[p80]{stuart_russell_artifical_2010}. This is measured by the largest summation of number of nodes in the explored set and frontier size during the search. 
+However, note that maximum number of nodes \( \neq \) maximum number of nodes in the explored set + maximum size of frontier. This is because the maximum sizes of explored states and frontier size might not occur in the same step; the frontier size is always changing.
 
+\subsection{Experiment Implementation Description}
+For n = \{1 \dots 25\}
+\begin{enumerate}
+    \item Generate \(3 \times 3 \) matrix \( M \) that has \( n \) number of steps to reach the goal state.
+    \item Perform search alogrithm on matrix \( M \)
+    \item Plot the number of nodes generated and maximum nodes in memory against n. 
+    \item To minimise bias, for each iteration, the puzzle solves 30 different puzzles of n steps and the average number of nodes and maximum nodes in memory are taken.
+\end{enumerate}
+
+\subsection{Results and Discussion}
 \begin{figure}
     \includegraphics[width=\textwidth]{fig1.png}
     \caption{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig1}
     \end{figure}
 
-\subsection{Analysis}
 For simple problems (number of steps is less than 15), the differences in the three heuristics' performance are negligible. However, as the puzzle becomes more complicated there is a clear divergence in the time and space complexity as can be seen in Fig.~\ref{fig1} above.
 
 \section{First Section}
