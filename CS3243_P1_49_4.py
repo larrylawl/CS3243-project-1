@@ -66,9 +66,6 @@ def flatten_array(unflattened_array):
 
     return flattened_arr
 
-def random_insert(lst, item):
-    lst.insert(randrange(len(lst)+1), item)
-
 def isEven(count):
         return count % 2 == 0
 
@@ -206,21 +203,6 @@ class Puzzle(object):
         return no_of_inversions
 
     @staticmethod
-    def even(count):
-        return count % 2 == 0
-
-    @staticmethod
-    def count_inversions(arr):
-        no_of_inversions = 0
-
-        for i in range(len(arr)):
-            for j in range(i, len(arr), 1):
-                if arr[i] > arr[j] != 0:
-                    no_of_inversions += 1
-
-        return no_of_inversions
-
-    @staticmethod
     def flatten_array(unflattened_array):
         flattened_arr = []
         for array in unflattened_array:
@@ -244,7 +226,6 @@ class Puzzle(object):
         # Unit test for transition
         stubbed_state = [1, 2, 3, 4, 5, 6, 7, 0, 8]
         stubbed_node = {"state" : stubbed_state, "cost" : 0, "depth": 0, "actions_history": list()}
-        stubbed_past_states = set()
         new_node = puzzle.transition(stubbed_node, Actions.LEFT)
         assert stubbed_node != new_node, "Unit test for transition is failing: transition should return a new node"
         assert new_node["state"][8] == 0, "Unit test for transition is failing: transition incorrectly"
@@ -358,9 +339,6 @@ class Puzzle(object):
                     heapq.heappush(frontier, ((evaluation_func, id(child_node), child_node)))
                    
         return curr_node["actions_history"]
-
-
-
 
     def convert_val_to_coord(self, value):
         return value // self.k, value % self.k

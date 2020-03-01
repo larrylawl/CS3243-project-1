@@ -66,9 +66,6 @@ def flatten_array(unflattened_array):
 
     return flattened_arr
 
-def random_insert(lst, item):
-    lst.insert(randrange(len(lst)+1), item)
-
 def isEven(count):
         return count % 2 == 0
 

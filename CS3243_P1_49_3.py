@@ -66,9 +66,6 @@ def flatten_array(unflattened_array):
 
     return flattened_arr
 
-def random_insert(lst, item):
-    lst.insert(randrange(len(lst)+1), item)
-
 def isEven(count):
         return count % 2 == 0
 
@@ -204,22 +201,7 @@ class Puzzle(object):
                     no_of_inversions += 1
 
         return no_of_inversions
-
-    @staticmethod
-    def even(count):
-        return count % 2 == 0
-
-    @staticmethod
-    def count_inversions(arr):
-        no_of_inversions = 0
-
-        for i in range(len(arr)):
-            for j in range(i, len(arr), 1):
-                if arr[i] > arr[j] != 0:
-                    no_of_inversions += 1
-
-        return no_of_inversions
-
+        
     @staticmethod
     def flatten_array(unflattened_array):
         flattened_arr = []
