@@ -115,13 +115,13 @@ the goal positions of \( t_j \) and \( t_k \) are both in that line,
 and the goal position of \( t_j \) is to the left of the goal position of \( t_k \). 
 \textbf{Derivation.} For any state \( s \),
 \begin{enumerate}
-    \item For each tile \( t_j \) in \( r_i \), let \( C(t_j, r_i) \) denote the number of tiles conflicting with \( t_j\) in row \( r_i \).
+    \item For each tile \( t_j \) in \( r_i \), let \( C(t_j, r_i) \) denote the number of tiles conflicting with \( t_j \) in row \( r_i \).
     \item While there is a non-zero \( C(t_j, r_i) \) value,
     \begin{enumerate}
         \item Move out the tile with the most conflicts from \( r_i \). Let this tile be \( t_k \).
         \item Set \( C(t_k, r_i) \) = 0.
         \item For every tile \( t_j \) in conflict with \( t_k \), decrement \( C(t_j, r_i) \) by 1.
-        \item Let \( lc(s, r_i) \) denote the number of tiles that must be removed from row \( r_i \) in order to resolve the linear conflicts in \( r_i \).
+        \item Let \( lc(s, r_i) \) denote the number of tiles that must be removed from row \( r_i \) in order to resolve the linear conflicts in \( r_i \). Increment \( lc(s, r_i) \) by 1.
     \end{enumerate}
     \item Repeat Step 1 and 2 for other rows and columns and sum the values of all \( lc (s, r_i) \) and \( lc(s, c_i) \).
     \item Let \( LinearConflict(s) \) denote the minimum number of additional moves necessary to resolve the linear conflicts in state \( s \). \( LinearConflict(s) \) = 2 x result from Step 3.
@@ -129,7 +129,7 @@ and the goal position of \( t_j \) is to the left of the goal position of \( t_k
         h_3(s) = ManhattanDistance(s) + LinearConflict(s)
     \end{equation}
 \end{enumerate}
-\textbf{Prove for Consistency.} To prove consistency, we must prove that for all \( s \) and \( s' \), \( f(s') \) \geq \( f(s) \), where \( s' \) is the successor of \( s \).
+\textbf{Prove for Consistency.} To prove consistency, we must prove that for all \( s \) and \( s' \), \( f(s') \geq f(s) \), where \( s' \) is the successor of \( s \).
 \begin{equation}
     f(s) = g(s) + h(s), where g(s') = g(s) + 1 and h(s) = ManhattanDistance(s) + LinearConflict(s).
 \end{equation}
@@ -141,13 +141,13 @@ Assume that tile \( t_k \) moves from row \( r_i \) to row \( r_j \) and stays i
     
     \item \textbf{Condition 2:} \( r_j \) is the goal row of \( t_j \).
         
-        \( MD(s') = MD(s) - 1 \). Since \( r_i \) is not the goal row of \( t_j \), \( lc(s', r_i) = lc(s, r_i) \). 
+        As \( t_j \) moves to its goal row, \( MD(s') = MD(s) - 1 \). Since \( r_i \) is not the goal row of \( t_j \), \( lc(s', r_i) = lc(s, r_i) \). 
         As \( r_j \) is the goal row, the conflicts in row \( r_j \) may or may not increase; so it is either \( lc(s', r_j) = lc(s, r_j) \) or \( lc(s', r_j) = lc(s, r_j) + 2 \). 
         Hence, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
 
     \item \textbf{Condition 3:} \( r_i \) is the goal row of \( t_j \).
     
-        \( MD(s') = MD(s) + 1 \). 
+        As \( t_j \) moves away from its goal row, \( MD(s') = MD(s) + 1 \). 
         As \( r_i \) is the goal row, the conflicts in row \( r_i \) may or may not decrease; so it is either \( lc(s', r_i) = lc(s, r_i) \) or \( lc(s', r_i) = lc(s, r_i) + 2 \). 
         Since \( r_j \) is not the goal row of \( t_j \), \( lc(s', r_j) = lc(s, r_j) \). 
         Therefore, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
