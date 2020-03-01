@@ -111,6 +111,7 @@ Since general triangle inequality fulfills the definition of consistency ~\cite[
 \subsection{ \(h_3: \) Linear Conflict}
 
 \section{Experimental Setup}
+\subsection{Description}
 The three informed searches were tested against 3 x 3 puzzles of varying difficulty and their runtimes are plotted against the number of nodes it passed to achieve goal states. To minimize bias, the searches were tested against 30 different puzzles for each number of steps needed to achieve goal states and the average of the 30 values of nodes passed are taken. See
 Fig.~\ref{fig1} for the visualization of the results.
 
@@ -118,6 +119,9 @@ Fig.~\ref{fig1} for the visualization of the results.
     \includegraphics[width=\textwidth]{fig1.png}
     \caption{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig1}
     \end{figure}
+
+\subsection{Analysis}
+For simple problems (number of steps is less than 15), the differences in the three heuristics' performance are negligible. However, as the puzzle becomes more complicated there is a clear divergence in the time and space complexity as can be seen in Fig.~\ref{fig1} above.
 
 \section{First Section}
 \subsection{A Subsection Sample}

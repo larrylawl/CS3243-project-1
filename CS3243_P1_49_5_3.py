@@ -170,45 +170,39 @@ class Puzzle(object):
 def plotRunTimes(dim_3_tuple):
 
     # Prepare the x-axis
-    x = range(1, 26)
+    x = range(1, 31)
 
     # Name the title
     plt.title("3 X 3 Puzzle")
 
     # Name the axes
     plt.xlabel("Steps to Goal State")
-    plt.ylabel("Nodes Explored")
+    plt.ylabel("Time Taken")
 
     # Plot the data
     plt.plot(x, dim_3_tuple[0], label='Manhattan Distance')
     plt.plot(x, dim_3_tuple[1], label='Euclidean Distance')
     plt.plot(x, dim_3_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
 
-    # show all values on the x-axis
-    plt.xticks(x)
-
-    # show grid
-    plt.grid(axis='y')
-    
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
 
     plt.show()
 
 
-def getNodesExploredForKPuzzle(k):
+def getRunTimesForKPuzzle(k):
     m_times = []
     e_times = []
     lc_m_times = []
 
-    for steps in range(1, 26):
+    for steps in range(1, 31):
         m_30_times = []
         e_30_times = []
         lc_m_30_times = []
 
         i = 1
 
-        for i in range(1, 21):
+        for i in range(10):
 
             incorrectNumberOfSteps = True
             while incorrectNumberOfSteps:
@@ -221,9 +215,9 @@ def getNodesExploredForKPuzzle(k):
                 e_puzzle = euclidean.Puzzle(init_state, goal_state)
                 lc_m_puzzle = linear_conf_manhattan.Puzzle(init_state, goal_state)
 
-                m_puzzle.solve()
-                e_puzzle.solve()
-                lc_m_puzzle.solve()
+                m_time = m_puzzle.getSolutionTime()
+                e_time = e_puzzle.getSolutionTime()
+                lc_m_time = lc_m_puzzle.getSolutionTime()
 
                 m_steps = len(m_puzzle.actions)
                 e_steps = len(e_puzzle.actions)
@@ -233,9 +227,9 @@ def getNodesExploredForKPuzzle(k):
 
                     incorrectNumberOfSteps = False
 
-                    m_30_times.append(len(m_puzzle.past_states))
-                    e_30_times.append(len(e_puzzle.past_states))
-                    lc_m_30_times.append(len(lc_m_puzzle.past_states))
+                    m_30_times.append(m_time)
+                    e_30_times.append(e_time)
+                    lc_m_30_times.append(lc_m_time)
                 else:
                     print("!!!!!!!!!!!!!!!!!!REDO!!!!!!!!!!!!!!!!!!!\n")
 
@@ -251,6 +245,6 @@ def getNodesExploredForKPuzzle(k):
 
 
 if __name__ == "__main__":
-    dim_3_nodes = getNodesExploredForKPuzzle(3)
+    dim_3_tuple = getRunTimesForKPuzzle(3)
 
-    plotRunTimes(dim_3_nodes)
+    plotRunTimes(dim_3_tuple)

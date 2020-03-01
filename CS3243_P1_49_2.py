@@ -92,6 +92,7 @@ class Puzzle(object):
         self.past_states = set()
         self.k = len(init_state)
         self.state_to_cost = {}
+        self.frontier_size = 0
 
     def transition(self, node, action):
         """ Moves the blank tile in the OPPOSITE direction specified by the action. (p4 of project1.pdf!
@@ -328,6 +329,7 @@ class Puzzle(object):
             for action in self.valid_actions(curr_node):
                 child_node = self.transition(curr_node, action)
                 child_state_string = state_to_string(child_node["state"])
+                self.frontier_size += 1
 
                 if child_state_string not in self.past_states:
                     heuristic = self.get_heuristic_Manhattan(child_node)

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7300 64-bit) (preloaded format=pdflatex 2020.2.29)  1 MAR 2020 12:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7300 64-bit) (preloaded format=pdflatex 2020.2.29)  1 MAR 2020 20:24
 entering extended mode
 **c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/samplepaper-larry.tex
 (c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/samplepaper-larry.tex
@@ -608,8 +608,9 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 <fig1.png, id=94, 925.056pt x 419.8887pt>
 File: fig1.png Graphic file (type png)
 <use fig1.png>
-Package pdftex.def Info: fig1.png  used on input line 118.
+Package pdftex.def Info: fig1.png  used on input line 119.
 (pdftex.def)             Requested size: 347.12354pt x 157.56038pt.
+ [3 <c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/fig1.png>]
 Package epstopdf Info: Source file: <fig1.eps>
 (epstopdf)                    date: 2020-02-14 18:17:53
 (epstopdf)                    size: 357553 bytes
@@ -617,40 +618,40 @@ Package epstopdf Info: Source file: <fig1.eps>
 (epstopdf)                    date: 2020-02-14 18:17:53
 (epstopdf)                    size: 26595 bytes
 (epstopdf)             Command: <epstopdf --outfile=fig1-eps-converted-to.pdf fig1.eps>
-(epstopdf)             \includegraphics on input line 165.
+(epstopdf)             \includegraphics on input line 169.
 Package epstopdf Info: Output file is already uptodate.
-<fig1-eps-converted-to.pdf, id=98, 345.29pt x 142.5325pt>
+<fig1-eps-converted-to.pdf, id=111, 345.29pt x 142.5325pt>
 File: fig1-eps-converted-to.pdf Graphic file (type pdf)
 <use fig1-eps-converted-to.pdf>
-Package pdftex.def Info: fig1-eps-converted-to.pdf  used on input line 165.
+Package pdftex.def Info: fig1-eps-converted-to.pdf  used on input line 169.
 (pdftex.def)             Requested size: 347.12354pt x 143.29115pt.
- [3 <c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/fig1.png>] (c:/Users\dalis\Documents\GitHub\CS3243-project-1\llncs2e-larry\samplepaper-larry.bbl [4 <c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/fig1-eps-converted-to.pdf>]
+ [4 <c:/Users/dalis/Documents/GitHub/CS3243-project-1/llncs2e-larry/fig1-eps-converted-to.pdf>] (c:/Users\dalis\Documents\GitHub\CS3243-project-1\llncs2e-larry\samplepaper-larry.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 10--12
 []\OT1/cmr/m/n/9 Rosalind: Eu-clidean dis-tance, []$\OT1/cmtt/m/n/9 http : / / rosalind . info / glossary /
  []
 
 ) [5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 245.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 245.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 249.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 249.
  (c:/Users\dalis\Documents\GitHub\CS3243-project-1\llncs2e-larry\samplepaper-larry.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 245.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 245.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 249.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 249.
 Package rerunfilecheck Info: File `samplepaper-larry.out' has not changed.
 (rerunfilecheck)             Checksum: C991FAE2C695135670A9F21426B5343B;117.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 245.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 249.
  ) 
 Here is how much of TeX's memory you used:
- 17197 strings out of 481565
- 326838 string characters out of 2914179
+ 17199 strings out of 481565
+ 326870 string characters out of 2914179
  567305 words of memory out of 3000000
  32015 multiletter control sequences out of 15000+200000
  543876 words of font info for 67 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,10n,60p,509b,468s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 60i,10n,60p,509b,392s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti9.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt9.pfb><C:/Users/dalis/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on c:/Users\dalis\Documents\GitHub\CS3243-project-1\llncs2e-larry\samplepaper-larry.pdf (5 pages, 362905 bytes).
+Output written on c:/Users\dalis\Documents\GitHub\CS3243-project-1\llncs2e-larry\samplepaper-larry.pdf (5 pages, 363858 bytes).
 PDF statistics:
- 269 PDF objects out of 1000 (max. 8388607)
- 61 named destinations out of 1000 (max. 500000)
+ 272 PDF objects out of 1000 (max. 8388607)
+ 63 named destinations out of 1000 (max. 500000)
  31 words of extra memory for PDF output out of 10000 (max. 10000000)
 
