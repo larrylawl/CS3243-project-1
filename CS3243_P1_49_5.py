@@ -170,7 +170,7 @@ class Puzzle(object):
 def plotRunTimes(dim_3_tuple):
 
     # Prepare the x-axis
-    x = range(1, 26)
+    x = range(1, 28)
 
     # Name the title
     plt.title("3 X 3 Puzzle")
@@ -201,7 +201,7 @@ def getNodesExploredForKPuzzle(k):
     e_times = []
     lc_m_times = []
 
-    for steps in range(1, 26):
+    for steps in range(1, 28):
         m_30_times = []
         e_30_times = []
         lc_m_30_times = []
