@@ -35,8 +35,9 @@ Law Ann Liat, Larry \inst{4}}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
-\institute{INSERT DALIS MATRIC NUMBER \and
-A0187536R \and
+
+\institute{A0187451Y \and
+INSERT JOHANNA MATRIC NUMBER \and
 INSERT SEAN MATRIC NUMBER \and 
 A0189883A}
 %
@@ -89,18 +90,23 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
     \item \textbf{Space Complexity:} \( O(bd) \) ~\cite[p88-90]{stuart_russell_artifical_2010}.
 \end{enumerate}
 
-% TODO Add in proves for heuristic
+% TODO Add in proofs for heuristic
 \subsection{Informed Search}
 \begin{enumerate}
-    \item \textbf{Implementation:} Graph-based \( A^* \) search. It improves on greedy best first search (ie \( f(n) = h(n) \)) as it avoids expanding paths that are already expensive (ie \( f(n) = g(n) + h(n) \)).
+    \item \textbf{Implementation:} Graph-based \( A^* \) search. It improofs on greedy best first search (ie \( f(n) = h(n) \)) as it avoids expanding paths that are already expensive (ie \( f(n) = g(n) + h(n) \)).
     \item \textbf{Correctness:} Since the search space is finite, \( A^* \) search will be complete.
     \item \textbf{Time Complexity:} \( O(b^{h^*(s_0) - h(s_0)}) \) ~\cite[p93-99]{stuart_russell_artifical_2010}.
     \item \textbf{Space Complexity:} \( O(b^m) \) ~\cite[p93-99]{stuart_russell_artifical_2010}.
 \end{enumerate}
 
-\subsection{\(h_1:\) Manhattan Distance} 
+\subsection{\(h_1:\) Euclidean Distance}
+\textbf{Definition.} Euclidean Distance heuristic is defined as the straight line distance between the tiles from their goal position ~\cite{rosalind_euclidean_nodate}. \\
+\textbf{Proof for Consistency.} Euclidian distance is a form general triangle inequality, given that the euclidian distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides ( the actual distance from S to middle state N and the euclidian distance from N to G) as the euclidian distance from \( S \) to \( G \) is already the shortest path. 
+Since general triangle inequality fulfills the definition of consistency ~\cite[p95]{stuart_russell_artifical_2010}, euclidean distance is consistent.
+
+\subsection{\(h_2:\) Manhattan Distance} 
 \textbf{Definition.} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010} . Note that this sum only includes horizontal and vertical distances as \textit{Actions} do not allow the diagonal movements. \\
-\textbf{Prove for Consistency.} Prove for consistency can be found in appendix \ref{appendix:manhat_cons}.
+\textbf{Proof for Consistency.} Proof for consistency can be found in appendix \ref{appendix:manhat_cons}.
 
 \subsection{\(h_2:\) Euclidean Distance}
 \textbf{Definition.} Euclidean Distance heuristic is defined as the straight line distance between the tiles from their goal position ~\cite{rosalind_euclidean_nodate}. \\
@@ -156,11 +162,17 @@ All 3 cases show that \( f(s') \geq f(s) \). Thus, for any tile which moves from
 
 
 \section{Experimental Setup}
-\begin{enumerate}
-    \item \textbf{Number of Nodes Generated:} Time Complexity
-    \item \textbf{Size of Frontier:} Space Complexity
-    \item Plot puzzle difficulty or multiple iterations for the same puzzle difficulty against time/space complexity 
-\end{enumerate}
+\subsection{Description}
+The three informed searches were tested against 3 x 3 puzzles of varying difficulty and their runtimes are plotted against the number of nodes it passed to achieve goal states. To minimize bias, the searches were tested against 30 different puzzles for each number of steps needed to achieve goal states and the average of the 30 values of nodes passed are taken. See
+Fig.~\ref{fig1} for the visualization of the results.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{fig1.png}
+    \caption{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig1}
+    \end{figure}
+
+\subsection{Analysis}
+For simple problems (number of steps is less than 15), the differences in the three heuristics' performance are negligible. However, as the puzzle becomes more complicated there is a clear divergence in the time and space complexity as can be seen in Fig.~\ref{fig1} above.
 
 \section{First Section}
 \subsection{A Subsection Sample}
@@ -208,7 +220,7 @@ Fig.~\ref{fig1}).
 \includegraphics[width=\textwidth]{fig1.eps}
 \caption{A figure caption is always placed below the illustration.
 Please note that short captions are centered, while long ones are
-justified by the macro package automatically.} \label{fig1}
+justified by the macro package automatically.} \label{fig2}
 \end{figure}
 
 \begin{theorem}
@@ -266,7 +278,7 @@ Oct 2017
 \end{thebibliography}
 
 \appendix
-\section{Prove for Manhattan Distance Consistency}
+\section{Proof for Manhattan Distance Consistency}
 \label{appendix:manhat_cons}
 
 To prove that Manhattan Distance is consistent.

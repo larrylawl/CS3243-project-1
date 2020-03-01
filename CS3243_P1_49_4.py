@@ -66,9 +66,6 @@ def flatten_array(unflattened_array):
 
     return flattened_arr
 
-def random_insert(lst, item):
-    lst.insert(randrange(len(lst)+1), item)
-
 def isEven(count):
         return count % 2 == 0
 
@@ -95,6 +92,7 @@ class Puzzle(object):
         self.past_states = set()
         self.k = len(init_state)
         self.state_to_cost = {}
+        self.frontier_size = 0
 
     def transition(self, node, action):
         """ Moves the blank tile in the OPPOSITE direction specified by the action. (p4 of project1.pdf!
@@ -206,21 +204,6 @@ class Puzzle(object):
         return no_of_inversions
 
     @staticmethod
-    def even(count):
-        return count % 2 == 0
-
-    @staticmethod
-    def count_inversions(arr):
-        no_of_inversions = 0
-
-        for i in range(len(arr)):
-            for j in range(i, len(arr), 1):
-                if arr[i] > arr[j] != 0:
-                    no_of_inversions += 1
-
-        return no_of_inversions
-
-    @staticmethod
     def flatten_array(unflattened_array):
         flattened_arr = []
         for array in unflattened_array:
@@ -244,7 +227,6 @@ class Puzzle(object):
         # Unit test for transition
         stubbed_state = [1, 2, 3, 4, 5, 6, 7, 0, 8]
         stubbed_node = {"state" : stubbed_state, "cost" : 0, "depth": 0, "actions_history": list()}
-        stubbed_past_states = set()
         new_node = puzzle.transition(stubbed_node, Actions.LEFT)
         assert stubbed_node != new_node, "Unit test for transition is failing: transition should return a new node"
         assert new_node["state"][8] == 0, "Unit test for transition is failing: transition incorrectly"
@@ -295,7 +277,8 @@ class Puzzle(object):
         else:
             self.actions = self.a_star_search()
 
-            print("Number of nodes passed through " + str(len(self.past_states)))
+            print("Number of nodes passed through: " + str(len(self.past_states)))
+            print("Actions to goal state:  " + str(len(self.actions)))
             print("--- %s seconds ---" % (time.time() - start_time))
 
         return self.actions 
@@ -355,11 +338,11 @@ class Puzzle(object):
 
                     # If not we simply add it into the frontier
                     heapq.heappush(frontier, ((evaluation_func, id(child_node), child_node)))
+
+                    # Update maximum frontier size
+                    self.frontier_size = max(self.frontier_size, len(frontier))
                    
         return curr_node["actions_history"]
-
-
-
 
     def convert_val_to_coord(self, value):
         return value // self.k, value % self.k
