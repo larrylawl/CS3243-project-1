@@ -174,7 +174,7 @@ def plotRunTimes(nodes, memory, times):
     # Prepare the x-axis
     x = range(1, 26)
 
-    plt.subplot(1, 3, 1)
+    plt.subplot(3, 1, 1)
 
     # Name the title
     plt.title("Time Complexity")
@@ -198,7 +198,7 @@ def plotRunTimes(nodes, memory, times):
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
 
-    plt.subplot(1, 3, 2)
+    plt.subplot(3, 1, 2)
     
     # Name the title
     plt.title("Space Complexity")
@@ -221,14 +221,14 @@ def plotRunTimes(nodes, memory, times):
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
 
-    plt.subplot(1, 3, 3)
+    plt.subplot(3, 1, 3)
     
     # Name the title
-    plt.title("Space Complexity")
+    plt.title("Actual Time")
 
     # Name the axes
     plt.xlabel("Steps to Goal State")
-    plt.ylabel("Actual Time Taken")
+    plt.ylabel("Time in Seconds")
 
     # show all values on the x-axis
     plt.xticks(x)
