@@ -4,3 +4,12 @@
 # pycharm setup
 *.idea/
 
+# latex build
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
