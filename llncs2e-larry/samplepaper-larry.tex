@@ -9,6 +9,7 @@
 \usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage{tikz}
+\usepackage{float}
 \usetikzlibrary{matrix}
 \usepackage[toc,page]{appendix}
 
@@ -31,6 +32,8 @@
 Johanna \textit{(A0187536R)} \and
 Sean Low Chen Yi \textit{(A0183743Y)} \and 
 Law Ann Liat, Larry \textit{(A0189883A)}}
+
+\authorrunning{D.C., J, S.L., L.L.}
 %
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
@@ -72,11 +75,7 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 
 \subsection{Rule to Check if k-puzzle is Solvable}
 \textbf{Definition.}~\cite{aditya_goel_how_nodate}. A pair of tiles form an \textit{inversion} if the values on tiles are in the reverse order of their appearance in the goal state. \\
-\textbf{Rules}~\cite{aditya_goel_how_nodate}. Let \( M \) denote a \( k \times k \) matrix, \( m_{i, j} \) denote a blank tile in \( M \), and \( n_i \) denote the number of inversions in the intial state \( M_{initial} \). Puzzle is solvable if \dots
-\begin{enumerate}
-    \item \( k \) is odd and \( n_i \) is even
-    \item \( k \) is even, the sum of \(n_i \) and \( i \) is odd
-\end{enumerate}
+\textbf{Rules}~\cite{aditya_goel_how_nodate}. Let \( M \) denote a \( k \times k \) matrix, \( m_{i, j} \) denote a blank tile in \( M \), and \( n_i \) denote the number of inversions in the intial state \( M_{initial} \). Puzzle is solvable if (1) \( k \) is odd and \( n_i \) is even or (2) \( k \) is even, the sum of \(n_i \) and \( i \) is odd.
 
 \subsection{Uninformed Search}
 \begin{enumerate}
@@ -86,7 +85,6 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
     \item \textbf{Space Complexity:} \( O(bd) \) ~\cite[p88-90]{stuart_russell_artifical_2010}.
 \end{enumerate}
 
-% TODO Add in proofs for heuristic
 \subsection{Informed Search}
 \begin{enumerate}
     \item \textbf{Implementation:} Graph-based \( A^* \) search. It improves on greedy best first search (ie \( f(n) = h(n) \)) as it avoids expanding paths that are already expensive (ie \( f(n) = g(n) + h(n) \)).
@@ -97,11 +95,11 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 
 \subsection{\(h_1:\) Manhattan Distance} 
 \textbf{Definition.} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010} . Note that this sum only includes horizontal and vertical distances as \textit{Actions} do not allow diagonal movements. \\
-\textbf{Proof for Consistency.} Found in appendix \ref{appendix:manhat_cons}.
+\textbf{Proof for Consistency.} Refer to appendix \ref{appendix:manhat_cons}.
 
 \subsection{\(h_2:\) Euclidean Distance}
 \textbf{Definition.} Euclidean Distance heuristic is defined as the straight line distance between the tiles from their goal position ~\cite{rosalind_euclidean_nodate}. \\
-\textbf{Proof for Consistency.} Found in appendix \ref{appendix:euc_cons}
+\textbf{Proof for Consistency.} Refer to appendix \ref{appendix:euc_cons}
 
 \subsection{ \(h_3: \) Linear Conflict}
 \textbf{Definition.} Two tiles \( t_j \) and \( t_k \) are in a linear conflict if \( t_j \) and \( t_k \) are in the same line, 
@@ -123,7 +121,7 @@ the goal positions of \( t_j \) and \( t_k \) are both in that line,
         h_3(s) = ManhattanDistance(s) + LinearConflict(s)
     \]
 \end{enumerate}
-\textbf{Prove for Consistency.} 
+\textbf{Prove for Consistency.} Refer to Appendix \ref{appendix:linear_conflict}.
 
 \section{Experimental Setup}
 \subsection{Experiment Goals}
@@ -147,22 +145,23 @@ For n = \{1 \dots 25\}
 \end{enumerate}
 
 \subsection{Results and Discussion}
-% \begin{figure}
-%     \includegraphics[width=\textwidth]{fig1_update.png}
-%     \caption{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig1}
-%     \end{figure}
-
+\begin{center}
+    \includegraphics[width=\textwidth]{fig1_update.png}
+    % \captionof{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig1}
+\end{center}
 In the analysis we will denote the Euclidean, Manhattan, and Manhattan + Linear Conflicts heuristics as E, M and L respectively. \\ \\
-For both the time and space complexity of the A star search using all 3 heuristics, we may observe that for lower values of steps required to reach the goal \( n \leq 15 \) is approximately the same. However, for higher step values, M and L outperforms E in terms of Time and Space complexity. This is in line with how the E will always be dominated by M and L, which explains the huge difference performance in time and space complexity. \\ \\
-Comparing the time and space complexity of the A star algorithm using M and L, we find that the time and space complexity is almost exactly identical for lower step values \( n \leq 22 \). However for values higher than that, we can observe that L outperforms M in terms of both time and space complexity. This is also in line with how L dominates M which translates directly into time and space efficiency \cite[p104]{stuart_russell_artifical_2010}. \\ \\
-
-% \begin{figure}
-%     \includegraphics[width=\textwidth]{actual_time.jpg}
-%     \caption{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig2}
-%     \end{figure}
-
-Our group also calculated the actual time (in seconds) required to run the A star algorithm using all 3 heuristics.(where we put) It is interesting to note that while both M and L outperforms E, L actually takes longer time to solve the puzzle (in seconds) compared to when M is used. This is primarily because of the extra time required to calculate L for each node before it is put in the frontier. \\ \\
-In conclusion, our experiment has shown that more dominant heuristics prove to be more efficient in terms of time and space complexity. However, in terms of actual time taken, a better heuristic is not guaranteed to be faster (in this case of the usage of L being slower than M in real time) as it is ultimately dependent on the amount of actual time needed to compute the heuristic itself.
+For step values above 15, we observe that M and L outperforms E in terms of time and space complexity. This is in line with how E will always be dominated by M and L, explaining the difference performance in time and space complexity.\\ \\
+In addition, for step values higher than 22, we observe that L outperforms M in terms of both time and space complexity. This is also in line with how L dominates M which translates directly into time and space efficiency (p104).\\ \\
+\begin{center}
+    \includegraphics[width=\textwidth]{actual_time.jpg}
+    % \caption{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig2}
+\end{center}
+In terms of actual running time (in seconds), it is interesting to note that while both M and L outperforms E, 
+L actually takes longer time to solve the puzzle as compared to when M is used. 
+This is because of the extra time required to calculate L for each node before it is put in the frontier. \\ \\
+In conclusion, our experiment has shown that more dominant heuristics prove to be more efficient 
+in terms of time and space complexity. However, in terms of actual time taken, a better heuristic 
+is not guaranteed to be faster as it is ultimately dependent on the amount of actual time needed to compute the heuristic itself.
 
 %
 % ---- Bibliography ----
@@ -191,7 +190,6 @@ In conclusion, our experiment has shown that more dominant heuristics prove to b
     \end{enumerate}
 \end{proof}
 
-\appendix
 \section{Proof for Euclidean Distance Consistency}
 \label{appendix:euc_cons}
 
@@ -200,7 +198,6 @@ In conclusion, our experiment has shown that more dominant heuristics prove to b
     Since general triangle inequality fulfills the definition of consistency ~\cite[p95]{stuart_russell_artifical_2010}, euclidean distance is consistent.
 \end{proof}
 
-\appendix
 \section{Proof for Linear Conflict}
 \label{appendix:linear_conflict}
 

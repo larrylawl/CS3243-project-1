@@ -1,0 +1,21 @@
+\begin{thebibliography}{1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\providecommand{\doi}[1]{https://doi.org/#1}
+
+\bibitem{aditya_goel_how_nodate}
+Goel, A.: How to check if an instance of 15 puzzle is solvable?
+
+\bibitem{othar_hansson_generating_1985}
+{Othar Hansson}, {Andrew E. Mayer}, {Mordechai M. Yung}: Generating admissible
+  heuristics by criticizing solutions to relaxed models
+
+\bibitem{rosalind_euclidean_nodate}
+{Rosalind}: Euclidean distance,
+  \url{http://rosalind.info/glossary/euclidean-distance/}
+
+\bibitem{stuart_russell_artifical_2010}
+{Stuart Russell}, {Peter Norvig}: Artifical Intelligence: A Modern Approach.
+  Pearson Educaiton, Inc., 3 edn.
+
+\end{thebibliography}
