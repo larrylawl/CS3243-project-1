@@ -66,6 +66,9 @@ def flatten_array(unflattened_array):
 
     return flattened_arr
 
+def random_insert(lst, item):
+    lst.insert(randrange(len(lst)+1), item)
+
 def isEven(count):
         return count % 2 == 0
 
@@ -329,7 +332,6 @@ class Puzzle(object):
             for action in self.valid_actions(curr_node):
                 child_node = self.transition(curr_node, action)
                 child_state_string = state_to_string(child_node["state"])
-                self.frontier_size += 1
 
                 if child_state_string not in self.past_states:
                     heuristic = self.get_heuristic_Manhattan(child_node)
@@ -347,6 +349,8 @@ class Puzzle(object):
 
                     # If not we simply add it into the frontier
                     heapq.heappush(frontier, ((evaluation_func, id(child_node), child_node)))
+                    # Update maximum frontier size
+                    self.frontier_size = max(self.frontier_size, len(frontier))
                    
 
         return curr_node["actions_history"]

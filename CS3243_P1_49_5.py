@@ -167,48 +167,79 @@ class Puzzle(object):
 
     # you may add more functions if you think is useful
 
-def plotRunTimes(dim_3_tuple):
+def plotRunTimes(dim_3_nodes, dim_3_frontier):
+
+    fig = plt.figure()
 
     # Prepare the x-axis
     x = range(1, 28)
 
+    plt.subplot(1, 2, 1)
+
     # Name the title
-    plt.title("3 X 3 Puzzle")
+    plt.title("Time Complexity")
 
     # Name the axes
     plt.xlabel("Steps to Goal State")
     plt.ylabel("Nodes Explored")
-
-    # Plot the data
-    plt.plot(x, dim_3_tuple[0], label='Manhattan Distance')
-    plt.plot(x, dim_3_tuple[1], label='Euclidean Distance')
-    plt.plot(x, dim_3_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
 
     # show all values on the x-axis
     plt.xticks(x)
 
     # show grid
     plt.grid(axis='y')
-    
+
+
+    # Plot the data
+    plt.plot(x, dim_3_nodes[0], label='Manhattan Distance')
+    plt.plot(x, dim_3_nodes[1], label='Euclidean Distance')
+    plt.plot(x, dim_3_nodes[2], label='Manhattan Distance + 2(Linear Conflicts)')
+
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
 
+    plt.subplot(1, 2, 2)
+    
+    # Name the title
+    plt.title("Space Complexity")
+
+    # Name the axes
+    plt.xlabel("Steps to Goal State")
+    plt.ylabel("Maximum Frontier Size")
+
+    # show all values on the x-axis
+    plt.xticks(x)
+
+    # show grid
+    plt.grid(axis='y')
+
+    # Plot the data
+    plt.plot(x, dim_3_frontier[0], label='Manhattan Distance')
+    plt.plot(x, dim_3_frontier[1], label='Euclidean Distance')
+    plt.plot(x, dim_3_frontier[2], label='Manhattan Distance + 2(Linear Conflicts)')
+    
     plt.show()
 
 
-def getNodesExploredForKPuzzle(k):
-    m_times = []
-    e_times = []
-    lc_m_times = []
+def getNodesExploredAndMaxFrontierSizeForKPuzzle(k):
+    m_nodes = []
+    e_nodes = []
+    lc_m_nodes = []
+
+    m_max_frontier = []
+    e_max_frontier = []
+    lc_m_max_frontier = []
 
     for steps in range(1, 28):
-        m_30_times = []
-        e_30_times = []
-        lc_m_30_times = []
+        m_30_nodes = []
+        e_30_nodes = []
+        lc_m_30_nodes = []
 
-        i = 1
+        m_30_max_frontier = []
+        e_30_max_frontier = []
+        lc_m_30_max_frontier = []
 
-        for i in range(1, 21):
+        for i in range(10):
 
             incorrectNumberOfSteps = True
             while incorrectNumberOfSteps:
@@ -233,24 +264,39 @@ def getNodesExploredForKPuzzle(k):
 
                     incorrectNumberOfSteps = False
 
-                    m_30_times.append(len(m_puzzle.past_states))
-                    e_30_times.append(len(e_puzzle.past_states))
-                    lc_m_30_times.append(len(lc_m_puzzle.past_states))
+                    m_30_nodes.append(len(m_puzzle.past_states))
+                    e_30_nodes.append(len(e_puzzle.past_states))
+                    lc_m_30_nodes.append(len(lc_m_puzzle.past_states))
+
+                    m_30_max_frontier.append(m_puzzle.frontier_size)
+                    e_30_max_frontier.append(e_puzzle.frontier_size)
+                    lc_m_30_max_frontier.append(lc_m_puzzle.frontier_size)
                 else:
                     print("!!!!!!!!!!!!!!!!!!REDO!!!!!!!!!!!!!!!!!!!\n")
 
-        m_ave_time = np.mean(m_30_times)
-        e_ave_time = np.mean(e_30_times)
-        lc_m_ave_time = np.mean(lc_m_30_times)
+        m_ave_nodes = np.mean(m_30_nodes)
+        e_ave_nodes = np.mean(e_30_nodes)
+        lc_m_ave_nodes = np.mean(lc_m_30_nodes)
 
-        m_times.append(m_ave_time)
-        e_times.append(e_ave_time)
-        lc_m_times.append(lc_m_ave_time)
+        m_ave_max_frontier = np.mean(m_30_max_frontier)
+        e_ave_max_frontier = np.mean(e_30_max_frontier)
+        lc_m_ave_max_frontier = np.mean(lc_m_30_max_frontier)
+
+        m_nodes.append(m_ave_nodes)
+        e_nodes.append(e_ave_nodes)
+        lc_m_nodes.append(lc_m_ave_nodes)
+
+        m_max_frontier.append(m_ave_max_frontier)
+        e_max_frontier.append(e_ave_max_frontier)
+        lc_m_max_frontier.append(lc_m_ave_max_frontier)
     
-    return (m_times, e_times, lc_m_times)
+    nodes_tuple = (m_nodes, e_nodes, lc_m_nodes)
+    max_frontier_tuple = (m_max_frontier, e_max_frontier, lc_m_max_frontier)
+
+    return (nodes_tuple, max_frontier_tuple)
 
 
 if __name__ == "__main__":
-    dim_3_nodes = getNodesExploredForKPuzzle(3)
+    dim_3_tuples = getNodesExploredAndMaxFrontierSizeForKPuzzle(3)
 
-    plotRunTimes(dim_3_nodes)
+    plotRunTimes(dim_3_tuples[0], dim_3_tuples[1])
