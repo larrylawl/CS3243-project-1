@@ -92,7 +92,7 @@ class Puzzle(object):
         self.past_states = set()
         self.k = len(init_state)
         self.state_to_cost = {}
-        self.frontier_size = 0
+        self.nodes_in_memory = 0
 
     def transition(self, node, action):
         """ Moves the blank tile in the OPPOSITE direction specified by the action. (p4 of project1.pdf!
@@ -341,7 +341,7 @@ class Puzzle(object):
                     # If not we simply add it into the frontier
                     heapq.heappush(frontier, ((evaluation_func, id(child_node), child_node)))
                     # Update maximum frontier size
-                    self.frontier_size = max(self.frontier_size, len(frontier))
+                    self.nodes_in_memory = max(self.nodes_in_memory, len(frontier) + len(self.past_states ))
                    
 
         return curr_node["actions_history"]
