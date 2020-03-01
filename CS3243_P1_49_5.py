@@ -70,6 +70,7 @@ class KPuzzleGenerator(object):
         return goal_state
     
     def generate_init_state(self):
+        past_states = set()
         actions = []
         new_puzzle = self.goal_state
 
@@ -81,50 +82,58 @@ class KPuzzleGenerator(object):
 
             blank_tile = self.get_zero(new_puzzle)
             if Actions.is_legal_action(self.k, blank_tile, action):
-                if actions:
+                if len(actions) > 0:
                     latest_action = actions[-1]
                     if not Actions.are_opposite_actions(action, latest_action):
+                        new_puzzle = self.move_by_action(new_puzzle, action)
                         actions.append(action)
-                        self.move_by_action(new_puzzle, action)
+
+                # first move
                 else:
                     actions.append(action)
-                    self.move_by_action(new_puzzle, action)
+                    new_puzzle = self.move_by_action(new_puzzle, action)
+                    past_states.add(self.puzzle_to_string(new_puzzle))
 
+        print(actions)
         return new_puzzle
+    
+    def puzzle_to_string(self, puzzle):
+        result = "[" + ", ".join(str(x) for x in puzzle) + "]"
+        result = "".join(str(x) for x in puzzle)
+        return result
+        
         
     def move_by_action(self, puzzle, action):
+        new_puzzle = [row[:] for row in puzzle]
         if action == "DOWN":
-            self.move_down(puzzle)
+            self.move_down(new_puzzle)
         elif action == "UP":
-            self.move_up(puzzle)
+            self.move_up(new_puzzle)
         elif action == "LEFT":
-            self.move_left(puzzle)
+            self.move_left(new_puzzle)
         else:
-            self.move_right(puzzle)
+            self.move_right(new_puzzle)
+        return new_puzzle
 
     def move_down(self, puzzle):
         x, y = self.get_zero(puzzle)
         puzzle[x][y] = puzzle[x - 1][y]
         puzzle[x - 1][y] = 0
-        # self.print_puzzle(puzzle)
 
     def move_up(self, puzzle):
         x, y = self.get_zero(puzzle)
         puzzle[x][y] = puzzle[x + 1][y]
         puzzle[x + 1][y] = 0
-        # self.print_puzzle(puzzle)
 
     def move_left(self, puzzle):
         x, y = self.get_zero(puzzle)
         puzzle[x][y] = puzzle[x][y + 1]
         puzzle[x][y + 1] = 0 
-        # self.print_puzzle(puzzle)
 
     def move_right(self, puzzle):
         x, y = self.get_zero(puzzle)
         puzzle[x][y] = puzzle[x][y - 1]
         puzzle[x][y - 1] = 0
-        # self.print_puzzle(puzzle)
 
     def print_puzzle(self, puzzle):
         size = len(puzzle)
@@ -158,102 +167,139 @@ class Puzzle(object):
 
     # you may add more functions if you think is useful
 
-def plotRunTimes(dim_3_tuple, dim_4_tuple, dim_5_tuple):
+def plotRunTimes(dim_3_nodes, dim_3_frontier):
 
     fig = plt.figure()
 
     # Prepare the x-axis
-    x = range(30)
+    x = range(1, 26)
 
-    ########## 3 X 3 Graph ##########
-    plt.subplot(1, 3, 1)
+    plt.subplot(1, 2, 1)
 
     # Name the title
-    plt.title("3 X 3 Puzzle")
+    plt.title("Time Complexity")
 
     # Name the axes
     plt.xlabel("Steps to Goal State")
-    plt.ylabel("Time Taken")
+    plt.ylabel("Nodes Explored")
+
+    # show all values on the x-axis
+    plt.xticks(x)
+
+    # show grid
+    plt.grid(axis='y')
+
 
     # Plot the data
-    plt.plot(x, dim_3_tuple[0], label='Manhattan Distance')
-    plt.plot(x, dim_3_tuple[1], label='Euclidean Distance')
-    plt.plot(x, dim_3_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
+    plt.plot(x, dim_3_nodes[0], label='Manhattan Distance')
+    plt.plot(x, dim_3_nodes[1], label='Euclidean Distance')
+    plt.plot(x, dim_3_nodes[2], label='Manhattan Distance + 2(Linear Conflicts)')
 
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
 
-    ########## 4 X 4 Graph ##########
-    plt.subplot(1, 3, 2)
+    plt.subplot(1, 2, 2)
     
     # Name the title
-    plt.title("4 x 4 Puzzle")
+    plt.title("Space Complexity")
 
     # Name the axes
     plt.xlabel("Steps to Goal State")
-    plt.ylabel("Time Taken")
+    plt.ylabel("Maximum Frontier Size")
+
+    # show all values on the x-axis
+    plt.xticks(x)
+
+    # show grid
+    plt.grid(axis='y')
 
     # Plot the data
-    plt.plot(x, dim_4_tuple[0], label='Manhattan Distance')
-    plt.plot(x, dim_4_tuple[1], label='Euclidean Distance')
-    plt.plot(x, dim_4_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
+    plt.plot(x, dim_3_frontier[0], label='Manhattan Distance')
+    plt.plot(x, dim_3_frontier[1], label='Euclidean Distance')
+    plt.plot(x, dim_3_frontier[2], label='Manhattan Distance + 2(Linear Conflicts)')
 
-    ########## 5 X 5 Graph ##########
-    plt.subplot(1, 3, 3)
-    
-    # Name the title
-    plt.title("5 x 5 Puzzle")
-
-    # Name the axes
-    plt.xlabel("Steps to Goal State")
-    plt.ylabel("Time Taken")
-
-    # Plot the data
-    plt.plot(x, dim_5_tuple[0], label='Manhattan Distance')
-    plt.plot(x, dim_5_tuple[1], label='Euclidean Distance')
-    plt.plot(x, dim_5_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
+    # Place the legend
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
     
     plt.show()
 
 
-def getRunTimesForKPuzzle(k):
-    m_time = []
-    e_time = []
-    lc_m_time = []
+def getNodesExploredAndMaxFrontierSizeForKPuzzle(k):
+    m_nodes = []
+    e_nodes = []
+    lc_m_nodes = []
 
-    for steps in range(1, 31):
-        print("/////////////////////  dimension:" + str(k) + " with "+ str(steps) + "steps  ////////////////")
-        m_30_times = []
-        e_30_times = []
-        lc_m_30_times = []
+    m_max_frontier = []
+    e_max_frontier = []
+    lc_m_max_frontier = []
 
-        for i in range (1, 31):
-            puzzleGenerator = KPuzzleGenerator(k, steps)
-            goal_state = puzzleGenerator.generate_goal_state()
-            init_state = puzzleGenerator.generate_init_state()
+    for steps in range(1, 26):
+        m_30_nodes = []
+        e_30_nodes = []
+        lc_m_30_nodes = []
 
-            m_puzzle = manhattan.Puzzle(init_state, goal_state)
-            e_puzzle = euclidean.Puzzle(init_state, goal_state)
-            lc_m_puzzle = linear_conf_manhattan.Puzzle(init_state, goal_state)
+        m_30_max_frontier = []
+        e_30_max_frontier = []
+        lc_m_30_max_frontier = []
 
-            m_30_times.append(m_puzzle.getSolutionTime())
-            e_30_times.append(e_puzzle.getSolutionTime())
-            lc_m_30_times.append(lc_m_puzzle.getSolutionTime())
+        for i in range(30):
 
-        m_ave_time = np.mean(m_30_times)
-        e_ave_time = np.mean(e_30_times)
-        lc_m_ave_time = np.mean(lc_m_30_times)
+            incorrectNumberOfSteps = True
+            while incorrectNumberOfSteps:
+                print("\n/////////////////////  dimension:" + str(k) + " with "+ str(steps) + "steps" + str(i) + " times  ////////////////")
+                puzzleGenerator = KPuzzleGenerator(k, steps)
+                goal_state = puzzleGenerator.generate_goal_state()
+                init_state = puzzleGenerator.generate_init_state()
 
-        m_time.append(m_ave_time)
-        e_time.append(e_ave_time)
-        lc_m_time.append(lc_m_ave_time)
+                m_puzzle = manhattan.Puzzle(init_state, goal_state)
+                e_puzzle = euclidean.Puzzle(init_state, goal_state)
+                lc_m_puzzle = linear_conf_manhattan.Puzzle(init_state, goal_state)
+
+                m_puzzle.solve()
+                e_puzzle.solve()
+                lc_m_puzzle.solve()
+
+                m_steps = len(m_puzzle.actions)
+                e_steps = len(e_puzzle.actions)
+                lc_m_steps = len(lc_m_puzzle.actions)
+            
+                if (m_steps == steps and e_steps == steps and lc_m_steps == steps):
+
+                    incorrectNumberOfSteps = False
+
+                    m_30_nodes.append(len(m_puzzle.past_states))
+                    e_30_nodes.append(len(e_puzzle.past_states))
+                    lc_m_30_nodes.append(len(lc_m_puzzle.past_states))
+
+                    m_30_max_frontier.append(m_puzzle.frontier_size)
+                    e_30_max_frontier.append(e_puzzle.frontier_size)
+                    lc_m_30_max_frontier.append(lc_m_puzzle.frontier_size)
+                else:
+                    print("!!!!!!!!!!!!!!!!!!REDO!!!!!!!!!!!!!!!!!!!\n")
+
+        m_ave_nodes = np.mean(m_30_nodes)
+        e_ave_nodes = np.mean(e_30_nodes)
+        lc_m_ave_nodes = np.mean(lc_m_30_nodes)
+
+        m_ave_max_frontier = np.mean(m_30_max_frontier)
+        e_ave_max_frontier = np.mean(e_30_max_frontier)
+        lc_m_ave_max_frontier = np.mean(lc_m_30_max_frontier)
+
+        m_nodes.append(m_ave_nodes)
+        e_nodes.append(e_ave_nodes)
+        lc_m_nodes.append(lc_m_ave_nodes)
+
+        m_max_frontier.append(m_ave_max_frontier)
+        e_max_frontier.append(e_ave_max_frontier)
+        lc_m_max_frontier.append(lc_m_ave_max_frontier)
     
-    return (m_time, e_time, lc_m_time)
+    nodes_tuple = (m_nodes, e_nodes, lc_m_nodes)
+    max_frontier_tuple = (m_max_frontier, e_max_frontier, lc_m_max_frontier)
+
+    return (nodes_tuple, max_frontier_tuple)
 
 
 if __name__ == "__main__":
-    dim_3_tuple = getRunTimesForKPuzzle(3)
-    dim_4_tuple = getRunTimesForKPuzzle(4)
-    dim_5_tuple = getRunTimesForKPuzzle(5)
+    dim_3_tuples = getNodesExploredAndMaxFrontierSizeForKPuzzle(3)
 
-    plotRunTimes(dim_3_tuple, dim_4_tuple, dim_5_tuple)
+    plotRunTimes(dim_3_tuples[0], dim_3_tuples[1])
