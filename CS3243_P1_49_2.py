@@ -66,9 +66,6 @@ def flatten_array(unflattened_array):
 
     return flattened_arr
 
-def random_insert(lst, item):
-    lst.insert(randrange(len(lst)+1), item)
-
 def isEven(count):
         return count % 2 == 0
 
@@ -95,7 +92,7 @@ class Puzzle(object):
         self.past_states = set()
         self.k = len(init_state)
         self.state_to_cost = {}
-        self.frontier_size = 0
+        self.nodes_in_memory = 0
 
     def transition(self, node, action):
         """ Moves the blank tile in the OPPOSITE direction specified by the action. (p4 of project1.pdf!
@@ -229,13 +226,9 @@ class Puzzle(object):
 
         """
         # Stubbed puzzle
-        stubbed_init_state = [[1, 2, 3], [4, 5, 6], [7, 0, 8]]
-        stubbed_goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
-        puzzle = Puzzle(stubbed_init_state, stubbed_goal_state)
         # Unit test for transition
         stubbed_state = [1, 2, 3, 4, 5, 6, 7, 0, 8]
         stubbed_node = {"state" : stubbed_state, "cost" : 0, "depth": 0, "actions_history": list()}
-        stubbed_past_states = set()
         new_node = self.transition(stubbed_node, Actions.LEFT)
         assert stubbed_node != new_node, "Unit test for transition is failing: transition should return a new node"
         assert new_node["state"][8] == 0, "Unit test for transition is failing: transition incorrectly"
@@ -246,7 +239,7 @@ class Puzzle(object):
 
         # Unit test for solvable 3x3
         stubbed_state = [8, 1, 2, 0, 4, 3, 7, 6, 5]
-        assert not self.is_solvable(stubbed_state) == True, \
+        assert not self.is_solvable() == True, \
             "Unit test for checking if 3x3 is unsolvable is failing"
 
         # Unit test for solvable 4x4
@@ -350,7 +343,7 @@ class Puzzle(object):
                     # If not we simply add it into the frontier
                     heapq.heappush(frontier, ((evaluation_func, id(child_node), child_node)))
                     # Update maximum frontier size
-                    self.frontier_size = max(self.frontier_size, len(frontier))
+                    self.nodes_in_memory = max(self.nodes_in_memory, len(frontier) + len(self.past_states))
                    
 
         return curr_node["actions_history"]
@@ -362,7 +355,6 @@ class Puzzle(object):
 
     # Manhattan heuristic
     def get_heuristic_Manhattan(self, node):
-        no_of_rows = self.k
         index = 0
         manhattan_sum = 0
 
