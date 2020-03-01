@@ -69,18 +69,21 @@ class KPuzzleGenerator(object):
         
         return goal_state
     
+    # Generate the initial state by taking n steps from goal state
     def generate_init_state(self):
         past_states = set()
         actions = []
         new_puzzle = self.goal_state
 
-        # add random actions to actions list until there are k actions
+        # Add random actions to actions list until there are k actions
         while len(actions) < self.steps:
-            # take a random action
+            # Take a random action
             action_choice = randrange(4)
             action = Actions.ACTIONS[action_choice]
 
             blank_tile = self.get_zero(new_puzzle)
+
+            # Check if the random action is legal and not opposite to the latest action
             if Actions.is_legal_action(self.k, blank_tile, action):
                 if len(actions) > 0:
                     latest_action = actions[-1]
@@ -88,7 +91,7 @@ class KPuzzleGenerator(object):
                         new_puzzle = self.move_by_action(new_puzzle, action)
                         actions.append(action)
 
-                # first move
+                # First move
                 else:
                     actions.append(action)
                     new_puzzle = self.move_by_action(new_puzzle, action)
@@ -101,7 +104,6 @@ class KPuzzleGenerator(object):
         result = "[" + ", ".join(str(x) for x in puzzle) + "]"
         result = "".join(str(x) for x in puzzle)
         return result
-        
         
     def move_by_action(self, puzzle, action):
         new_puzzle = [row[:] for row in puzzle]
@@ -169,8 +171,6 @@ class Puzzle(object):
 
 def plotRunTimes(dim_3_nodes, dim_3_memory):
 
-    fig = plt.figure()
-
     # Prepare the x-axis
     x = range(1, 26)
 
@@ -225,14 +225,20 @@ def plotRunTimes(dim_3_nodes, dim_3_memory):
 
 
 def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
+
+    # The arrays will store the number of nodes generated for puzzles of steps n
+    # where arr[i - 1] contains the number of nodes for step n
     m_nodes = []
     e_nodes = []
     lc_m_nodes = []
 
+    # The arrays will store the max nodes in memory generated for puzzles of steps n
+    # where arr[i - 1] contains the max nodes in memory for step n
     m_max_memory_used = []
     e_max_memory_used = []
     lc_m_max_memory_used = []
 
+    # Generate puzzles from steps 1 to 25
     for steps in range(1, 26):
         m_30_nodes = []
         e_30_nodes = []
@@ -242,41 +248,53 @@ def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
         e_30_max_memory_used = []
         lc_m_30_max_memory_used = []
 
+        # Generate each puzzle 30 times and take the average of each metric
         for i in range(30):
 
+            # Some puzzles are generated with n number of steps, but the heuristiscs can sometimes take less than n steps to achieve goal state
+            # Thus a new puzzle will generate until the solution REALLY takes n steps to goal state
             incorrectNumberOfSteps = True
+
             while incorrectNumberOfSteps:
                 print("\n/////////////////////  dimension:" + str(k) + " with "+ str(steps) + "steps" + str(i) + " times  ////////////////")
+                # Generate a goal state and initial state of dimension k x k that should take 'steps' steps to solve
                 puzzleGenerator = KPuzzleGenerator(k, steps)
                 goal_state = puzzleGenerator.generate_goal_state()
                 init_state = puzzleGenerator.generate_init_state()
 
+                # Creates the puzzles for each of the heuristics scripts
                 m_puzzle = manhattan.Puzzle(init_state, goal_state)
                 e_puzzle = euclidean.Puzzle(init_state, goal_state)
                 lc_m_puzzle = linear_conf_manhattan.Puzzle(init_state, goal_state)
 
+                # Solve the puzzles for each of the heuristics scripts
                 m_puzzle.solve()
                 e_puzzle.solve()
                 lc_m_puzzle.solve()
 
+                # Get the number of steps taken to reach goal state
                 m_steps = len(m_puzzle.actions)
                 e_steps = len(e_puzzle.actions)
                 lc_m_steps = len(lc_m_puzzle.actions)
             
+                # If the number of steps is truly as what was intended:
                 if (m_steps == steps and e_steps == steps and lc_m_steps == steps):
 
                     incorrectNumberOfSteps = False
 
+                    # Get the number of nodes explored
                     m_30_nodes.append(len(m_puzzle.past_states))
                     e_30_nodes.append(len(e_puzzle.past_states))
                     lc_m_30_nodes.append(len(lc_m_puzzle.past_states))
 
+                    # Get the maximum number of nodes in memory
                     m_30_max_memory_used.append(m_puzzle.nodes_in_memory)
                     e_30_max_memory_used.append(e_puzzle.nodes_in_memory)
                     lc_m_30_max_memory_used.append(lc_m_puzzle.nodes_in_memory)
                 else:
                     print("!!!!!!!!!!!!!!!!!!REDO!!!!!!!!!!!!!!!!!!!\n")
 
+        # Get averages of 30 puzzles
         m_ave_nodes = np.mean(m_30_nodes)
         e_ave_nodes = np.mean(e_30_nodes)
         lc_m_ave_nodes = np.mean(lc_m_30_nodes)
@@ -285,6 +303,7 @@ def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
         e_ave_max_memory_used = np.mean(e_30_max_memory_used)
         lc_m_ave_max_memory_used = np.mean(lc_m_30_max_memory_used)
 
+        # Append to the arrays
         m_nodes.append(m_ave_nodes)
         e_nodes.append(e_ave_nodes)
         lc_m_nodes.append(lc_m_ave_nodes)
@@ -300,6 +319,9 @@ def getNodesExploredAndMaxMemorySizeForKPuzzle(k):
 
 
 if __name__ == "__main__":
+    # dim_3_tuples return a tuple which contains:
+    # tuple[0]: the nodes generated for the puzzles for each heuristic
+    # tuple[1]: the max nodes in memory for the puzzles for each heuristics 
     dim_3_tuples = getNodesExploredAndMaxMemorySizeForKPuzzle(3)
 
     plotRunTimes(dim_3_tuples[0], dim_3_tuples[1])

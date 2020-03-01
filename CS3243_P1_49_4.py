@@ -358,8 +358,6 @@ class Puzzle(object):
     # Linear conflict heuristic
     def get_heuristic_linear_conflict(self, node):
         no_of_rows = self.k
-        index = 0
-        manhattan_sum = 0
         lin_conflict_row = 0
         lin_conflict_col = 0
 
@@ -502,7 +500,6 @@ class Puzzle(object):
         return num_conflicting_tiles
           
     def get_heuristic_Manhattan(self, node):
-        no_of_rows = self.k
         index = 0
         manhattan_sum = 0
 
