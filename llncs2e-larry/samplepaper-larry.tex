@@ -75,11 +75,7 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 \textbf{Rules}~\cite{aditya_goel_how_nodate}. Let \( M \) denote a \( k \times k \) matrix, \( m_{i, j} \) denote a blank tile in \( M \), and \( n_i \) denote the number of inversions in the intial state \( M_{initial} \). Puzzle is solvable if \dots
 \begin{enumerate}
     \item \( k \) is odd and \( n_i \) is even
-    \item \( k \) is even,
-    \begin{enumerate}
-        \item \( n_i \) is odd and \( m_{i,j} \) is on an even row from the bottom (ie \( j \) is odd).
-        \item \( n_i \) is even and \( m_{i,j} \) is on an odd row from the bottom (ie \( j \) is even).
-    \end{enumerate}
+    \item \( k \) is even, the sum of \(n_i \) and \( i \) is odd
 \end{enumerate}
 
 \subsection{Uninformed Search}
@@ -101,12 +97,11 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 
 \subsection{\(h_1:\) Manhattan Distance} 
 \textbf{Definition.} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010} . Note that this sum only includes horizontal and vertical distances as \textit{Actions} do not allow diagonal movements. \\
-\textbf{Proof for Consistency.} Proof for consistency can be found in appendix \ref{appendix:manhat_cons}.
+\textbf{Proof for Consistency.} Found in appendix \ref{appendix:manhat_cons}.
 
 \subsection{\(h_2:\) Euclidean Distance}
 \textbf{Definition.} Euclidean Distance heuristic is defined as the straight line distance between the tiles from their goal position ~\cite{rosalind_euclidean_nodate}. \\
-\textbf{Proof for Consistency.} Euclidean distance is a form general triangle inequality, given that the euclidean distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides ( the actual distance from S to middle state N and the euclidean distance from N to G) as the euclidean distance from \( S \) to \( G \) is already the shortest path. 
-Since general triangle inequality fulfills the definition of consistency ~\cite[p95]{stuart_russell_artifical_2010}, euclidean distance is consistent.
+\textbf{Proof for Consistency.} Found in appendix \ref{appendix:euc_cons}
 
 \subsection{ \(h_3: \) Linear Conflict}
 \textbf{Definition.} Two tiles \( t_j \) and \( t_k \) are in a linear conflict if \( t_j \) and \( t_k \) are in the same line, 
@@ -128,7 +123,89 @@ the goal positions of \( t_j \) and \( t_k \) are both in that line,
         h_3(s) = ManhattanDistance(s) + LinearConflict(s)
     \]
 \end{enumerate}
-\textbf{Prove for Consistency.} To prove consistency, we must prove that for all \( s \) and \( s' \), \( f(s') \geq f(s) \), where \( s' \) is the successor of \( s \).
+\textbf{Prove for Consistency.} 
+
+\section{Experimental Setup}
+\subsection{Experiment Goals}
+\begin{enumerate}
+    \item \textbf{Time Complexity} shows the theoretical time efficiency of the algorithm in minimising the number of nodes expanded before reaching the goal state
+    \item \textbf{Space Complexity} shows the maximum amount of memory required while running the algorithm
+    \item \textbf{Actual Time Taken} shows the amount of real time needed for the algorithm to reach the goal sate
+\end{enumerate}
+
+\subsection{Experiment Implementation Description}
+\textbf{Time complexity} is measured by the number of nodes generated during the search (ie number of the explored states) \cite[p80]{rosalind_euclidean_nodate}. \\
+\textbf{Space complexity} is measured by the maximum number of nodes stored in memory during the search \cite[p80]{stuart_russell_artifical_2010}. This is measured by the largest summation of number of nodes in the explored set and frontier size during the search. \\
+\textbf{Actual time taken} is measured by the number of seconds needed by the algorithm to reach the goal state.
+
+For n = \{1 \dots 25\}
+\begin{enumerate}
+    \item Generate \(3 \times 3 \) matrix \( M \) that has \( n \) number of steps to reach the goal state.
+    \item Perform search alogrithm on matrix \( M \)
+    \item Plot the number of nodes generated, maximum nodes in memory, and time against n. % TODO: Reference to graph 
+    \item To minimise bias, for each iteration, the puzzle solves 30 different puzzles of n steps and the average number of nodes and maximum nodes in memory are taken.
+\end{enumerate}
+
+\subsection{Results and Discussion}
+% \begin{figure}
+%     \includegraphics[width=\textwidth]{fig1_update.png}
+%     \caption{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig1}
+%     \end{figure}
+
+In the analysis we will denote the Euclidean, Manhattan, and Manhattan + Linear Conflicts heuristics as E, M and L respectively. \\ \\
+For both the time and space complexity of the A star search using all 3 heuristics, we may observe that for lower values of steps required to reach the goal \( n \leq 15 \) is approximately the same. However, for higher step values, M and L outperforms E in terms of Time and Space complexity. This is in line with how the E will always be dominated by M and L, which explains the huge difference performance in time and space complexity. \\ \\
+Comparing the time and space complexity of the A star algorithm using M and L, we find that the time and space complexity is almost exactly identical for lower step values \( n \leq 22 \). However for values higher than that, we can observe that L outperforms M in terms of both time and space complexity. This is also in line with how L dominates M which translates directly into time and space efficiency \cite[p104]{stuart_russell_artifical_2010}. \\ \\
+
+% \begin{figure}
+%     \includegraphics[width=\textwidth]{actual_time.jpg}
+%     \caption{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig2}
+%     \end{figure}
+
+Our group also calculated the actual time (in seconds) required to run the A star algorithm using all 3 heuristics.(where we put) It is interesting to note that while both M and L outperforms E, L actually takes longer time to solve the puzzle (in seconds) compared to when M is used. This is primarily because of the extra time required to calculate L for each node before it is put in the frontier. \\ \\
+In conclusion, our experiment has shown that more dominant heuristics prove to be more efficient in terms of time and space complexity. However, in terms of actual time taken, a better heuristic is not guaranteed to be faster (in this case of the usage of L being slower than M in real time) as it is ultimately dependent on the amount of actual time needed to compute the heuristic itself.
+
+%
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
+%
+\bibliographystyle{splncs04}
+\bibliography{CS3243_project_1}
+
+\appendix
+\section{Proof for Manhattan Distance Consistency}
+\label{appendix:manhat_cons}
+\begin{proof} Proof by Cases
+    \begin{enumerate}
+        \item \( |h(n') - h(n) = 1| \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
+        \item Case 1: \( h(n') = h(n) + 1 \)
+        \begin{enumerate}
+            \item \( h(n) \leq h(n) + 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
+        \end{enumerate}
+        \item Case 2: \( h(n') = h(n) - 1 \)
+        \begin{enumerate}
+            \item \( h(n) \leq h(n) - 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
+        \end{enumerate}
+        \item For both cases of \( h(n') \), \( h(n) \) is consistent. (\(\bullet\))
+    \end{enumerate}
+\end{proof}
+
+\appendix
+\section{Proof for Euclidean Distance Consistency}
+\label{appendix:euc_cons}
+
+\begin{proof} Proof by Construction. \\
+    Euclidean distance is a form general triangle inequality, given that the euclidean distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides ( the actual distance from S to middle state N and the euclidean distance from N to G) as the euclidean distance from \( S \) to \( G \) is already the shortest path. 
+    Since general triangle inequality fulfills the definition of consistency ~\cite[p95]{stuart_russell_artifical_2010}, euclidean distance is consistent.
+\end{proof}
+
+\appendix
+\section{Proof for Linear Conflict}
+\label{appendix:linear_conflict}
+
+\begin{proof} Proof by Construction. \\
+    To prove consistency, we must prove that for all \( s \) and \( s' \), \( f(s') \geq f(s) \), where \( s' \) is the successor of \( s \).
 \[
     f(s) = g(s) + h(s)
 \]
@@ -153,90 +230,5 @@ Assume that tile \( t_k \) moves from row \( r_i \) to row \( r_j \) and stays i
         Therefore, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
 \end{enumerate}
 All 3 cases show that \( f(s') \geq f(s) \). Thus, for any tile which moves from column \( c_i \) to \( c_j \) while remaining in the same column, \( f(s') \geq f(s) \) will still hold by the symmetry of the puzzle.
-
-
-\section{Experimental Setup}
-\subsection{Experiment Goals}
-\begin{enumerate}
-    \item \textbf{Time Complexity} shows the theoretical time efficiency of the algorithm in minimising the number of nodes expanded before reaching the goal state
-    \item \textbf{Space Complexity} shows the maximum amount of memory required while running the algorithm
-    \item \textbf{Actual Time Taken} shows the amount of real time needed for the algorithm to reach the goal sate
-\end{enumerate}
-
-\subsection{Experiment Implementation Description}
-Time complexity is measured by the number of nodes generated during the search (ie number of the explored states) \cite[p80]{rosalind_euclidean_nodate}. \\
-Space complexity is measured by the Maximum number of nodes stored in memory during the search \cite[p80]{stuart_russell_artifical_2010}. This is measured by the largest summation of number of nodes in the explored set and frontier size during the search. 
-However, note that maximum number of nodes \( \neq \) maximum number of nodes in the explored set + maximum size of frontier. This is because the maximum sizes of explored states and frontier size might not occur in the same step; the frontier size is always changing.
-
-For n = \{1 \dots 25\}
-\begin{enumerate}
-    \item Generate \(3 \times 3 \) matrix \( M \) that has \( n \) number of steps to reach the goal state.
-    \item Perform search alogrithm on matrix \( M \)
-    \item Plot the number of nodes generated, maximum nodes in memory, and time against n. % TODO: Reference to graph 
-    \item To minimise bias, for each iteration, the puzzle solves 30 different puzzles of n steps and the average number of nodes and maximum nodes in memory are taken.
-\end{enumerate}
-
-\subsection{Results and Discussion}
-\begin{figure}
-    \includegraphics[width=\textwidth]{fig1.png}
-    \caption{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig1}
-    \end{figure}
-
-In the analysis we will denote the Euclidean, Manhattan, and Manhattan + Linear Conflicts heuristics as E, M and L respectively. \\ 
-For both the time and space complexity of the A star search using all 3 heuristics, we may observe that for lower values of steps required to reach the goal \( n \leq 15 \) is approximately the same. However, for higher step values, M and L outperforms E in terms of Time and Space complexity. This is in line with how the E will always be dominated by M and L, which explains the huge difference performance in time and space complexity. \\
-Comparing the time and space complexity of the A star algorithm using M and L, we find that the time and space complexity is almost exactly identical for lower step values \( n \leq 22 \). However for values higher than that, we can observe that L outperforms M in terms of both time and space complexity. This is also in line with how L dominates M which translates directly into time and space efficiency \cite[p104]{stuart_russell_artifical_2010}. \\
-Our group also calculated the actual time (in seconds) required to run the A star algorithm using all 3 heuristics.(where we put) It is interesting to note that while both M and L outperforms E, L actually takes longer time to solve the puzzle (in seconds) compared to when M is used. This is primarily because of the extra time required to calculate L for each node before it is put in the frontier. \\
-In conclusion, our experiment has shown that more dominant heuristics prove to be more efficient in terms of time and space complexity. However, in terms of actual time taken, a better heuristic is not guaranteed to be faster (in this case of the usage of L being slower than M in real time) as it is ultimately dependent on the amount of actual time needed to compute the heuristic itself.
-
-%
-% ---- Bibliography ----
-%
-% BibTeX users should specify bibliography style 'splncs04'.
-% References will then be sorted and formatted in the correct style.
-%
-\bibliographystyle{splncs04}
-\bibliography{CS3243_project_1}
-
-\begin{thebibliography}{8}
-\bibitem{ref_article1}
-Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
-
-\bibitem{ref_lncs1}
-Author, F., Author, S.: Title of a proceedings paper. In: Editor,
-F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
-Springer, Heidelberg (2016). \doi{10.10007/1234567890}
-
-\bibitem{ref_book1}
-Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
-Location (1999)
-
-\bibitem{ref_proc1}
-Author, A.-B.: Contribution title. In: 9th International Proceedings
-on Proceedings, pp. 1--2. Publisher, Location (2010)
-
-\bibitem{ref_url1}
-LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
-Oct 2017
-\end{thebibliography}
-
-\appendix
-\section{Proof for Manhattan Distance Consistency}
-\label{appendix:manhat_cons}
-
-To prove that Manhattan Distance is consistent.
-\begin{proof} Proof by Cases
-    \begin{enumerate}
-        \item \( |h(n') - h(n) = 1| \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
-        \item Case 1: \( h(n') = h(n) + 1 \)
-        \begin{enumerate}
-            \item \( h(n) \leq h(n) + 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
-        \end{enumerate}
-        \item Case 2: \( h(n') = h(n) - 1 \)
-        \begin{enumerate}
-            \item \( h(n) \leq h(n) - 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
-        \end{enumerate}
-        \item For both cases of \( h(n') \), \( h(n) \) is consistent. (\(\bullet\))
-    \end{enumerate}
 \end{proof}
-
 \end{document}

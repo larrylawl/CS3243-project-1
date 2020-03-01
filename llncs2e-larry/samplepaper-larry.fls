@@ -234,9 +234,6 @@ INPUT /usr/local/texlive/2019/texmf-dist/fonts/tfm/public/cm/cmbxti10.tfm
 INPUT /usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/local/texlive/2019/texmf-dist/tex/latex/base/omscmr.fd
 INPUT /usr/local/texlive/2019/texmf-dist/tex/latex/base/omscmr.fd
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.png
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.png
-INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/fig1.png
 INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.bbl
 INPUT /Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.bbl
 INPUT /usr/local/texlive/2019/texmf-dist/fonts/tfm/public/cm/cmtt9.tfm
