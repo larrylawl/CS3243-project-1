@@ -1,6 +1,4 @@
-This is BibTeX, Version 0.99d (TeX Live 2019)
-Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
-The top-level auxiliary file: samplepaper-larry.aux
+This is BibTeX, Version 0.99dThe top-level auxiliary file: samplepaper-larry.aux
 The style file: splncs04.bst
 Database file #1: CS3243_project_1.bib
 Warning--entry type for "aditya_goel_how_nodate" isn't style-file defined
@@ -15,45 +13,4 @@ Warning--I didn't find a database entry for "ref_url1"
 Warning--empty booktitle in othar_hansson_generating_1985
 Warning--empty year in othar_hansson_generating_1985
 Warning--empty year in stuart_russell_artifical_2010
-You've used 4 entries,
-            2850 wiz_defined-function locations,
-            613 strings with 5040 characters,
-and the built_in function-call counts, 1274 in all, are:
-= -- 74
-> -- 43
-< -- 0
-+ -- 18
-- -- 14
-* -- 64
-:= -- 169
-add.period$ -- 1
-call.type$ -- 4
-change.case$ -- 19
-chr.to.int$ -- 0
-cite$ -- 7
-duplicate$ -- 115
-empty$ -- 140
-format.name$ -- 16
-if$ -- 265
-int.to.chr$ -- 0
-int.to.str$ -- 4
-missing$ -- 28
-newline$ -- 18
-num.names$ -- 8
-pop$ -- 80
-preamble$ -- 1
-purify$ -- 15
-quote$ -- 0
-skip$ -- 44
-stack$ -- 0
-substring$ -- 20
-swap$ -- 44
-text.length$ -- 0
-text.prefix$ -- 0
-top$ -- 0
-type$ -- 14
-warning$ -- 3
-while$ -- 8
-width$ -- 5
-write$ -- 33
 (There were 10 warnings)
