@@ -167,17 +167,22 @@ class Puzzle(object):
 
     # you may add more functions if you think is useful
 
-def plotRunTimes(dim_3_tuple):
+def plotRunTimes(dim_3_tuple, dim_4_tuple, dim_5_tuple):
+
+    fig = plt.figure()
 
     # Prepare the x-axis
-    x = range(1, 31)
+    x = range(1, 26)
+
+    ########## 3 X 3 Graph ##########
+    plt.subplot(1, 3, 1)
 
     # Name the title
     plt.title("3 X 3 Puzzle")
 
     # Name the axes
     plt.xlabel("Steps to Goal State")
-    plt.ylabel("Time Taken")
+    plt.ylabel("Nodes Explored")
 
     # Plot the data
     plt.plot(x, dim_3_tuple[0], label='Manhattan Distance')
@@ -187,27 +192,55 @@ def plotRunTimes(dim_3_tuple):
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
 
+    ########## 4 X 4 Graph ##########
+    plt.subplot(1, 3, 2)
+    
+    # Name the title
+    plt.title("4 x 4 Puzzle")
+
+    # Name the axes
+    plt.xlabel("Steps to Goal State")
+    plt.ylabel("Nodes Explored")
+
+    # Plot the data
+    plt.plot(x, dim_4_tuple[0], label='Manhattan Distance')
+    plt.plot(x, dim_4_tuple[1], label='Euclidean Distance')
+    plt.plot(x, dim_4_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
+
+    ########## 5 X 5 Graph ##########
+    plt.subplot(1, 3, 3)
+    
+    # Name the title
+    plt.title("5 x 5 Puzzle")
+
+    # Name the axes
+    plt.xlabel("Steps to Goal State")
+    plt.ylabel("Nodes Explored")
+
+    # Plot the data
+    plt.plot(x, dim_5_tuple[0], label='Manhattan Distance')
+    plt.plot(x, dim_5_tuple[1], label='Euclidean Distance')
+    plt.plot(x, dim_5_tuple[2], label='Manhattan Distance + 2(Linear Conflicts)')
+    
     plt.show()
 
 
 def getRunTimesForKPuzzle(k):
-    m_times = []
-    e_times = []
-    lc_m_times = []
+    m_nodes = []
+    e_nodes = []
+    lc_m_nodes = []
 
-    for steps in range(1, 50):
+    for steps in range(1, 26):
         m_30_times = []
         e_30_times = []
         lc_m_30_times = []
 
-        i = 1
+        for i in range(10):
 
-        for i in range(30):
-            
-            print("\n/////////////////////  dimension:" + str(k) + " with "+ str(steps) + "steps  ////////////////")
-            
             incorrectNumberOfSteps = True
             while incorrectNumberOfSteps:
+                print("\n/////////////////////  dimension:" + str(k) + " with "+ str(steps) + "steps " + str(i) + " times  ////////////////")
+
                 puzzleGenerator = KPuzzleGenerator(k, steps)
                 goal_state = puzzleGenerator.generate_goal_state()
                 init_state = puzzleGenerator.generate_init_state()
@@ -216,9 +249,9 @@ def getRunTimesForKPuzzle(k):
                 e_puzzle = euclidean.Puzzle(init_state, goal_state)
                 lc_m_puzzle = linear_conf_manhattan.Puzzle(init_state, goal_state)
 
-                m_time = m_puzzle.getSolutionTime()
-                e_time = e_puzzle.getSolutionTime()
-                lc_m_time = lc_m_puzzle.getSolutionTime()
+                m_puzzle.solve()
+                e_puzzle.solve()
+                lc_m_puzzle.solve()
 
                 m_steps = len(m_puzzle.actions)
                 e_steps = len(e_puzzle.actions)
@@ -228,24 +261,27 @@ def getRunTimesForKPuzzle(k):
 
                     incorrectNumberOfSteps = False
 
-                    m_30_times.append(m_time)
-                    e_30_times.append(e_time)
-                    lc_m_30_times.append(lc_m_time)
+                    m_30_times.append(len(m_puzzle.past_states))
+                    e_30_times.append(len(e_puzzle.past_states))
+                    lc_m_30_times.append(len(lc_m_puzzle.past_states))
                 else:
                     print("!!!!!!!!!!!!!!!!!!REDO!!!!!!!!!!!!!!!!!!!\n")
+
 
         m_ave_time = np.mean(m_30_times)
         e_ave_time = np.mean(e_30_times)
         lc_m_ave_time = np.mean(lc_m_30_times)
 
-        m_times.append(m_ave_time)
-        e_times.append(e_ave_time)
-        lc_m_times.append(lc_m_ave_time)
+        m_nodes.append(m_ave_time)
+        e_nodes.append(e_ave_time)
+        lc_m_nodes.append(lc_m_ave_time)
     
-    return (m_times, e_times, lc_m_times)
+    return (m_nodes, e_nodes, lc_m_nodes)
 
 
 if __name__ == "__main__":
     dim_3_tuple = getRunTimesForKPuzzle(3)
+    dim_4_tuple = getRunTimesForKPuzzle(4)
+    dim_5_tuple = getRunTimesForKPuzzle(5)
 
-    plotRunTimes(dim_3_tuple)
+    plotRunTimes(dim_3_tuple, dim_4_tuple, dim_5_tuple)
