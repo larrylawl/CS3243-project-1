@@ -5,11 +5,20 @@
 *.idea/
 
 # latex build
-*.aux
-*.bbl
-*.blg
-*.fdb_latexmk
-*.fls
-*.log
-*.out
-*.synctex.gz
+llncs2e-larry/*.aux
+llncs2e-larry/*.bbl
+llncs2e-larry/*.blg
+llncs2e-larry/*.fdb_latexmk
+llncs2e-larry/*.fls
+llncs2e-larry/*.log
+llncs2e-larry/*.out
+llncs2e-larry/*.synctex.gz
+
+llncs2e-larry/*.aux*
+llncs2e-larry/*.bbl*
+llncs2e-larry/*.blg*
+llncs2e-larry/*.fdb_latexmk*
+llncs2e-larry/*.fls*
+llncs2e-larry/*.log*
+llncs2e-larry/*.out*
+llncs2e-larry/*.synctex.gz*
