@@ -27,19 +27,17 @@
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
-\author{Dalis Chan\inst{1} \and
-Johanna \inst{2} \and
-Sean Low Chen Yi \inst{3} \and 
-Law Ann Liat, Larry \inst{4}}
+\author{Dalis Chan \textit{(A0187451Y)} \and
+Johanna \textit{(A0187536R)} \and
+Sean Low Chen Yi \textit{(A0183743Y)} \and 
+Law Ann Liat, Larry \textit{(A0189883A)}}
 %
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
 
-\institute{A0187451Y \and
-INSERT JOHANNA MATRIC NUMBER \and
-INSERT SEAN MATRIC NUMBER \and 
-A0189883A}
+\institute{National University of Singapore \\
+Repository Link \href{https://github.com/larrylawl/CS3243-project-1}{here}}
 %
 \maketitle              % typeset the header of the contribution
 %
@@ -108,17 +106,10 @@ Since general triangle inequality fulfills the definition of consistency ~\cite[
 \textbf{Definition.} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010} . Note that this sum only includes horizontal and vertical distances as \textit{Actions} do not allow the diagonal movements. \\
 \textbf{Proof for Consistency.} Proof for consistency can be found in appendix \ref{appendix:manhat_cons}.
 
-\subsection{\(h_2:\) Euclidean Distance}
-\textbf{Definition.} Euclidean Distance heuristic is defined as the straight line distance between the tiles from their goal position ~\cite{rosalind_euclidean_nodate}. \\
-\textbf{Prove for Consistency.} Euclidean distance is a form general triangle inequality, given that the euclidian distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides ( the actual distance from S to middle state N and the euclidian distance from N to G) as the euclidean distance from \( S \) to \( G \) is already the shortest path. 
-Since general triangle inequality fulfills the definition of consistency ~\cite[p95]{stuart_russell_artifical_2010}, euclidean distance is consistent.
-
-% TODO: Add in linear conflict
 \subsection{ \(h_3: \) Linear Conflict}
 \textbf{Definition.} Two tiles \( t_j \) and \( t_k \) are in a linear conflict if \( t_j \) and \( t_k \) are in the same line, 
 the goal positions of \( t_j \) and \( t_k \) are both in that line, 
-\( t_j \) is to the right of \( t_k \), 
-and the goal position of \( t_j \) is to the left of the goal position of \( t_k \). 
+\( t_j \) is to the right of \( t_k \), and the goal position of \( t_j \) is to the left of the goal position of \( t_k \) \cite[p13]{othar_hansson_generating_1985}. \\
 \textbf{Derivation.} For any state \( s \),
 \begin{enumerate}
     \item For each tile \( t_j \) in \( r_i \), let \( C(t_j, r_i) \) denote the number of tiles conflicting with \( t_j \) in row \( r_i \).
@@ -131,14 +122,15 @@ and the goal position of \( t_j \) is to the left of the goal position of \( t_k
     \end{enumerate}
     \item Repeat Step 1 and 2 for other rows and columns and sum the values of all \( lc (s, r_i) \) and \( lc(s, c_i) \).
     \item Let \( LinearConflict(s) \) denote the minimum number of additional moves necessary to resolve the linear conflicts in state \( s \). \( LinearConflict(s) \) = 2 x result from Step 3.
-    \begin{equation}
+    \[
         h_3(s) = ManhattanDistance(s) + LinearConflict(s)
-    \end{equation}
+    \]
 \end{enumerate}
 \textbf{Prove for Consistency.} To prove consistency, we must prove that for all \( s \) and \( s' \), \( f(s') \geq f(s) \), where \( s' \) is the successor of \( s \).
-\begin{equation}
-    f(s) = g(s) + h(s), where g(s') = g(s) + 1 and h(s) = ManhattanDistance(s) + LinearConflict(s).
-\end{equation}
+\[
+    f(s) = g(s) + h(s)
+\]
+, where $g(s') = g(s) + 1$ and $h(s) = ManhattanDistance(s) + LinearConflict(s)$. \\
 Assume that tile \( t_k \) moves from row \( r_i \) to row \( r_j \) and stays in the same column. Let \( ManhattanDistance(s) \) be \( MD(s) \) and \( LinearConflict(s) \) be \( LC(s) \). 
 \begin{enumerate}
     \item \textbf{Condition 1:} Both \( r_i \) and \( r_j \) are not the goal row of \( t_j \).

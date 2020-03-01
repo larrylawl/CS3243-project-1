@@ -1,0 +1,14 @@
+This is BibTeX, Version 0.99dThe top-level auxiliary file: samplepaper-larry.aux
+The style file: splncs04.bst
+Database file #1: CS3243_project_1.bib
+Warning--entry type for "aditya_goel_how_nodate" isn't style-file defined
+--line 2 of file CS3243_project_1.bib
+Warning--entry type for "rosalind_euclidean_nodate" isn't style-file defined
+--line 16 of file CS3243_project_1.bib
+Warning--I didn't find a database entry for "ref_article1"
+Warning--I didn't find a database entry for "ref_lncs1"
+Warning--I didn't find a database entry for "ref_book1"
+Warning--I didn't find a database entry for "ref_proc1"
+Warning--I didn't find a database entry for "ref_url1"
+Warning--empty year in stuart_russell_artifical_2010
+(There were 8 warnings)
