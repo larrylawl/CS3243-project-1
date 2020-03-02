@@ -95,7 +95,7 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 \end{enumerate}
 
 \subsection{\(h_1:\) Manhattan Distance} 
-\textbf{Justification:} Manhattan Distance is theoretically more efficient than Euclidean distance ~\cite[p104]{stuart_russell_artifical_2010} (since the former dominates the latter) and is consistent. \\
+\textbf{Justification:} Manhattan Distance is theoretically more efficient than Euclidean Distance ~\cite[p104]{stuart_russell_artifical_2010} (since the former dominates the latter) and is consistent. \\
 \textbf{Definition:} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010} . Note that this sum only includes horizontal and vertical distances as \textit{Actions} do not allow diagonal movements. \\
 \textbf{Proof for Consistency:} Refer to Appendix \ref{appendix:manhat_cons}.
 
@@ -149,12 +149,13 @@ For n = \{1 \dots 27\}
 \end{enumerate}
 \subsection{Results and Discussion}
 \begin{centering}
+    \captionof{figure}{Performance of the 3 heuristics under 27 levels of k-puzzle difficulty.}
     \includegraphics[width=\textwidth]{Figure_1.png}
-    \captionof{figure}{Performance of the three different heuristics under 27 levels of k-puzzle difficulty.}
 \end{centering}
-From the Time and Space Complexity graphs in Fig 1 above, for step values above 15, we observe that M and L outperform E in terms of time and space complexity. This is in line with how E dominates M and L, explaining the difference in performance in time and space complexity.\\ \\
-In addition, for step values higher than 22, we observe that L outperforms M in terms of both time and space complexity. This is also in line with how L dominates M which translates directly into time and space efficiency ~\cite[p104]{stuart_russell_artifical_2010}.\\ \\
+In the analysis we denote the Euclidean, Manhattan, and Linear Conflicts heuristics as E, M and L respectively. \\ \\
+From the Time and Space Complexity graphs in Fig 1 above, for step values above 15, we observe that M and L outperform E. This is in line with the theoretical explanation of how M and L dominate E, accounting for the performance difference. In addition, for step values higher than 22, we observe that L outperforms M in terms of both time and space complexity. This is also in line with the theoretical explanation of how L dominates M which translates directly into time and space efficiency ~\cite[p104]{stuart_russell_artifical_2010}.\\ \\
 In terms of actual running time (in seconds), it is interesting to note that while it is no surprise that both M and L outperforms E in terms of actual time taken, L actually takes longer time to solve the puzzle (in seconds) compared to when M is used.  This is contrary to our preliminary expectation that L will be more time efficient than M in theory and practice. \\ \\
+This contradiction may be attributed to the extra time (in seconds) required to calculate the L heuristic for each node before it is put in the frontier, hence overall causing L to take a longer time to solve the puzzle than M. \\ \\
 In conclusion, our experiment has shown that in general, while more dominant heuristics tend to be more efficient in terms of time and space complexity in both theory and practice, there are exceptions such as the case of M and L (actual time) as stated above which are due to the additional computational time needed to compute the heuristic.
 %
 % ---- Bibliography ----
@@ -188,8 +189,8 @@ In conclusion, our experiment has shown that in general, while more dominant heu
 \label{appendix:euc_cons}
 
 \begin{proof} Proof by Construction. \\
-    Euclidean distance is a form general triangle inequality, given that the Euclidean distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides ( the actual distance from S to middle state N and the Euclidean distance from N to G) as the Euclidean distance from \( S \) to \( G \) is already the shortest path. 
-    Since general triangle inequality fulfills the definition of consistency ~\cite[p95]{stuart_russell_artifical_2010}, Euclidean distance is consistent.
+    Euclidean Distance is a form general triangle inequality, given that the Euclidean Distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides (the actual distance from S to middle state N and the Euclidean Distance from N to G) as the Euclidean Distance from \( S \) to \( G \) is already the shortest path. 
+    Since general triangle inequality fulfills the definition of consistency~\cite[p95]{stuart_russell_artifical_2010}, Euclidean Distance is consistent.
 \end{proof}
 
 \section{Proof for Linear Conflict}
