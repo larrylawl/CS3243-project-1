@@ -9,7 +9,7 @@
 \usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage{tikz}
-\usepackage{float}
+\usepackage{capt-of}
 \usetikzlibrary{matrix}
 \usepackage[toc,page]{appendix}
 
@@ -40,13 +40,14 @@ Law Ann Liat, Larry \textit{(A0189883A)}}
 %
 
 \institute{National University of Singapore \\
+%TODO: change to diff colours
 Repository Link \href{https://github.com/larrylawl/CS3243-project-1}{here}}
 %
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
 K-puzzle is often used as test problems for new search algorithms in artificial intelligence ~\cite[p71]{stuart_russell_artifical_2010}. This paper evaluates the use of iterative deepening search (IDS) and \( A^* \) search. 
-Since \( A^* \) search uses heuristic functions to guide its search, this paper also evalutes the heuristic functions euclidean distance, manhattan distance, and linear conflict.
+Since \( A^* \) search uses heuristic functions to guide its search, this paper also evalutes the heuristic functions Euclidean Distance, Manhattan Distance, and linear conflict.
 \end{abstract}
 %
 %
@@ -74,13 +75,13 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 \label{section2}
 
 \subsection{Rule to Check if k-puzzle is Solvable}
-\textbf{Definition.}~\cite{aditya_goel_how_nodate}. A pair of tiles form an \textit{inversion} if the values on tiles are in the reverse order of their appearance in the goal state. \\
-\textbf{Rules}~\cite{aditya_goel_how_nodate}. Let \( M \) denote a \( k \times k \) matrix, \( m_{i, j} \) denote a blank tile in \( M \), and \( n_i \) denote the number of inversions in the intial state \( M_{initial} \). Puzzle is solvable if (1) \( k \) is odd and \( n_i \) is even or (2) \( k \) is even, the sum of \(n_i \) and \( i \) is odd.
+\textbf{Definition:}~\cite{princeton_computer_science_8-puzzle_nodate}. A pair of tiles form an \textit{inversion} if the values on tiles are in the reverse order of their appearance in the goal state. \\
+\textbf{Rules}~\cite{princeton_computer_science_8-puzzle_nodate}. Let \( M \) denote a \( k \times k \) matrix, \( m_{i, j} \) denote a blank tile in \( M \), and \( n_i \) denote the number of inversions in the intial state \( M_{initial} \). Puzzle is solvable if (1) \( k \) is odd and \( n_i \) is even or (2) \( k \) is even, the sum of \(n_i \) and \( i \) is odd.
 
 \subsection{Uninformed Search}
 \begin{enumerate}
     \item \textbf{Implementation:} Graph-based IDS. Step costs are equal, thus it is optimal~\cite[p88]{stuart_russell_artifical_2010}. Furthermore, since the search space is large and the depth of the solution is not known, IDS is preferred ~\cite[p90]{stuart_russell_artifical_2010}.
-    \item \textbf{Correctness:} Branching factor \( b = 4 \) is finite, thus IDS is complete ~\cite[p88-90]{stuart_russell_artifical_2010}. 
+    \item \textbf{Correctness:} Branching factor \( b \leq 4 \) is finite, thus IDS is complete ~\cite[p88-90]{stuart_russell_artifical_2010}. 
     \item \textbf{Time Complexity:} \( O(b^d) \) ~\cite[p88-90]{stuart_russell_artifical_2010}.
     \item \textbf{Space Complexity:} \( O(bd) \) ~\cite[p88-90]{stuart_russell_artifical_2010}.
 \end{enumerate}
@@ -94,15 +95,18 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 \end{enumerate}
 
 \subsection{\(h_1:\) Manhattan Distance} 
-\textbf{Definition.} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010} . Note that this sum only includes horizontal and vertical distances as \textit{Actions} do not allow diagonal movements. \\
-\textbf{Proof for Consistency.} Refer to appendix \ref{appendix:manhat_cons}.
+\textbf{Justification:} Manhattan Distance is theoretically more efficient than Euclidean distance ~\cite[p104]{stuart_russell_artifical_2010} (since the former dominates the latter) and is consistent. \\
+\textbf{Definition:} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010} . Note that this sum only includes horizontal and vertical distances as \textit{Actions} do not allow diagonal movements. \\
+\textbf{Proof for Consistency:} Refer to Appendix \ref{appendix:manhat_cons}.
 
 \subsection{\(h_2:\) Euclidean Distance}
-\textbf{Definition.} Euclidean Distance heuristic is defined as the straight line distance between the tiles from their goal position ~\cite{rosalind_euclidean_nodate}. \\
-\textbf{Proof for Consistency.} Refer to appendix \ref{appendix:euc_cons}
+\textbf{Justification:} Euclidean Distance is theoretically more efficient than number of misplaced tiles heuristic ~\cite[p104]{stuart_russell_artifical_2010} (since the former dominates the latter) and is consistent. \\
+\textbf{Definition:} Euclidean Distance heuristic is defined as the straight line distance between the tiles from their goal position ~\cite{rosalind_euclidean_nodate}. \\
+\textbf{Proof for Consistency:} Refer to Appendix \ref{appendix:euc_cons}.
 
 \subsection{ \(h_3: \) Linear Conflict}
-\textbf{Definition.} Two tiles \( t_j \) and \( t_k \) are in a linear conflict if \( t_j \) and \( t_k \) are in the same line, 
+\textbf{Justification:} Linear Conflict is theoretically more efficient than Manhattan Distance ~\cite[p104]{stuart_russell_artifical_2010} (since the former dominates latter \cite[p25]{othar_hansson_generating_1985} ) and it is consistent. \\
+\textbf{Definition:} Two tiles \( t_j \) and \( t_k \) are in a linear conflict if \( t_j \) and \( t_k \) are in the same line, 
 the goal positions of \( t_j \) and \( t_k \) are both in that line, 
 \( t_j \) is to the right of \( t_k \), and the goal position of \( t_j \) is to the left of the goal position of \( t_k \) \cite[p13]{othar_hansson_generating_1985}. \\
 \textbf{Derivation.} For any state \( s \),
@@ -121,45 +125,37 @@ the goal positions of \( t_j \) and \( t_k \) are both in that line,
         h_3(s) = ManhattanDistance(s) + LinearConflict(s)
     \]
 \end{enumerate}
-\textbf{Prove for Consistency.} Refer to Appendix \ref{appendix:linear_conflict}.
+\textbf{Proof for Consistency:} Refer to Appendix \ref{appendix:linear_conflict}.
 
 \section{Experimental Setup}
 \subsection{Experiment Goals}
 \begin{enumerate}
-    \item \textbf{Time Complexity} shows the theoretical time efficiency of the algorithm in minimising the number of nodes expanded before reaching the goal state
-    \item \textbf{Space Complexity} shows the maximum amount of memory required while running the algorithm
-    \item \textbf{Actual Time Taken} shows the amount of real time needed for the algorithm to reach the goal sate
+    \item \textbf{Time Complexity} shows the theoretical time efficiency of the algorithm in minimising the number of nodes expanded before reaching the goal state.
+    \item \textbf{Space Complexity} shows the maximum amount of memory required while running the algorithm.
+    \item \textbf{Actual Time Taken} shows the amount of real time needed for the algorithm to reach the goal sate.
 \end{enumerate}
 
 \subsection{Experiment Implementation Description}
-\textbf{Time complexity} is measured by the number of nodes generated during the search (ie number of the explored states) \cite[p80]{rosalind_euclidean_nodate}. \\
-\textbf{Space complexity} is measured by the maximum number of nodes stored in memory during the search \cite[p80]{stuart_russell_artifical_2010}. This is measured by the largest summation of number of nodes in the explored set and frontier size during the search. \\
+\textbf{Time Complexity} is measured by the number of nodes generated during the search (ie number of the explored states) \cite[p80]{stuart_russell_artifical_2010}. \\
+\textbf{Space Complexity} is measured by the maximum number of nodes stored in memory during the search \cite[p80]{stuart_russell_artifical_2010}. This is measured by the largest summation of number of nodes in the explored set and frontier size during the search. \\
 \textbf{Actual time taken} is measured by the number of seconds needed by the algorithm to reach the goal state.
 
-For n = \{1 \dots 25\}
+For n = \{1 \dots 27\}
 \begin{enumerate}
     \item Generate \(3 \times 3 \) matrix \( M \) that has \( n \) number of steps to reach the goal state.
-    \item Perform search alogrithm on matrix \( M \)
+    \item Perform search algorithm on matrix \( M \).
     \item Plot the number of nodes generated, maximum nodes in memory, and time against n. % TODO: Reference to graph 
     \item To minimise bias, for each iteration, the puzzle solves 30 different puzzles of n steps and the average number of nodes and maximum nodes in memory are taken.
 \end{enumerate}
-
 \subsection{Results and Discussion}
-\begin{center}
+\begin{centering}
     \includegraphics[width=\textwidth]{Figure_1.png}
-    % \captionof{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig1}
-\end{center}
-In the analysis we will denote the Euclidean, Manhattan, and Manhattan + Linear Conflicts heuristics as E, M and L respectively. \\ \\
-For step values above 15, we observe that M and L outperforms E in terms of time and space complexity. This is in line with how E will always be dominated by M and L, explaining the difference performance in time and space complexity.\\ \\
-In addition, for step values higher than 22, we observe that L outperforms M in terms of both time and space complexity. This is also in line with how L dominates M which translates directly into time and space efficiency (p104).\\ \\
-
-In terms of actual running time (in seconds), it is interesting to note that while both M and L outperforms E, 
-L actually takes longer time to solve the puzzle as compared to when M is used. 
-This is because of the extra time required to calculate L for each node before it is put in the frontier. \\ \\
-In conclusion, our experiment has shown that more dominant heuristics prove to be more efficient 
-in terms of time and space complexity. However, in terms of actual time taken, a better heuristic 
-is not guaranteed to be faster as it is ultimately dependent on the amount of actual time needed to compute the heuristic itself.
-
+    \captionof{figure}{Performance of the three different heuristics under 27 levels of k-puzzle difficulty.}
+\end{centering}
+From the Time and Space Complexity graphs in Fig 1 above, for step values above 15, we observe that M and L outperform E in terms of time and space complexity. This is in line with how E dominates M and L, explaining the difference in performance in time and space complexity.\\ \\
+In addition, for step values higher than 22, we observe that L outperforms M in terms of both time and space complexity. This is also in line with how L dominates M which translates directly into time and space efficiency ~\cite[p104]{stuart_russell_artifical_2010}.\\ \\
+In terms of actual running time (in seconds), it is interesting to note that while it is no surprise that both M and L outperforms E in terms of actual time taken, L actually takes longer time to solve the puzzle (in seconds) compared to when M is used.  This is contrary to our preliminary expectation that L will be more time efficient than M in theory and practice. \\ \\
+In conclusion, our experiment has shown that in general, while more dominant heuristics tend to be more efficient in terms of time and space complexity in both theory and practice, there are exceptions such as the case of M and L (actual time) as stated above which are due to the additional computational time needed to compute the heuristic.
 %
 % ---- Bibliography ----
 %
@@ -192,15 +188,15 @@ is not guaranteed to be faster as it is ultimately dependent on the amount of ac
 \label{appendix:euc_cons}
 
 \begin{proof} Proof by Construction. \\
-    Euclidean distance is a form general triangle inequality, given that the euclidean distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides ( the actual distance from S to middle state N and the euclidean distance from N to G) as the euclidean distance from \( S \) to \( G \) is already the shortest path. 
-    Since general triangle inequality fulfills the definition of consistency ~\cite[p95]{stuart_russell_artifical_2010}, euclidean distance is consistent.
+    Euclidean distance is a form general triangle inequality, given that the Euclidean distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides ( the actual distance from S to middle state N and the Euclidean distance from N to G) as the Euclidean distance from \( S \) to \( G \) is already the shortest path. 
+    Since general triangle inequality fulfills the definition of consistency ~\cite[p95]{stuart_russell_artifical_2010}, Euclidean distance is consistent.
 \end{proof}
 
 \section{Proof for Linear Conflict}
 \label{appendix:linear_conflict}
 
-\begin{proof} Proof by Construction. \\
-    To prove consistency, we must prove that for all \( s \) and \( s' \), \( f(s') \geq f(s) \), where \( s' \) is the successor of \( s \).
+\begin{proof} Proof by Cases. \\
+    To prove consistency, we must prove that for all state \( s \) and \( s' \), \( f(s') \geq f(s) \), where \( s' \) is the successor of \( s \).
 \[
     f(s) = g(s) + h(s)
 \]

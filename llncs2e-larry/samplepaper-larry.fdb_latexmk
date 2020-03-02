@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex samplepaper-larry"] 1583118627 "samplepaper-larry.aux" "samplepaper-larry.bbl" "samplepaper-larry" 1583118629
+["bibtex samplepaper-larry"] 1583123619 "samplepaper-larry.aux" "samplepaper-larry.bbl" "samplepaper-larry" 1583123622
   "./splncs04.bst" 1581675411 33694 182740d5d784dd29ee55be34dddd4ccc ""
-  "CS3243_project_1.bib" 1583071372 788 3c12538843538e6f8782deb45f3f0ae0 ""
-  "samplepaper-larry.aux" 1583118629 4337 14d5adbc10c721bbfc4106c06207a61d "pdflatex"
+  "CS3243_project_1.bib" 1583120045 849 1d24e389dca5765c5d24ac8a5c69d09d ""
+  "samplepaper-larry.aux" 1583123621 4804 b3895d60e5e696ff2151ab405e327e42 "pdflatex"
   (generated)
-  "samplepaper-larry.blg"
   "samplepaper-larry.bbl"
-["pdflatex"] 1583118627 "/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.tex" "/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.pdf" "samplepaper-larry" 1583118629
-  "/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.aux" 1583118629 4337 14d5adbc10c721bbfc4106c06207a61d ""
-  "/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.tex" 1583118622 14409 02a47b663e783c85176d1e2e910a192a ""
+  "samplepaper-larry.blg"
+["pdflatex"] 1583123620 "/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.tex" "/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.pdf" "samplepaper-larry" 1583123622
+  "/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.aux" 1583123621 4804 b3895d60e5e696ff2151ab405e327e42 ""
+  "/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.tex" 1583123619 15185 c77f08e307d959f269b41599d978bc16 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1246382020 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm" 1246382020 1120 7f9f170e8aa57527ad6c49feafd45d54 ""
@@ -133,7 +133,7 @@
   "/usr/local/texlive/2019/texmf-dist/tex/latex/base/article.cls" 1544567569 19933 3097d1b31d3c45dc957096f554529032 ""
   "/usr/local/texlive/2019/texmf-dist/tex/latex/base/omscmr.fd" 1523050425 2472 aa08940f0a4dc6c24ae9f943b04ae0b9 ""
   "/usr/local/texlive/2019/texmf-dist/tex/latex/base/size10.clo" 1544567569 8294 6d6e23d5169c0d89d173f6c7e08a005a ""
-  "/usr/local/texlive/2019/texmf-dist/tex/latex/float/float.sty" 1137110151 6749 16d2656a1984957e674b149555f1ea1d ""
+  "/usr/local/texlive/2019/texmf-dist/tex/latex/capt-of/capt-of.sty" 1264379041 1311 063f8536a047a2d9cb1803321f793f37 ""
   "/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-cfg/color.cfg" 1459978653 1213 620bba36b25224fa9b7e1ccb4ecb76fd ""
   "/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-cfg/graphics.cfg" 1465944070 1224 978390e9c2234eab29404bc21b268d1e ""
   "/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-def/pdftex.def" 1515537368 17334 520b9b85ad8a2a48eda3f643e27a5179 ""
@@ -173,14 +173,14 @@
   "/usr/local/texlive/2019/texmf.cnf" 1557341546 577 d150fef99ac436ad1156e86b0892f6ef ""
   "Figure_1.png" 1583118515 72459 6ad54045be0bc463339cfa11de02d5af ""
   "llncs.cls" 1581675411 43467 a21466011e5ed5d4c3f1d5a9af897395 ""
-  "samplepaper-larry.aux" 1583118629 4337 14d5adbc10c721bbfc4106c06207a61d "pdflatex"
-  "samplepaper-larry.bbl" 1583118627 720 4e7e952833348114186129033392ffee "bibtex samplepaper-larry"
-  "samplepaper-larry.out" 1583118629 117 c991fae2c695135670a9f21426b5343b "pdflatex"
-  "samplepaper-larry.tex" 1583118622 14409 02a47b663e783c85176d1e2e910a192a ""
+  "samplepaper-larry.aux" 1583123621 4804 b3895d60e5e696ff2151ab405e327e42 "pdflatex"
+  "samplepaper-larry.bbl" 1583123619 816 7b60937e22e9b822f7ce2150a5fe5bb6 "bibtex samplepaper-larry"
+  "samplepaper-larry.out" 1583123621 117 c991fae2c695135670a9f21426b5343b "pdflatex"
+  "samplepaper-larry.tex" 1583123619 15185 c77f08e307d959f269b41599d978bc16 ""
   (generated)
   "samplepaper-larry.aux"
-  "samplepaper-larry.pdf"
   "/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.log"
+  "samplepaper-larry.out"
   "/Users/larrylaw/Learn/Uni/projects/CS3243-project-1/llncs2e-larry/samplepaper-larry.pdf"
   "samplepaper-larry.log"
-  "samplepaper-larry.out"
+  "samplepaper-larry.pdf"

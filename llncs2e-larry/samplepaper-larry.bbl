@@ -3,12 +3,13 @@
 \providecommand{\urlprefix}{URL }
 \providecommand{\doi}[1]{https://doi.org/#1}
 
-\bibitem{aditya_goel_how_nodate}
-Goel, A.: How to check if an instance of 15 puzzle is solvable?
-
 \bibitem{othar_hansson_generating_1985}
 {Othar Hansson}, {Andrew E. Mayer}, {Mordechai M. Yung}: Generating admissible
   heuristics by criticizing solutions to relaxed models
+
+\bibitem{princeton_computer_science_8-puzzle_nodate}
+{Princeton Computer Science}: 8-puzzle,
+  \url{https://www.cs.princeton.edu/courses/archive/spring18/cos226/assignments/8puzzle/index.html}
 
 \bibitem{rosalind_euclidean_nodate}
 {Rosalind}: Euclidean distance,
