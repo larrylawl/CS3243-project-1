@@ -146,16 +146,13 @@ For n = \{1 \dots 25\}
 
 \subsection{Results and Discussion}
 \begin{center}
-    \includegraphics[width=\textwidth]{fig1_update.png}
+    \includegraphics[width=\textwidth]{Figure_1.png}
     % \captionof{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig1}
 \end{center}
 In the analysis we will denote the Euclidean, Manhattan, and Manhattan + Linear Conflicts heuristics as E, M and L respectively. \\ \\
 For step values above 15, we observe that M and L outperforms E in terms of time and space complexity. This is in line with how E will always be dominated by M and L, explaining the difference performance in time and space complexity.\\ \\
 In addition, for step values higher than 22, we observe that L outperforms M in terms of both time and space complexity. This is also in line with how L dominates M which translates directly into time and space efficiency (p104).\\ \\
-\begin{center}
-    \includegraphics[width=\textwidth]{actual_time.jpg}
-    % \caption{Performance of the three different heuristics under varying levels of k-puzzle difficulty.} \label{fig2}
-\end{center}
+
 In terms of actual running time (in seconds), it is interesting to note that while both M and L outperforms E, 
 L actually takes longer time to solve the puzzle as compared to when M is used. 
 This is because of the extra time required to calculate L for each node before it is put in the frontier. \\ \\
@@ -169,6 +166,7 @@ is not guaranteed to be faster as it is ultimately dependent on the amount of ac
 % BibTeX users should specify bibliography style 'splncs04'.
 % References will then be sorted and formatted in the correct style.
 %
+\pagebreak
 \bibliographystyle{splncs04}
 \bibliography{CS3243_project_1}
 
