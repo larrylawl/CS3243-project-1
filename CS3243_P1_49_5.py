@@ -172,9 +172,9 @@ class Puzzle(object):
 def plotRunTimes(nodes, memory, times):
 
     # Prepare the x-axis
-    x = range(1, 26)
+    x = range(1, 28)
 
-    plt.subplot(3, 1, 1)
+    plt.subplot(1, 3, 1)
 
     # Name the title
     plt.title("Time Complexity")
@@ -198,7 +198,7 @@ def plotRunTimes(nodes, memory, times):
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
 
-    plt.subplot(3, 1, 2)
+    plt.subplot(1, 3, 2)
     
     # Name the title
     plt.title("Space Complexity")
@@ -221,7 +221,7 @@ def plotRunTimes(nodes, memory, times):
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
 
-    plt.subplot(3, 1, 3)
+    plt.subplot(1, 3, 3)
     
     # Name the title
     plt.title("Actual Time")
@@ -269,7 +269,7 @@ def getNodesExploredMaxMemorySizeAndTimeForKPuzzle(k):
     lc_m_times = []
 
     # Generate puzzles from steps 1 to 25
-    for steps in range(1, 26):
+    for steps in range(1, 28):
         m_30_nodes = []
         e_30_nodes = []
         lc_m_30_nodes = []
