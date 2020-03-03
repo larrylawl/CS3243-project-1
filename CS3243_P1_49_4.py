@@ -57,13 +57,6 @@ def opposite_actions(action, latest_action):
     if action == Actions.LEFT:
         return latest_action == Actions.RIGHT
 
-def is_goal_state(k, state, goal_state):
-    for i in range(k * k):
-        if state[i] != goal_state[i]:
-                return False
-    
-    return True
-
 def flatten_array(unflattened_array):
     """ Turns a 2D array to a 1D array.
     """
@@ -314,7 +307,7 @@ class Puzzle(object):
             curr_node = temp_list[2]
 
             # If the goal state is reached
-            if (Puzzle.is_goal_state(curr_node["state"], self.goal_state)):
+            if (self.is_goal_state(curr_node["state"])):
                 break
 
             curr_state_string = state_to_string(curr_node["state"])
