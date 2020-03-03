@@ -94,7 +94,7 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 \textbf{Definition:} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010}. \\
 \textbf{Proof for Consistency:} Prove by Cases.
 \begin{enumerate}
-    \item \( |h(n') - h(n) = 1| \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
+    \item \( |h(n') - h(n)| = 1 \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
     \item Case 1: \( h(n') = h(n) + 1 \)
     \begin{enumerate}
         \item \( h(n) \leq h(n) + 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
@@ -145,7 +145,7 @@ the goal positions of \( t_j \) and \( t_k \) are both in that line,
     f(s) = g(s) + h(s)
 \]
 where $g(s') = g(s) + 1$ and $h(s) = ManhattanDistance(s) + LinearConflict(s)$. \\
-Assume that tile \( t_k \) moves from row \( r_i \) to row \( r_j \) and stays in the same column. Let \( ManhattanDistance(s) \) be \( MD(s) \) and \( LinearConflict(s) \) be \( LC(s) \). 
+Assume that tile \( t_j \) moves from row \( r_i \) to row \( r_j \) and stays in the same column. Let \( ManhattanDistance(s) \) be \( MD(s) \) and \( LinearConflict(s) \) be \( LC(s) \). 
 \begin{enumerate}
     \item \textbf{Case 1:} Both \( r_i \) and \( r_j \) are not the goal row of \( t_j \).
     
@@ -164,7 +164,7 @@ Assume that tile \( t_k \) moves from row \( r_i \) to row \( r_j \) and stays i
         Since \( r_j \) is not the goal row of \( t_j \), \( lc(s', r_j) = lc(s, r_j) \). 
         Therefore, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
 \end{enumerate}
-All 3 cases show that \( f(s') \geq f(s) \). Thus, for any tile which moves from column \( c_i \) to \( c_j \) while remaining in the same column, \( f(s') \geq f(s) \) will still hold by the symmetry of the puzzle.
+All 3 cases show that \( f(s') \geq f(s) \). Thus, for any tile which moves from column \( c_i \) to \( c_j \) while remaining in the same row, \( f(s') \geq f(s) \) will still hold by the symmetry of the puzzle.
 
 \section{Experimental Setup}
 \textbf{Experiment Goals:} Our experiment aims to measure (1) \textbf{time complexity}, (2) \textbf{space complexity}, and (3) \textbf{actual run time}. 
