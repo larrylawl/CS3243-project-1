@@ -348,7 +348,7 @@ class Puzzle(object):
         return value // self.k, value % self.k
 
     def get_heuristic_Manhattan_linear(self, node):
-        return self.get_heuristic_Manhattan(node) + 2 * self.get_heuristic_linear_conflict(node)
+        return self.get_heuristic_Manhattan(node) + self.get_heuristic_linear_conflict(node)
 
     # Check if the two tiles who have the same GOAL row/ col are conflicting (not in order).
     def is_conflicting(self, curr_pos_j, goal_pos_j, curr_pos_k, goal_pos_k):
@@ -425,7 +425,7 @@ class Puzzle(object):
                 # Find new highest conflict value.
                 highest_conflict_val = max(list_num_conflicting_tiles_in_col)
         
-        return lin_conflict_row + lin_conflict_col
+        return 2*(lin_conflict_row + lin_conflict_col)
 
     def getIthRow(self, state, i):
         start_index = i * self.k
