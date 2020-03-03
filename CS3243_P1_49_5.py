@@ -153,7 +153,6 @@ class KPuzzleGenerator(object):
                     break
             return x, y
 
-
 class Puzzle(object):
     def __init__(self, init_state, goal_state):
         # you may add more attributes if you think is useful
@@ -161,16 +160,11 @@ class Puzzle(object):
         self.goal_state = goal_state
         self.actions = list()
 
-    def solve(self):
-        #TODO
-        # implement your search algorithm here
-        
-        return ["LEFT", "RIGHT"] # sample output 
-
-    # you may add more functions if you think is useful
-
 def plotRunTimes(nodes, memory, times):
-
+    """ Plots 3 graphs side-by-side. The first graph plots the number of nodes generated against steps to goal state.
+    The second graph plots the maximum number of nodes in memory against steps to goal state.
+    The third graph plots the actual time taken to solve puzzle against steps to goal state.
+    """
     # Prepare the x-axis
     x = range(1, 28)
 
@@ -188,7 +182,6 @@ def plotRunTimes(nodes, memory, times):
 
     # show grid
     plt.grid(axis='y')
-
 
     # Plot the data
     plt.plot(x, nodes[0], label='Manhattan Distance')
@@ -244,11 +237,12 @@ def plotRunTimes(nodes, memory, times):
     # Place the legend
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1))
 
-
     plt.show()
 
 
 def getNodesExploredMaxMemorySizeAndTimeForKPuzzle(k):
+    """ Returns a tuple that serves as the parameters for the plot function above.
+    """
 
     # The arrays will store the number of nodes generated for puzzles of steps n
     # where arr[i - 1] contains the number of nodes for step n
@@ -270,20 +264,20 @@ def getNodesExploredMaxMemorySizeAndTimeForKPuzzle(k):
 
     # Generate puzzles from steps 1 to 25
     for steps in range(1, 28):
-        m_30_nodes = []
-        e_30_nodes = []
-        lc_m_30_nodes = []
+        m_27_nodes = []
+        e_27_nodes = []
+        lc_m_27_nodes = []
 
-        m_30_max_memory_used = []
-        e_30_max_memory_used = []
-        lc_m_30_max_memory_used = []
+        m_27_max_memory_used = []
+        e_27_max_memory_used = []
+        lc_m_27_max_memory_used = []
 
-        m_30_times = []
-        e_30_times = []
-        lc_m_30_times = []
+        m_27_times = []
+        e_27_times = []
+        lc_m_27_times = []
 
-        # Generate each puzzle 30 times and take the average of each metric
-        for i in range(30):
+        # Generate each puzzle 27 times and take the average of each metric
+        for i in range(27):
 
             # Some puzzles are generated with n number of steps, but the heuristiscs can sometimes take less than n steps to achieve goal state
             # Thus a new puzzle will generate until the solution REALLY takes n steps to goal state
@@ -317,35 +311,35 @@ def getNodesExploredMaxMemorySizeAndTimeForKPuzzle(k):
                     incorrectNumberOfSteps = False
 
                     # Get the number of nodes explored
-                    m_30_nodes.append(len(m_puzzle.past_states))
-                    e_30_nodes.append(len(e_puzzle.past_states))
-                    lc_m_30_nodes.append(len(lc_m_puzzle.past_states))
+                    m_27_nodes.append(len(m_puzzle.past_states))
+                    e_27_nodes.append(len(e_puzzle.past_states))
+                    lc_m_27_nodes.append(len(lc_m_puzzle.past_states))
 
                     # Get the maximum number of nodes in memory
-                    m_30_max_memory_used.append(m_puzzle.nodes_in_memory)
-                    e_30_max_memory_used.append(e_puzzle.nodes_in_memory)
-                    lc_m_30_max_memory_used.append(lc_m_puzzle.nodes_in_memory)
+                    m_27_max_memory_used.append(m_puzzle.nodes_in_memory)
+                    e_27_max_memory_used.append(e_puzzle.nodes_in_memory)
+                    lc_m_27_max_memory_used.append(lc_m_puzzle.nodes_in_memory)
 
                     # Get the actual time taken
-                    m_30_times.append(m_time)
-                    e_30_times.append(e_time)
-                    lc_m_30_times.append(lc_m_time)
+                    m_27_times.append(m_time)
+                    e_27_times.append(e_time)
+                    lc_m_27_times.append(lc_m_time)
 
                 else:
                     print("!!!!!!!!!!!!!!!!!!REDO!!!!!!!!!!!!!!!!!!!\n")
 
-        # Get averages of 30 puzzles
-        m_ave_nodes = np.mean(m_30_nodes)
-        e_ave_nodes = np.mean(e_30_nodes)
-        lc_m_ave_nodes = np.mean(lc_m_30_nodes)
+        # Get averages of 27 puzzles
+        m_ave_nodes = np.mean(m_27_nodes)
+        e_ave_nodes = np.mean(e_27_nodes)
+        lc_m_ave_nodes = np.mean(lc_m_27_nodes)
 
-        m_ave_max_memory_used = np.mean(m_30_max_memory_used)
-        e_ave_max_memory_used = np.mean(e_30_max_memory_used)
-        lc_m_ave_max_memory_used = np.mean(lc_m_30_max_memory_used)
+        m_ave_max_memory_used = np.mean(m_27_max_memory_used)
+        e_ave_max_memory_used = np.mean(e_27_max_memory_used)
+        lc_m_ave_max_memory_used = np.mean(lc_m_27_max_memory_used)
 
-        m_ave_times = np.mean(m_30_times)
-        e_ave_times = np.mean(e_30_times)
-        lc_m_ave_times = np.mean(lc_m_30_times) 
+        m_ave_times = np.mean(m_27_times)
+        e_ave_times = np.mean(e_27_times)
+        lc_m_ave_times = np.mean(lc_m_27_times) 
         
         # Append to the arrays
         m_nodes.append(m_ave_nodes)

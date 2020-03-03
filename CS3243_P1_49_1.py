@@ -3,16 +3,15 @@ import sys
 import math
 from random import randrange, sample
 
-
 def swap(state, blank_tile_index, target_tile_index, debug=False):
-        """ Swaps target tile with blank tile. Returns a new array.
-        """
-        new_state = state[:]
-        temp = new_state[target_tile_index]
-        new_state[target_tile_index] = state[blank_tile_index]
-        new_state[blank_tile_index] = temp
+    """ Swaps target tile with blank tile. Returns a new array.
+    """
+    new_state = state[:]
+    temp = new_state[target_tile_index]
+    new_state[target_tile_index] = state[blank_tile_index]
+    new_state[blank_tile_index] = temp
 
-        return new_state
+    return new_state
 
 def get_blank_tile(self, debug=False):
     i = self.state.index(0)
@@ -24,7 +23,8 @@ def state_to_string(state):
     return result
 
 def is_legal_tile(target_tile_index, blank_tile_index, k, debug=False):
-    
+    """ Checks if a target and blank tiles can be swapped.
+    """
     list_right_edge = list()
     list_left_edge = list()
     for i in range(1, k + 1):
@@ -41,6 +41,11 @@ def is_legal_tile(target_tile_index, blank_tile_index, k, debug=False):
         return 0 <= target_tile_index < k * k  
 
 def opposite_actions(action, latest_action):
+    """ Checks if an action is opposite to the previous action.
+    This is so that the current transition does not return to the past state,
+    which is the parent directly above it. This also decreases the branching
+    factor to at most 3 for non-root nodes.
+    """
     if action == Actions.DOWN:
         return latest_action == Actions.UP
     if action == Actions.UP:
@@ -50,14 +55,9 @@ def opposite_actions(action, latest_action):
     if action == Actions.LEFT:
         return latest_action == Actions.RIGHT
 
-def is_goal_state(k, state, goal_state):
-    for i in range(k * k):
-        if state[i] != goal_state[i]:
-                return False
-    
-    return True
-
 def flatten_array(unflattened_array):
+    """ Turns a 2D array to a 1D array.
+    """
     flattened_arr = []
     for array in unflattened_array:
         for i in array:
@@ -65,7 +65,21 @@ def flatten_array(unflattened_array):
 
     return flattened_arr
 
+def count_inversions(flattened_arr):
+    """ a[i] makes an inversion with a[j] is i < j and a[j] > a[i].
+    """
+    no_of_inversions = 0
+
+    for i in range(len(flattened_arr)):
+        for j in range(i, len(flattened_arr), 1):
+            if flattened_arr[i] > flattened_arr[j] != 0:
+                no_of_inversions += 1
+
+    return no_of_inversions
+
 def random_insert(lst, item):
+    """ Randomly inserts an element to a list.
+    """
     lst.insert(randrange(len(lst)+1), item)
 
 def isEven(count):
@@ -122,7 +136,7 @@ class Puzzle(object):
         return new_node
 
     def valid_actions(self, node):
-        """ Returns an array of valid actions
+        """ Returns an array of valid actions.
         """
         result = []
         blank_tile_index = node["state"].index(0)
@@ -148,17 +162,30 @@ class Puzzle(object):
             if is_legal_tile(target_tile_index, blank_tile_index, self.k):
                 state_string = state_to_string(swap(node["state"], blank_tile_index, target_tile_index))
                 if not self.is_explored_state(state_string):
-                    result.append(action)
+                    # Greedy approach to branching the nodes. The nodes are branched in random order.
+                    random_insert(result, action)
 
         return result
 
     def is_explored_state(self, state_string):
         return state_string in self.past_states
 
+    def is_goal_state(self, state):
+        for i in range(self.k ** 2):
+            if state[i] != self.goal_state[i]:
+                    return False
+        
+        return True
+
     @staticmethod
     def is_solvable(state):
+        """ A k-puzzle is solvable if:
+        a). k is odd: The number of inversions is even.
+        b). k is even: The sum of the number of inversions and the row (0-indexed) of the 
+        blank tile is odd.
+        """
         k = len(state)
-        no_of_inversions = Puzzle.count_inversions(state)
+        no_of_inversions = count_inversions(state)
 
         isKEven = isEven(k)
         isEvenInversions = isEven(no_of_inversions)
@@ -184,20 +211,6 @@ class Puzzle(object):
                 return False
         # method from https://www.cs.princeton.edu/courses/archive/spring18/cos226/assignments/8puzzle/index.html
 
-
-    @staticmethod
-    def count_inversions(flattened_arr):
-        no_of_inversions = 0
-
-        for i in range(len(flattened_arr)):
-            for j in range(i, len(flattened_arr), 1):
-                if flattened_arr[i] > flattened_arr[j] != 0:
-                    no_of_inversions += 1
-
-        return no_of_inversions
-
-
-
     def test(self):
         """ Unit tests for basic functions. Assumes the input file is n_equals_3/input_1.txt.
 
@@ -209,7 +222,6 @@ class Puzzle(object):
         # Unit test for transition
         stubbed_state = [1, 2, 3, 4, 5, 6, 7, 0, 8]
         stubbed_node = {"state" : stubbed_state, "cost" : 0, "depth": 0, "actions_history": list()}
-        stubbed_past_states = set()
         new_node = puzzle.transition(stubbed_node, Actions.LEFT)
         assert stubbed_node != new_node, "Unit test for transition is failing: transition should return a new node"
         assert new_node["state"][8] == 0, "Unit test for transition is failing: transition incorrectly"
@@ -261,7 +273,7 @@ class Puzzle(object):
         if debug:
             print(state_to_string(node["state"]))
 
-        if is_goal_state(self.k, node["state"], self.goal_state):
+        if self.is_goal_state(node["state"]):
             return node["actions_history"]
         elif limit == 0:
             return Puzzle.CUTOFF
