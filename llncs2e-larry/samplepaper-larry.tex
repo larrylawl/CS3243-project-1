@@ -73,11 +73,6 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 
 \section{Technical Analysis of the Selected Algorithms and Heuristics}
 \label{section2}
-
-\subsection{Rule to Check if k-puzzle is Solvable}
-\textbf{Definition:}~\cite{princeton_computer_science_8-puzzle_nodate}. A pair of tiles form an \textit{inversion} if the values on tiles are in the reverse order of their appearance in the goal state. \\
-\textbf{Rules}~\cite{princeton_computer_science_8-puzzle_nodate}. Let \( M \) denote a \( k \times k \) matrix, \( m_{i, j} \) denote a blank tile in \( M \), and \( n_i \) denote the number of inversions in the intial state \( M_{initial} \). Puzzle is solvable if (1) \( k \) is odd and \( n_i \) is even or (2) \( k \) is even, the sum of \(n_i \) and \( i \) is odd.
-
 \subsection{Uninformed Search}
 \begin{enumerate}
     \item \textbf{Implementation:} Graph-based IDS. Step costs are equal, thus it is optimal~\cite[p88]{stuart_russell_artifical_2010}. Furthermore, since the search space is large and the depth of the solution is not known, IDS is preferred ~\cite[p90]{stuart_russell_artifical_2010}.
@@ -96,7 +91,7 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 
 \subsection{\(h_1:\) Manhattan Distance} 
 \textbf{Justification:} Manhattan Distance is theoretically more efficient than Euclidean Distance ~\cite[p104]{stuart_russell_artifical_2010} (since the former dominates the latter) and is consistent. \\
-\textbf{Definition:} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010} . Note that this sum only includes horizontal and vertical distances as \textit{Actions} do not allow diagonal movements. \\
+\textbf{Definition:} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010}. \\
 \textbf{Proof for Consistency:} Prove by Cases.
 \begin{enumerate}
     \item \( |h(n') - h(n) = 1| \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
@@ -120,14 +115,18 @@ Since general triangle inequality fulfills the definition of consistency~\cite[p
 
 
 \subsection{ \(h_3: \) Linear Conflict}
-\textbf{Justification:} Linear Conflict is theoretically more efficient than Manhattan Distance ~\cite[p104]{stuart_russell_artifical_2010} (since the former dominates latter \cite[p25]{othar_hansson_generating_1985} ) and it is consistent. \\
+\textbf{Justification:} Linear Conflict is theoretically more efficient than Manhattan Distance ~\cite[p104]{stuart_russell_artifical_2010} (since the former dominates latter \cite[p25]{othar_hansson_generating_1985}) and is consistent. \\
 \textbf{Definition:} Two tiles \( t_j \) and \( t_k \) are in a linear conflict if \( t_j \) and \( t_k \) are in the same line, 
 the goal positions of \( t_j \) and \( t_k \) are both in that line, 
 \( t_j \) is to the right of \( t_k \), and the goal position of \( t_j \) is to the left of the goal position of \( t_k \) \cite[p13]{othar_hansson_generating_1985}. \\
 \textbf{Derivation.} For any state \( s \),
 \begin{enumerate}
     \item For each tile \( t_j \) in \( r_i \), let \( C(t_j, r_i) \) denote the number of tiles conflicting with \( t_j \) in row \( r_i \).
-    \item While there is a non-zero \( C(t_j, r_i) \) value,
+    \item While there is a non-zero \( C(t_j, r_i) \) value, 
+    % (a) Move out the tile with the most conflicts from \( r_i \). Let this tile be \( t_k \).
+    % (b) Set \( C(t_k, r_i) \) = 0.
+    % (c) For every tile \( t_j \) in conflict with \( t_k \), decrement \( C(t_j, r_i) \) by 1. 
+    % (d) Let \( lc(s, r_i) \) denote the number of tiles that must be removed from row \( r_i \) in order to resolve the linear conflicts in \( r_i \). Increment \( lc(s, r_i) \) by 1.
     \begin{enumerate}
         \item Move out the tile with the most conflicts from \( r_i \). Let this tile be \( t_k \).
         \item Set \( C(t_k, r_i) \) = 0.
@@ -148,17 +147,17 @@ the goal positions of \( t_j \) and \( t_k \) are both in that line,
 where $g(s') = g(s) + 1$ and $h(s) = ManhattanDistance(s) + LinearConflict(s)$. \\
 Assume that tile \( t_k \) moves from row \( r_i \) to row \( r_j \) and stays in the same column. Let \( ManhattanDistance(s) \) be \( MD(s) \) and \( LinearConflict(s) \) be \( LC(s) \). 
 \begin{enumerate}
-    \item \textbf{Condition 1:} Both \( r_i \) and \( r_j \) are not the goal row of \( t_j \).
+    \item \textbf{Case 1:} Both \( r_i \) and \( r_j \) are not the goal row of \( t_j \).
     
         \( MD(s') = MD(s) \pm 1 \). \( LC(s) \) is unchanged. Thus, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
     
-    \item \textbf{Condition 2:} \( r_j \) is the goal row of \( t_j \).
+    \item \textbf{Case 2:} \( r_j \) is the goal row of \( t_j \).
         
         As \( t_j \) moves to its goal row, \( MD(s') = MD(s) - 1 \). Since \( r_i \) is not the goal row of \( t_j \), \( lc(s', r_i) = lc(s, r_i) \). 
         As \( r_j \) is the goal row, the conflicts in row \( r_j \) may or may not increase; so it is either \( lc(s', r_j) = lc(s, r_j) \) or \( lc(s', r_j) = lc(s, r_j) + 2 \). 
         Hence, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
 
-    \item \textbf{Condition 3:} \( r_i \) is the goal row of \( t_j \).
+    \item \textbf{Case 3:} \( r_i \) is the goal row of \( t_j \).
     
         As \( t_j \) moves away from its goal row, \( MD(s') = MD(s) + 1 \). 
         As \( r_i \) is the goal row, the conflicts in row \( r_i \) may or may not decrease; so it is either \( lc(s', r_i) = lc(s, r_i) \) or \( lc(s', r_i) = lc(s, r_i) - 2 \). 
@@ -168,35 +167,36 @@ Assume that tile \( t_k \) moves from row \( r_i \) to row \( r_j \) and stays i
 All 3 cases show that \( f(s') \geq f(s) \). Thus, for any tile which moves from column \( c_i \) to \( c_j \) while remaining in the same column, \( f(s') \geq f(s) \) will still hold by the symmetry of the puzzle.
 
 \section{Experimental Setup}
-\subsection{Experiment Goals}
-\begin{enumerate}
-    \item \textbf{Time Complexity} shows the theoretical time efficiency of the algorithm in minimising the number of nodes expanded before reaching the goal state.
-    \item \textbf{Space Complexity} shows the maximum amount of memory required while running the algorithm.
-    \item \textbf{Actual Time Taken} shows the amount of real time needed for the algorithm to reach the goal sate.
-\end{enumerate}
-
-\subsection{Experiment Implementation Description}
-\textbf{Time Complexity} is measured by the number of nodes generated during the search (ie number of the explored states) \cite[p80]{stuart_russell_artifical_2010}. \\
-\textbf{Space Complexity} is measured by the maximum number of nodes stored in memory during the search \cite[p80]{stuart_russell_artifical_2010}. This is measured by the largest summation of number of nodes in the explored set and frontier size during the search. \\
-\textbf{Actual time taken} is measured by the number of seconds needed by the algorithm to reach the goal state.
-
-For n = \{1 \dots 27\}
+\textbf{Experiment Goals:} Our experiment aims to measure (1) \textbf{time complexity}, (2) \textbf{space complexity}, and (3) \textbf{actual run time}. 
+(1) shows the theoretical time efficiency in terms of the number of nodes generated. % \footnote{Measured by number of nodes generated}. 
+(2) shows the maximum memory required for the search in terms of the max number of nodes stored. %\footnote{Measured by the maximum number of nodes stored in memory during the search}. 
+(3) shows the real time needed for the algorithm to reach the goal state. \\ % \footnote{Measured by by the number of seconds needed by the algorithm to reach the goal state}.\\
+% \textbf{Actual Time Taken} shows the amount of real time needed for the algorithm to reach the goal sate. 
+% \begin{enumerate}
+%     \item \textbf{Time Complexity} shows the theoretical time efficiency of the algorithm in minimising the number of nodes expanded before reaching the goal state.
+%     \item \textbf{Space Complexity} shows the maximum amount of memory required while running the algorithm.
+%     \item \textbf{Actual Time Taken} shows the amount of real time needed for the algorithm to reach the goal sate.
+% \end{enumerate}
+% \subsection{Experiment Implementation Description}
+% \textbf{Time Complexity} is measured by the number of nodes generated during the search (ie number of the explored states) \cite[p80]{stuart_russell_artifical_2010}. \\
+% \textbf{Space Complexity} is measured by the maximum number of nodes stored in memory during the search \cite[p80]{stuart_russell_artifical_2010}. This is measured by the largest summation of number of nodes in the explored set and frontier size during the search. \\
+% \textbf{Actual time taken} is measured by the number of seconds needed by the algorithm to reach the goal state.
+\textbf{Experiment Implementation Details:} For n = \{1 \dots 27\}
 \begin{enumerate}
     \item Generate \(3 \times 3 \) matrix \( M \) that has \( n \) number of steps to reach the goal state.
     \item Perform search algorithm on matrix \( M \).
-    \item Plot the number of nodes generated, maximum nodes in memory, and time against n. % TODO: Reference to graph 
+    \item Plot the number of nodes generated, maximum nodes in memory, and the actual run time.
     \item To minimise bias, for each iteration, the puzzle solves 30 different puzzles of n steps and the average number of nodes and maximum nodes in memory are taken.
 \end{enumerate}
-\subsection{Results and Discussion}
+\section{Results and Discussion}
 \begin{centering}
     \captionof{figure}{Performance of the 3 heuristics under 27 levels of k-puzzle difficulty.}
     \includegraphics[width=\textwidth]{Figure_1.png}
 \end{centering}
-In the analysis we denote the Euclidean, Manhattan, and Linear Conflicts heuristics as E, M and L respectively. \\ \\
-From the Time and Space Complexity graphs in Fig 1 above, for step values above 15, we observe that M and L outperform E. This is in line with the theoretical explanation of how M and L dominate E, accounting for the performance difference. In addition, for step values higher than 22, we observe that L outperforms M in terms of both time and space complexity. This is also in line with the theoretical explanation of how L dominates M which translates directly into time and space efficiency ~\cite[p104]{stuart_russell_artifical_2010}.\\ \\
-In terms of actual running time (in seconds), it is interesting to note that while it is no surprise that both M and L outperforms E in terms of actual time taken, L actually takes longer time to solve the puzzle (in seconds) compared to when M is used.  This is contrary to our preliminary expectation that L will be more time efficient than M in theory and practice. \\ \\
-This contradiction may be attributed to the extra time (in seconds) required to calculate the L heuristic for each node before it is put in the frontier, hence overall causing L to take a longer time to solve the puzzle than M. \\ \\
-In conclusion, our experiment has shown that in general, while more dominant heuristics tend to be more efficient in terms of time and space complexity in both theory and practice, there are exceptions such as the case of M and L (actual time) as stated above which are due to the additional computational time needed to compute the heuristic.
+In the analysis we denote the Euclidean, Manhattan, and Linear Conflicts heuristics as E, M and L respectively. \\
+From the Time and Space Complexity graphs in Fig 1 above, for step values above 15, we observe that M and L outperform E. This is in line with the theoretical explanation of how M and L dominate E, accounting for the performance difference. In addition, for step values higher than 22, we observe that L outperforms M in terms of both time and space complexity. This is also in line with the theoretical explanation of how L dominates M which translates directly into time and space efficiency ~\cite[p104]{stuart_russell_artifical_2010}.\\
+However in terms of actual running time, L takes longer to solve the puzzle compared to M.  This is contrary to our preliminary expectation that L will be more time efficient than M. This contradiction can be explained by the extra time required to calculate the heuristic for each node before it is put in the frontier.
+% In conclusion, our experiment has shown that in general, while more dominant heuristics tend to be more efficient in terms of time and space complexity in both theory and practice, there are exceptions such as the case of M and L (actual time) as stated above which are due to the additional computational time needed to compute the heuristic.
 %
 % ---- Bibliography ----
 %
@@ -208,59 +208,65 @@ In conclusion, our experiment has shown that in general, while more dominant heu
 \bibliography{CS3243_project_1}
 
 \appendix
-\section{Proof for Manhattan Distance Consistency}
-\label{appendix:manhat_cons}
-\begin{proof} Proof by Cases
-    \begin{enumerate}
-        \item \( |h(n') - h(n) = 1| \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
-        \item Case 1: \( h(n') = h(n) + 1 \)
-        \begin{enumerate}
-            \item \( h(n) \leq h(n) + 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
-        \end{enumerate}
-        \item Case 2: \( h(n') = h(n) - 1 \)
-        \begin{enumerate}
-            \item \( h(n) \leq h(n) - 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
-        \end{enumerate}
-        \item For both cases of \( h(n') \), \( h(n) \) is consistent. (\(\bullet\))
-    \end{enumerate}
-\end{proof}
+\section{Rule to Check if k-puzzle is Solvable}
+\textbf{Definition:}~\cite{princeton_computer_science_8-puzzle_nodate}. A pair of tiles form an \textit{inversion} if the values on tiles are in the reverse order of their appearance in the goal state. \\
+\textbf{Rules}~\cite{princeton_computer_science_8-puzzle_nodate}. Let \( M \) denote a \( k \times k \) matrix, \( m_{i, j} \) denote a blank tile in \( M \), and \( n_i \) denote the number of inversions in the intial state \( M_{initial} \). Puzzle is solvable if (1) \( k \) is odd and \( n_i \) is even or (2) \( k \) is even, the sum of \(n_i \) and \( i \) is odd.
 
-\section{Proof for Euclidean Distance Consistency}
-\label{appendix:euc_cons}
 
-\begin{proof} Proof by Construction. \\
-    Euclidean Distance is a form general triangle inequality, given that the Euclidean Distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides (the actual distance from S to middle state N and the Euclidean Distance from N to G) as the Euclidean Distance from \( S \) to \( G \) is already the shortest path. 
-    Since general triangle inequality fulfills the definition of consistency~\cite[p95]{stuart_russell_artifical_2010}, Euclidean Distance is consistent.
-\end{proof}
+% \appendix
+% \section{Proof for Manhattan Distance Consistency}
+% \label{appendix:manhat_cons}
+% \begin{proof} Proof by Cases
+%     \begin{enumerate}
+%         \item \( |h(n') - h(n) = 1| \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
+%         \item Case 1: \( h(n') = h(n) + 1 \)
+%         \begin{enumerate}
+%             \item \( h(n) \leq h(n) + 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
+%         \end{enumerate}
+%         \item Case 2: \( h(n') = h(n) - 1 \)
+%         \begin{enumerate}
+%             \item \( h(n) \leq h(n) - 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
+%         \end{enumerate}
+%         \item For both cases of \( h(n') \), \( h(n) \) is consistent. (\(\bullet\))
+%     \end{enumerate}
+% \end{proof}
 
-\section{Proof for Linear Conflict}
-\label{appendix:linear_conflict}
+% \section{Proof for Euclidean Distance Consistency}
+% \label{appendix:euc_cons}
 
-\begin{proof} Proof by Cases. \\
-    To prove consistency, we must prove that for all state \( s \) and \( s' \), \( f(s') \geq f(s) \), where \( s' \) is the successor of \( s \).
-\[
-    f(s) = g(s) + h(s)
-\]
-where $g(s') = g(s) + 1$ and $h(s) = ManhattanDistance(s) + LinearConflict(s)$. \\
-Assume that tile \( t_k \) moves from row \( r_i \) to row \( r_j \) and stays in the same column. Let \( ManhattanDistance(s) \) be \( MD(s) \) and \( LinearConflict(s) \) be \( LC(s) \). 
-\begin{enumerate}
-    \item \textbf{Condition 1:} Both \( r_i \) and \( r_j \) are not the goal row of \( t_j \).
+% \begin{proof} Proof by Construction. \\
+%     Euclidean Distance is a form of general triangle inequality, given that the Euclidean Distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides (the actual distance from S to middle state N and the Euclidean Distance from N to G) as the Euclidean Distance from \( S \) to \( G \) is already the shortest path. 
+%     Since general triangle inequality fulfills the definition of consistency~\cite[p95]{stuart_russell_artifical_2010}, Euclidean Distance is consistent.
+% \end{proof}
+
+% \section{Proof for Linear Conflict}
+% \label{appendix:linear_conflict}
+
+% \begin{proof} Proof by Cases. \\
+%     To prove consistency, we must prove that for all state \( s \) and \( s' \), \( f(s') \geq f(s) \), where \( s' \) is the successor of \( s \).
+% \[
+%     f(s) = g(s) + h(s)
+% \]
+% where $g(s') = g(s) + 1$ and $h(s) = ManhattanDistance(s) + LinearConflict(s)$. \\
+% Assume that tile \( t_k \) moves from row \( r_i \) to row \( r_j \) and stays in the same column. Let \( ManhattanDistance(s) \) be \( MD(s) \) and \( LinearConflict(s) \) be \( LC(s) \). 
+% \begin{enumerate}
+%     \item \textbf{Condition 1:} Both \( r_i \) and \( r_j \) are not the goal row of \( t_j \).
     
-        \( MD(s') = MD(s) \pm 1 \). \( LC(s) \) is unchanged. Thus, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
+%         \( MD(s') = MD(s) \pm 1 \). \( LC(s) \) is unchanged. Thus, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
     
-    \item \textbf{Condition 2:} \( r_j \) is the goal row of \( t_j \).
+%     \item \textbf{Condition 2:} \( r_j \) is the goal row of \( t_j \).
         
-        As \( t_j \) moves to its goal row, \( MD(s') = MD(s) - 1 \). Since \( r_i \) is not the goal row of \( t_j \), \( lc(s', r_i) = lc(s, r_i) \). 
-        As \( r_j \) is the goal row, the conflicts in row \( r_j \) may or may not increase; so it is either \( lc(s', r_j) = lc(s, r_j) \) or \( lc(s', r_j) = lc(s, r_j) + 2 \). 
-        Hence, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
+%         As \( t_j \) moves to its goal row, \( MD(s') = MD(s) - 1 \). Since \( r_i \) is not the goal row of \( t_j \), \( lc(s', r_i) = lc(s, r_i) \). 
+%         As \( r_j \) is the goal row, the conflicts in row \( r_j \) may or may not increase; so it is either \( lc(s', r_j) = lc(s, r_j) \) or \( lc(s', r_j) = lc(s, r_j) + 2 \). 
+%         Hence, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
 
-    \item \textbf{Condition 3:} \( r_i \) is the goal row of \( t_j \).
+%     \item \textbf{Condition 3:} \( r_i \) is the goal row of \( t_j \).
     
-        As \( t_j \) moves away from its goal row, \( MD(s') = MD(s) + 1 \). 
-        As \( r_i \) is the goal row, the conflicts in row \( r_i \) may or may not decrease; so it is either \( lc(s', r_i) = lc(s, r_i) \) or \( lc(s', r_i) = lc(s, r_i) - 2 \). 
-        Since \( r_j \) is not the goal row of \( t_j \), \( lc(s', r_j) = lc(s, r_j) \). 
-        Therefore, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
-\end{enumerate}
-All 3 cases show that \( f(s') \geq f(s) \). Thus, for any tile which moves from column \( c_i \) to \( c_j \) while remaining in the same column, \( f(s') \geq f(s) \) will still hold by the symmetry of the puzzle.
-\end{proof}
+%         As \( t_j \) moves away from its goal row, \( MD(s') = MD(s) + 1 \). 
+%         As \( r_i \) is the goal row, the conflicts in row \( r_i \) may or may not decrease; so it is either \( lc(s', r_i) = lc(s, r_i) \) or \( lc(s', r_i) = lc(s, r_i) - 2 \). 
+%         Since \( r_j \) is not the goal row of \( t_j \), \( lc(s', r_j) = lc(s, r_j) \). 
+%         Therefore, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
+% \end{enumerate}
+% All 3 cases show that \( f(s') \geq f(s) \). Thus, for any tile which moves from column \( c_i \) to \( c_j \) while remaining in the same column, \( f(s') \geq f(s) \) will still hold by the symmetry of the puzzle.
+% \end{proof}
 \end{document}
