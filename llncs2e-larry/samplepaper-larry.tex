@@ -83,7 +83,7 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 
 \subsection{Informed Search}
 \begin{enumerate}
-    \item \textbf{Implementation:} Graph-based \( A^* \) search. It improves on greedy best first search (ie \( f(n) = h(n) \)) as it avoids expanding paths that are already expensive (ie \( f(n) = g(n) + h(n) \)).
+    \item \textbf{Implementation:} Graph-based \( A^* \) search. It improves on greedy best first search (i.e. \( f(n) = h(n) \)) as it avoids expanding paths that are already expensive (i.e. \( f(n) = g(n) + h(n) \)).
     \item \textbf{Correctness:} Since the search space is finite, \( A^* \) search will be complete.
     \item \textbf{Time Complexity:} \( O(b^{h^*(s_0) - h(s_0)}) \) ~\cite[p93-99]{stuart_russell_artifical_2010}.
     \item \textbf{Space Complexity:} \( O(b^m) \) ~\cite[p93-99]{stuart_russell_artifical_2010}.
@@ -178,7 +178,7 @@ All 3 cases show that \( f(s') \geq f(s) \). Thus, for any tile which moves from
 %     \item \textbf{Actual Time Taken} shows the amount of real time needed for the algorithm to reach the goal sate.
 % \end{enumerate}
 % \subsection{Experiment Implementation Description}
-% \textbf{Time Complexity} is measured by the number of nodes generated during the search (ie number of the explored states) \cite[p80]{stuart_russell_artifical_2010}. \\
+% \textbf{Time Complexity} is measured by the number of nodes generated during the search (i.e. number of the explored states) \cite[p80]{stuart_russell_artifical_2010}. \\
 % \textbf{Space Complexity} is measured by the maximum number of nodes stored in memory during the search \cite[p80]{stuart_russell_artifical_2010}. This is measured by the largest summation of number of nodes in the explored set and frontier size during the search. \\
 % \textbf{Actual time taken} is measured by the number of seconds needed by the algorithm to reach the goal state.
 \textbf{Experiment Implementation Details:} For n = \{1 \dots 27\}
