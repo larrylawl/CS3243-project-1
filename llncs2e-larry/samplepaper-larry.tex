@@ -39,15 +39,16 @@ Law Ann Liat, Larry \textit{(A0189883A)}}
 % If there are more than two authors, 'et al.' is used.
 %
 
-\institute{National University of Singapore \\
+\institute{%National University of Singapore \\
 %TODO: change to diff colours
 Repository Link \href{https://github.com/larrylawl/CS3243-project-1}{here}}
 %
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-K-puzzle is often used as test problems for new search algorithms in artificial intelligence ~\cite[p71]{stuart_russell_artifical_2010}. This paper evaluates the use of iterative deepening search (IDS) and \( A^* \) search. 
-Since \( A^* \) search uses heuristic functions to guide its search, this paper also evalutes the heuristic functions Euclidean Distance, Manhattan Distance, and linear conflict.
+K-puzzle is often used as test problems for new search algorithms in artificial intelligence ~\cite[p71]{stuart_russell_artifical_2010}. 
+This paper evaluates the use of iterative deepening search (IDS) and \( A^* \) search. 
+Since \( A^* \) search uses heuristic functions to guide its search, this paper also evaluates the heuristic functions Manhattan Distance, Euclidean Distance, and Linear Conflict. We use these heuristics as our \(h_1(n) \geq h_2(n), h_2(n) \geq h_{misplaced tiles}(n),\)  and \(h_3(n) \geq h_1(n) \).
 \end{abstract}
 %
 %
@@ -90,32 +91,36 @@ Since \( A^* \) search uses heuristic functions to guide its search, this paper 
 \end{enumerate}
 
 \subsection{\(h_1:\) Manhattan Distance} 
-\textbf{Justification:} Manhattan Distance is theoretically more efficient than Euclidean Distance ~\cite[p104]{stuart_russell_artifical_2010} (since the former dominates the latter) and is consistent. \\
-\textbf{Definition:} Manhattan Distance heuristic is defined as the sum of the distance of the tiles from their goal positions ~\cite[p103]{stuart_russell_artifical_2010}. \\
-\textbf{Proof for Consistency:} Prove by Cases.
-\begin{enumerate}
-    \item \( |h(n') - h(n)| = 1 \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
-    \item Case 1: \( h(n') = h(n) + 1 \)
-    \begin{enumerate}
-        \item \( h(n) \leq h(n) + 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
-    \end{enumerate}
-    \item Case 2: \( h(n') = h(n) - 1 \)
-    \begin{enumerate}
-        \item \( h(n) \leq h(n) - 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
-    \end{enumerate}
-    \item For both cases of \( h(n') \), \( h(n) \) is consistent. (\(\bullet\))
-\end{enumerate}
+\textbf{Justification:} Manhattan Distance (1) is consistent and (2) it dominates Euclidean Distance heuristic, thus theoretically more efficient ~\cite[104]{stuart_russell_artifical_2010}. \\
+\textbf{Definition:} Manhattan Distance heuristic is defined as the sum of the horizontal distance and vertical distance from their goal positions ~\cite[p103]{stuart_russell_artifical_2010}. More formally, \( h_1(s) = D_v(s) + D_h(s) \). \\
+\textbf{Proof for Consistency:} Proof in appendix \ref{appendix:manhat_cons}. \\
+\textbf{Proof for Dominance:} \( \forall s \in S, h_{2}(s) \leq D_h(s) + D_v(s) (\because \text{triangle inequality}) \), where S denotes the set of possible states.
 
 \subsection{\(h_2:\) Euclidean Distance}
-\textbf{Justification:} Euclidean Distance is theoretically more efficient than number of misplaced tiles heuristic ~\cite[p104]{stuart_russell_artifical_2010} (since the former dominates the latter) and is consistent. \\
+\textbf{Justification:} Euclidean Distance (1) is consistent and (2) it dominates Misplace Tiles heuristic, thus theoretically more efficient ~\cite[104]{stuart_russell_artifical_2010}. \\
 \textbf{Definition:} Euclidean Distance heuristic is defined as the straight line distance between the tiles from their goal position ~\cite{rosalind_euclidean_nodate}. \\
 \textbf{Proof for Consistency:} Prove by Construction. \\
 Euclidean Distance is a form general triangle inequality, given that the Euclidean Distance from start state \( S \) to end state \( G \) (1 side of the triangle) cannot be longer than the sum of the 2 sides (the actual distance from S to middle state N and the Euclidean Distance from N to G) as the Euclidean Distance from \( S \) to \( G \) is already the shortest path. 
-Since general triangle inequality fulfills the definition of consistency~\cite[p95]{stuart_russell_artifical_2010}, Euclidean Distance is consistent \( (\bullet) \).
-
-
+Since general triangle inequality fulfills the definition of consistency~\cite[p95]{stuart_russell_artifical_2010}, Euclidean Distance is consistent \( (\bullet) \). \\
+\textbf{Proof for Dominance:}
+\[
+	M(m_{i,j}) =
+	    \begin{cases}
+	      0 & \text{if \(m_{i,j} \) is not misplaced.}\\
+	      1 & \text{if \(m_{i,j} \) is misplaced.}
+	    \end{cases} 
+\]
+Thus, \( h_{misplaced tiles}(s) = \sum_{i=1}^k \sum_{j=1}^k M(m_{i,j}) \). Let \(D(m_{i,j})\) be the Euclidean distance of tile \(m_{i,j}\) to its goal position. Hence,
+\[
+	D(m_{i,j}) =
+	    \begin{cases}
+	      0 & \text{if \(m_{i,j} \) is not misplaced.}\\
+	      [1, \sqrt{2}(k-1)] & \text{if \(m_{i,j} \) is misplaced.}
+	    \end{cases} 
+\]
+Since \(h_2(s) = \sum_{i=1}^k \sum_{j=1}^k D(m_{i,j}) \), \(h_2(s) \geq h_{misplaced tiles}(s)\).
 \subsection{ \(h_3: \) Linear Conflict}
-\textbf{Justification:} Linear Conflict is theoretically more efficient than Manhattan Distance ~\cite[p104]{stuart_russell_artifical_2010} (since the former dominates latter \cite[p25]{othar_hansson_generating_1985}) and is consistent. \\
+\textbf{Justification:} Linear Conflict (1) is consistent and (2) it dominates Manhattan Distance heuristic, thus theoretically more efficient ~\cite[104]{stuart_russell_artifical_2010}. \\
 \textbf{Definition:} Two tiles \( t_j \) and \( t_k \) are in a linear conflict if \( t_j \) and \( t_k \) are in the same line, 
 the goal positions of \( t_j \) and \( t_k \) are both in that line, 
 \( t_j \) is to the right of \( t_k \), and the goal position of \( t_j \) is to the left of the goal position of \( t_k \) \cite[p13]{othar_hansson_generating_1985}. \\
@@ -134,37 +139,25 @@ the goal positions of \( t_j \) and \( t_k \) are both in that line,
         \item Let \( lc(s, r_i) \) denote the number of tiles that must be removed from row \( r_i \) in order to resolve the linear conflicts in \( r_i \). Increment \( lc(s, r_i) \) by 1.
     \end{enumerate}
     \item Repeat Step 1 and 2 for other rows and columns and sum the values of all \( lc (s, r_i) \) and \( lc(s, c_i) \).
-    \item Let \( LinearConflict(s) \) denote the minimum number of additional moves necessary to resolve the linear conflicts in state \( s \). \( LinearConflict(s) \) = 2 x result from Step 3.
-    \[
-        h_3(s) = ManhattanDistance(s) + LinearConflict(s)
-    \]
+    \item Let \( LinearConflict(s) \) denote the minimum number of additional moves necessary to resolve the linear conflicts in state \( s \). \( LinearConflict(s) \) = 2 x result from Step 3. Thus, \(h_3(s) = ManhattanDistance(s) + LinearConflict(s).\)
 \end{enumerate}
 \textbf{Proof for Consistency:} Proof By Cases. \\
-    To prove consistency, we must prove that for all state \( s \) and \( s' \), \( f(s') \geq f(s) \), where \( s' \) is the successor of \( s \).
-\[
-    f(s) = g(s) + h(s)
-\]
-where $g(s') = g(s) + 1$ and $h(s) = ManhattanDistance(s) + LinearConflict(s)$. \\
+    To prove consistency, we must prove that for all state \( s \) and \( s' \), \( f(s') \geq f(s) \), where \( s' \) is the successor of \( s \). \(f(s) = g(s) + h(s) \) where $g(s') = g(s) + 1$ and $h(s) = ManhattanDistance(s) + LinearConflict(s)$. \\
 Assume that tile \( t_j \) moves from row \( r_i \) to row \( r_j \) and stays in the same column. Let \( ManhattanDistance(s) \) be \( MD(s) \) and \( LinearConflict(s) \) be \( LC(s) \). 
 \begin{enumerate}
-    \item \textbf{Case 1:} Both \( r_i \) and \( r_j \) are not the goal row of \( t_j \).
+    \item \textbf{Case 1:} Both \( r_i \) and \( r_j \) are not the goal row of \( t_j \). \( MD(s') = MD(s) \pm 1 \). \( LC(s) \) is unchanged. Thus, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
     
-        \( MD(s') = MD(s) \pm 1 \). \( LC(s) \) is unchanged. Thus, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
-    
-    \item \textbf{Case 2:} \( r_j \) is the goal row of \( t_j \).
-        
-        As \( t_j \) moves to its goal row, \( MD(s') = MD(s) - 1 \). Since \( r_i \) is not the goal row of \( t_j \), \( lc(s', r_i) = lc(s, r_i) \). 
+    \item \textbf{Case 2:} \( r_j \) is the goal row of \( t_j \). As \( t_j \) moves to its goal row, \( MD(s') = MD(s) - 1 \). Since \( r_i \) is not the goal row of \( t_j \), \( lc(s', r_i) = lc(s, r_i) \). 
         As \( r_j \) is the goal row, the conflicts in row \( r_j \) may or may not increase; so it is either \( lc(s', r_j) = lc(s, r_j) \) or \( lc(s', r_j) = lc(s, r_j) + 2 \). 
         Hence, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
 
-    \item \textbf{Case 3:} \( r_i \) is the goal row of \( t_j \).
-    
-        As \( t_j \) moves away from its goal row, \( MD(s') = MD(s) + 1 \). 
+    \item \textbf{Case 3:} \( r_i \) is the goal row of \( t_j \). As \( t_j \) moves away from its goal row, \( MD(s') = MD(s) + 1 \). 
         As \( r_i \) is the goal row, the conflicts in row \( r_i \) may or may not decrease; so it is either \( lc(s', r_i) = lc(s, r_i) \) or \( lc(s', r_i) = lc(s, r_i) - 2 \). 
         Since \( r_j \) is not the goal row of \( t_j \), \( lc(s', r_j) = lc(s, r_j) \). 
         Therefore, \( h(s') = h(s) \pm 1 \) and \( f(s') = f(s) + 1 \pm 1 \geq f(s) \).
 \end{enumerate}
-All 3 cases show that \( f(s') \geq f(s) \). Thus, for any tile which moves from column \( c_i \) to \( c_j \) while remaining in the same row, \( f(s') \geq f(s) \) will still hold by the symmetry of the puzzle.
+All 3 cases show that \( f(s') \geq f(s) \). Thus, for any tile which moves from column \( c_i \) to \( c_j \) while remaining in the same row, \( f(s') \geq f(s) \) will still hold by the symmetry of the puzzle. \\
+\textbf{Proof for Dominance:} \( \forall s \in S: (h_3(s) = h_1(s) + \text{LinearConflict(s)}) \geq h_{1}(s) (\because LinearConflict(s) \geq 0) \), where S denotes the set of possible states.
 
 \section{Experimental Setup}
 \textbf{Experiment Goals:} Our experiment aims to measure (1) \textbf{time complexity}, (2) \textbf{space complexity}, and (3) \textbf{actual run time}. 
@@ -213,23 +206,23 @@ However in terms of actual running time, L takes longer to solve the puzzle comp
 \textbf{Rules}~\cite{princeton_computer_science_8-puzzle_nodate}. Let \( M \) denote a \( k \times k \) matrix, \( m_{i, j} \) denote a blank tile in \( M \), and \( n_i \) denote the number of inversions in the intial state \( M_{initial} \). Puzzle is solvable if (1) \( k \) is odd and \( n_i \) is even or (2) \( k \) is even, the sum of \(n_i \) and \( i \) is odd.
 
 
-% \appendix
-% \section{Proof for Manhattan Distance Consistency}
-% \label{appendix:manhat_cons}
-% \begin{proof} Proof by Cases
-%     \begin{enumerate}
-%         \item \( |h(n') - h(n) = 1| \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
-%         \item Case 1: \( h(n') = h(n) + 1 \)
-%         \begin{enumerate}
-%             \item \( h(n) \leq h(n) + 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
-%         \end{enumerate}
-%         \item Case 2: \( h(n') = h(n) - 1 \)
-%         \begin{enumerate}
-%             \item \( h(n) \leq h(n) - 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
-%         \end{enumerate}
-%         \item For both cases of \( h(n') \), \( h(n) \) is consistent. (\(\bullet\))
-%     \end{enumerate}
-% \end{proof}
+\appendix
+\section{Proof for Manhattan Distance Consistency}
+\label{appendix:manhat_cons}
+\begin{proof} Proof by Cases
+    \begin{enumerate}
+        \item \( |h(n') - h(n)| = 1 \) (\( \because c(n, a, n') = 1 \), any node n' is 1 step away from node n)
+        \item Case 1: \( h(n') = h(n) + 1 \)
+        \begin{enumerate}
+            \item \( h(n) \leq h(n) + 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
+        \end{enumerate}
+        \item Case 2: \( h(n') = h(n) - 1 \)
+        \begin{enumerate}
+            \item \( h(n) \leq h(n) - 1 + 1 \implies h(n) \leq h(n') + c(n, a, n') \)
+        \end{enumerate}
+        \item For both cases of \( h(n') \), \( h(n) \) is consistent. (\(\bullet\))
+    \end{enumerate}
+\end{proof}
 
 % \section{Proof for Euclidean Distance Consistency}
 % \label{appendix:euc_cons}
